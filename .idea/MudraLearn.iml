@@ -3,9 +3,11 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/backend/venv/lib/python3.13/site-packages" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ml/venv/lib/python3.13/site-packages" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
+      <excludeFolder url="file://$MODULE_DIR$/ml/.venv" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.14 (MudraLearn)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.11 (MudraLearn)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
