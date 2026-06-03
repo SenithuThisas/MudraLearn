@@ -11,10 +11,10 @@ When starting work, open three terminal tabs and run the full stack services (Fr
 cd ~/Documents/Coding\ folder/BscFinalYear/mudralearn/frontend && npm run dev
 
 ### Backend (FastAPI)
-cd ~/Documents/Coding\ folder/BscFinalYear/mudralearn/backend && source venv/bin/activate && uvicorn app.main:app --reload
+cd ~/Documents/Coding\ folder/BscFinalYear/mudralearn/backend && source ../.venv/bin/activate && uvicorn app.main:app --reload
 
 ### ML (Jupyter / Training)
-cd ~/Documents/Coding\ folder/BscFinalYear/mudralearn/ml && source venv/bin/activate && jupyter notebook
+cd ~/Documents/Coding\ folder/BscFinalYear/mudralearn/ml && source ../.venv/bin/activate && jupyter notebook
 
 ---
 
@@ -32,3 +32,6 @@ brew services list
 - Run each service in a separate terminal tab.
 - Always activate virtual environments before running Backend or ML services.
 - Start background services once per day unless they are stopped or restarted.
+
+import sys
+print(sys.executable)
