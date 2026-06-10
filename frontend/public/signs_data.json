@@ -1,0 +1,1537 @@
+{
+  "total": 383,
+  "signs": [
+    {
+      "name": "Bad",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Beautiful",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Careful",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Cold",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Deaf",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Deep",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Different",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Difficult",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Double",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Fast",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Fat",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Free",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Full",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Good",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Happy",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Hard",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Healthy",
+      "category": "Adjectives"
+    },
+    {
+      "name": "High",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Independent",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Less",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Loose",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Low",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Next",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Nice",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Not good",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Old",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Past",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Positive",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Present",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Quick",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Rich",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Same",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Senior",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Small",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Soft",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Strong",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Thirsty",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Tight",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Ugly",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Welcome",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Wrong",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Again",
+      "category": "Adverb"
+    },
+    {
+      "name": "Also",
+      "category": "Adverb"
+    },
+    {
+      "name": "Can",
+      "category": "Adverb"
+    },
+    {
+      "name": "Cant",
+      "category": "Adverb"
+    },
+    {
+      "name": "Clearly",
+      "category": "Adverb"
+    },
+    {
+      "name": "Dont",
+      "category": "Adverb"
+    },
+    {
+      "name": "Dont know",
+      "category": "Adverb"
+    },
+    {
+      "name": "Here",
+      "category": "Adverb"
+    },
+    {
+      "name": "Instead",
+      "category": "Adverb"
+    },
+    {
+      "name": "Never",
+      "category": "Adverb"
+    },
+    {
+      "name": "Not like (dislike)",
+      "category": "Adverb"
+    },
+    {
+      "name": "When",
+      "category": "Adverb"
+    },
+    {
+      "name": "Where",
+      "category": "Adverb"
+    },
+    {
+      "name": "Why",
+      "category": "Adverb"
+    },
+    {
+      "name": "Black",
+      "category": "Colors"
+    },
+    {
+      "name": "Blue",
+      "category": "Colors"
+    },
+    {
+      "name": "Brown",
+      "category": "Colors"
+    },
+    {
+      "name": "Color",
+      "category": "Colors"
+    },
+    {
+      "name": "Gold",
+      "category": "Colors"
+    },
+    {
+      "name": "Gray",
+      "category": "Colors"
+    },
+    {
+      "name": "Green",
+      "category": "Colors"
+    },
+    {
+      "name": "Grey",
+      "category": "Colors"
+    },
+    {
+      "name": "Orange",
+      "category": "Colors"
+    },
+    {
+      "name": "Pink",
+      "category": "Colors"
+    },
+    {
+      "name": "Purple",
+      "category": "Colors"
+    },
+    {
+      "name": "Red",
+      "category": "Colors"
+    },
+    {
+      "name": "White",
+      "category": "Colors"
+    },
+    {
+      "name": "Yellow",
+      "category": "Colors"
+    },
+    {
+      "name": "Or",
+      "category": "Conjunctions"
+    },
+    {
+      "name": "Day",
+      "category": "Days"
+    },
+    {
+      "name": "Day after tomorrow",
+      "category": "Days"
+    },
+    {
+      "name": "Evening",
+      "category": "Days"
+    },
+    {
+      "name": "Friday",
+      "category": "Days"
+    },
+    {
+      "name": "Good evening",
+      "category": "Days"
+    },
+    {
+      "name": "Good morning",
+      "category": "Days"
+    },
+    {
+      "name": "Good night",
+      "category": "Days"
+    },
+    {
+      "name": "Hour",
+      "category": "Days"
+    },
+    {
+      "name": "Monday",
+      "category": "Days"
+    },
+    {
+      "name": "Morning",
+      "category": "Days"
+    },
+    {
+      "name": "Night",
+      "category": "Days"
+    },
+    {
+      "name": "Saturday",
+      "category": "Days"
+    },
+    {
+      "name": "Seconds",
+      "category": "Days"
+    },
+    {
+      "name": "Sunday",
+      "category": "Days"
+    },
+    {
+      "name": "Thursday",
+      "category": "Days"
+    },
+    {
+      "name": "Time",
+      "category": "Days"
+    },
+    {
+      "name": "Today",
+      "category": "Days"
+    },
+    {
+      "name": "Tomorrow",
+      "category": "Days"
+    },
+    {
+      "name": "Tuesday",
+      "category": "Days"
+    },
+    {
+      "name": "Wednesday",
+      "category": "Days"
+    },
+    {
+      "name": "Week",
+      "category": "Days"
+    },
+    {
+      "name": "Yesterday",
+      "category": "Days"
+    },
+    {
+      "name": "No",
+      "category": "Determiner"
+    },
+    {
+      "name": "Alright",
+      "category": "Greetings"
+    },
+    {
+      "name": "Ayubowan",
+      "category": "Greetings"
+    },
+    {
+      "name": "Hello",
+      "category": "Greetings"
+    },
+    {
+      "name": "How are you",
+      "category": "Greetings"
+    },
+    {
+      "name": "Thank you",
+      "category": "Greetings"
+    },
+    {
+      "name": "Yes",
+      "category": "Interjection"
+    },
+    {
+      "name": "April",
+      "category": "Months"
+    },
+    {
+      "name": "August",
+      "category": "Months"
+    },
+    {
+      "name": "December",
+      "category": "Months"
+    },
+    {
+      "name": "February",
+      "category": "Months"
+    },
+    {
+      "name": "January",
+      "category": "Months"
+    },
+    {
+      "name": "July",
+      "category": "Months"
+    },
+    {
+      "name": "June",
+      "category": "Months"
+    },
+    {
+      "name": "March",
+      "category": "Months"
+    },
+    {
+      "name": "May",
+      "category": "Months"
+    },
+    {
+      "name": "Month",
+      "category": "Months"
+    },
+    {
+      "name": "November",
+      "category": "Months"
+    },
+    {
+      "name": "October",
+      "category": "Months"
+    },
+    {
+      "name": "September",
+      "category": "Months"
+    },
+    {
+      "name": "Year",
+      "category": "Months"
+    },
+    {
+      "name": "Article",
+      "category": "Nouns"
+    },
+    {
+      "name": "Bag",
+      "category": "Nouns"
+    },
+    {
+      "name": "Bed",
+      "category": "Nouns"
+    },
+    {
+      "name": "Book",
+      "category": "Nouns"
+    },
+    {
+      "name": "Camera",
+      "category": "Nouns"
+    },
+    {
+      "name": "Card",
+      "category": "Nouns"
+    },
+    {
+      "name": "Cat",
+      "category": "Nouns"
+    },
+    {
+      "name": "Ceiling fan",
+      "category": "Nouns"
+    },
+    {
+      "name": "Cell phone",
+      "category": "Nouns"
+    },
+    {
+      "name": "Chain",
+      "category": "Nouns"
+    },
+    {
+      "name": "Children",
+      "category": "Nouns"
+    },
+    {
+      "name": "Choice",
+      "category": "Nouns"
+    },
+    {
+      "name": "Clothing",
+      "category": "Nouns"
+    },
+    {
+      "name": "Computer",
+      "category": "Nouns"
+    },
+    {
+      "name": "Cow",
+      "category": "Nouns"
+    },
+    {
+      "name": "Crocodile",
+      "category": "Nouns"
+    },
+    {
+      "name": "Culture",
+      "category": "Nouns"
+    },
+    {
+      "name": "Door",
+      "category": "Nouns"
+    },
+    {
+      "name": "Elephant",
+      "category": "Nouns"
+    },
+    {
+      "name": "Eye",
+      "category": "Nouns"
+    },
+    {
+      "name": "Eyes",
+      "category": "Nouns"
+    },
+    {
+      "name": "Face",
+      "category": "Nouns"
+    },
+    {
+      "name": "Fever",
+      "category": "Nouns"
+    },
+    {
+      "name": "Flower",
+      "category": "Nouns"
+    },
+    {
+      "name": "Food",
+      "category": "Nouns"
+    },
+    {
+      "name": "Group",
+      "category": "Nouns"
+    },
+    {
+      "name": "Gun",
+      "category": "Nouns"
+    },
+    {
+      "name": "Hat",
+      "category": "Nouns"
+    },
+    {
+      "name": "He",
+      "category": "Nouns"
+    },
+    {
+      "name": "Health",
+      "category": "Nouns"
+    },
+    {
+      "name": "Hill",
+      "category": "Nouns"
+    },
+    {
+      "name": "How many",
+      "category": "Nouns"
+    },
+    {
+      "name": "How much",
+      "category": "Nouns"
+    },
+    {
+      "name": "I",
+      "category": "Nouns"
+    },
+    {
+      "name": "Impact",
+      "category": "Nouns"
+    },
+    {
+      "name": "Internet",
+      "category": "Nouns"
+    },
+    {
+      "name": "Key",
+      "category": "Nouns"
+    },
+    {
+      "name": "Laptop",
+      "category": "Nouns"
+    },
+    {
+      "name": "List",
+      "category": "Nouns"
+    },
+    {
+      "name": "Lock",
+      "category": "Nouns"
+    },
+    {
+      "name": "Middle",
+      "category": "Nouns"
+    },
+    {
+      "name": "Milk",
+      "category": "Nouns"
+    },
+    {
+      "name": "Mind",
+      "category": "Nouns"
+    },
+    {
+      "name": "Money",
+      "category": "Nouns"
+    },
+    {
+      "name": "Moon",
+      "category": "Nouns"
+    },
+    {
+      "name": "Movie",
+      "category": "Nouns"
+    },
+    {
+      "name": "My",
+      "category": "Nouns"
+    },
+    {
+      "name": "Network",
+      "category": "Nouns"
+    },
+    {
+      "name": "None",
+      "category": "Nouns"
+    },
+    {
+      "name": "Ok",
+      "category": "Nouns"
+    },
+    {
+      "name": "Our",
+      "category": "Nouns"
+    },
+    {
+      "name": "Paint",
+      "category": "Nouns"
+    },
+    {
+      "name": "Part",
+      "category": "Nouns"
+    },
+    {
+      "name": "Path",
+      "category": "Nouns"
+    },
+    {
+      "name": "Peace",
+      "category": "Nouns"
+    },
+    {
+      "name": "Pencil",
+      "category": "Nouns"
+    },
+    {
+      "name": "Phone",
+      "category": "Nouns"
+    },
+    {
+      "name": "Pocket",
+      "category": "Nouns"
+    },
+    {
+      "name": "Point",
+      "category": "Nouns"
+    },
+    {
+      "name": "Problem",
+      "category": "Nouns"
+    },
+    {
+      "name": "Radio",
+      "category": "Nouns"
+    },
+    {
+      "name": "Ring",
+      "category": "Nouns"
+    },
+    {
+      "name": "Sand",
+      "category": "Nouns"
+    },
+    {
+      "name": "Saree",
+      "category": "Nouns"
+    },
+    {
+      "name": "Shirt",
+      "category": "Nouns"
+    },
+    {
+      "name": "Sign",
+      "category": "Nouns"
+    },
+    {
+      "name": "Sign language",
+      "category": "Nouns"
+    },
+    {
+      "name": "Skirt",
+      "category": "Nouns"
+    },
+    {
+      "name": "Society",
+      "category": "Nouns"
+    },
+    {
+      "name": "Song",
+      "category": "Nouns"
+    },
+    {
+      "name": "Squirrel",
+      "category": "Nouns"
+    },
+    {
+      "name": "Street",
+      "category": "Nouns"
+    },
+    {
+      "name": "Structure",
+      "category": "Nouns"
+    },
+    {
+      "name": "Suit",
+      "category": "Nouns"
+    },
+    {
+      "name": "Table",
+      "category": "Nouns"
+    },
+    {
+      "name": "Tea",
+      "category": "Nouns"
+    },
+    {
+      "name": "Team",
+      "category": "Nouns"
+    },
+    {
+      "name": "Technology",
+      "category": "Nouns"
+    },
+    {
+      "name": "Telephone",
+      "category": "Nouns"
+    },
+    {
+      "name": "They",
+      "category": "Nouns"
+    },
+    {
+      "name": "Tree",
+      "category": "Nouns"
+    },
+    {
+      "name": "Weather",
+      "category": "Nouns"
+    },
+    {
+      "name": "Who",
+      "category": "Nouns"
+    },
+    {
+      "name": "Whom",
+      "category": "Nouns"
+    },
+    {
+      "name": "Whose",
+      "category": "Nouns"
+    },
+    {
+      "name": "Window",
+      "category": "Nouns"
+    },
+    {
+      "name": "You",
+      "category": "Nouns"
+    },
+    {
+      "name": "1. one",
+      "category": "Numbers"
+    },
+    {
+      "name": "10. ten",
+      "category": "Numbers"
+    },
+    {
+      "name": "11. eleven",
+      "category": "Numbers"
+    },
+    {
+      "name": "12. twelve",
+      "category": "Numbers"
+    },
+    {
+      "name": "13. thirteen",
+      "category": "Numbers"
+    },
+    {
+      "name": "14. fourteen",
+      "category": "Numbers"
+    },
+    {
+      "name": "15. fifteen",
+      "category": "Numbers"
+    },
+    {
+      "name": "16. sixteen",
+      "category": "Numbers"
+    },
+    {
+      "name": "17. seventeen",
+      "category": "Numbers"
+    },
+    {
+      "name": "18. eighteen",
+      "category": "Numbers"
+    },
+    {
+      "name": "19. nineteen",
+      "category": "Numbers"
+    },
+    {
+      "name": "2. two",
+      "category": "Numbers"
+    },
+    {
+      "name": "20. twenty",
+      "category": "Numbers"
+    },
+    {
+      "name": "3. three",
+      "category": "Numbers"
+    },
+    {
+      "name": "4. four",
+      "category": "Numbers"
+    },
+    {
+      "name": "5. five",
+      "category": "Numbers"
+    },
+    {
+      "name": "6. six",
+      "category": "Numbers"
+    },
+    {
+      "name": "7. seven",
+      "category": "Numbers"
+    },
+    {
+      "name": "8. eight",
+      "category": "Numbers"
+    },
+    {
+      "name": "9. nine",
+      "category": "Numbers"
+    },
+    {
+      "name": "Addition",
+      "category": "Numbers"
+    },
+    {
+      "name": "Count",
+      "category": "Numbers"
+    },
+    {
+      "name": "Divide",
+      "category": "Numbers"
+    },
+    {
+      "name": "Equal",
+      "category": "Numbers"
+    },
+    {
+      "name": "Multiplication",
+      "category": "Numbers"
+    },
+    {
+      "name": "Subtraction",
+      "category": "Numbers"
+    },
+    {
+      "name": "Aunt",
+      "category": "People"
+    },
+    {
+      "name": "Baby",
+      "category": "People"
+    },
+    {
+      "name": "Bro",
+      "category": "People"
+    },
+    {
+      "name": "Brother in law",
+      "category": "People"
+    },
+    {
+      "name": "Child",
+      "category": "People"
+    },
+    {
+      "name": "Daughter",
+      "category": "People"
+    },
+    {
+      "name": "Doctor",
+      "category": "People"
+    },
+    {
+      "name": "Elder bro",
+      "category": "People"
+    },
+    {
+      "name": "Elder sister",
+      "category": "People"
+    },
+    {
+      "name": "Families",
+      "category": "People"
+    },
+    {
+      "name": "Family",
+      "category": "People"
+    },
+    {
+      "name": "Father",
+      "category": "People"
+    },
+    {
+      "name": "Grand father",
+      "category": "People"
+    },
+    {
+      "name": "Grand mother",
+      "category": "People"
+    },
+    {
+      "name": "Grand son",
+      "category": "People"
+    },
+    {
+      "name": "Husband",
+      "category": "People"
+    },
+    {
+      "name": "Lady",
+      "category": "People"
+    },
+    {
+      "name": "Man",
+      "category": "People"
+    },
+    {
+      "name": "Mother",
+      "category": "People"
+    },
+    {
+      "name": "Player",
+      "category": "People"
+    },
+    {
+      "name": "Police",
+      "category": "People"
+    },
+    {
+      "name": "Relations",
+      "category": "People"
+    },
+    {
+      "name": "She",
+      "category": "People"
+    },
+    {
+      "name": "Sister",
+      "category": "People"
+    },
+    {
+      "name": "Sister in law",
+      "category": "People"
+    },
+    {
+      "name": "Son",
+      "category": "People"
+    },
+    {
+      "name": "Thief",
+      "category": "People"
+    },
+    {
+      "name": "Uncle",
+      "category": "People"
+    },
+    {
+      "name": "Us",
+      "category": "People"
+    },
+    {
+      "name": "Wife",
+      "category": "People"
+    },
+    {
+      "name": "Younger bro",
+      "category": "People"
+    },
+    {
+      "name": "Younger sister",
+      "category": "People"
+    },
+    {
+      "name": "Airport",
+      "category": "Places"
+    },
+    {
+      "name": "Bank",
+      "category": "Places"
+    },
+    {
+      "name": "Bus station",
+      "category": "Places"
+    },
+    {
+      "name": "Church",
+      "category": "Places"
+    },
+    {
+      "name": "Hospital",
+      "category": "Places"
+    },
+    {
+      "name": "House",
+      "category": "Places"
+    },
+    {
+      "name": "Location",
+      "category": "Places"
+    },
+    {
+      "name": "Next door",
+      "category": "Places"
+    },
+    {
+      "name": "Police station",
+      "category": "Places"
+    },
+    {
+      "name": "Road",
+      "category": "Places"
+    },
+    {
+      "name": "Shop",
+      "category": "Places"
+    },
+    {
+      "name": "Temple",
+      "category": "Places"
+    },
+    {
+      "name": "Train station",
+      "category": "Places"
+    },
+    {
+      "name": "After",
+      "category": "Preposition"
+    },
+    {
+      "name": "Around",
+      "category": "Preposition"
+    },
+    {
+      "name": "In",
+      "category": "Preposition"
+    },
+    {
+      "name": "Inside",
+      "category": "Preposition"
+    },
+    {
+      "name": "Near",
+      "category": "Preposition"
+    },
+    {
+      "name": "On",
+      "category": "Preposition"
+    },
+    {
+      "name": "Out",
+      "category": "Preposition"
+    },
+    {
+      "name": "Over",
+      "category": "Preposition"
+    },
+    {
+      "name": "Than",
+      "category": "Preposition"
+    },
+    {
+      "name": "To",
+      "category": "Preposition"
+    },
+    {
+      "name": "Until",
+      "category": "Preposition"
+    },
+    {
+      "name": "Up",
+      "category": "Preposition"
+    },
+    {
+      "name": "Bicycle",
+      "category": "Vehicles"
+    },
+    {
+      "name": "Boat",
+      "category": "Vehicles"
+    },
+    {
+      "name": "Bus",
+      "category": "Vehicles"
+    },
+    {
+      "name": "Car",
+      "category": "Vehicles"
+    },
+    {
+      "name": "Motorcycle",
+      "category": "Vehicles"
+    },
+    {
+      "name": "Plane",
+      "category": "Vehicles"
+    },
+    {
+      "name": "Tire",
+      "category": "Vehicles"
+    },
+    {
+      "name": "Train",
+      "category": "Vehicles"
+    },
+    {
+      "name": "Van",
+      "category": "Vehicles"
+    },
+    {
+      "name": "Vehicle",
+      "category": "Vehicles"
+    },
+    {
+      "name": "Allow",
+      "category": "Verbs"
+    },
+    {
+      "name": "Bathe",
+      "category": "Verbs"
+    },
+    {
+      "name": "Boil",
+      "category": "Verbs"
+    },
+    {
+      "name": "Break",
+      "category": "Verbs"
+    },
+    {
+      "name": "Bring",
+      "category": "Verbs"
+    },
+    {
+      "name": "Buy",
+      "category": "Verbs"
+    },
+    {
+      "name": "Carry",
+      "category": "Verbs"
+    },
+    {
+      "name": "Change",
+      "category": "Verbs"
+    },
+    {
+      "name": "Choose",
+      "category": "Verbs"
+    },
+    {
+      "name": "Click",
+      "category": "Verbs"
+    },
+    {
+      "name": "Come",
+      "category": "Verbs"
+    },
+    {
+      "name": "Connect",
+      "category": "Verbs"
+    },
+    {
+      "name": "Cook",
+      "category": "Verbs"
+    },
+    {
+      "name": "Copy",
+      "category": "Verbs"
+    },
+    {
+      "name": "Cough",
+      "category": "Verbs"
+    },
+    {
+      "name": "Cover",
+      "category": "Verbs"
+    },
+    {
+      "name": "Cry",
+      "category": "Verbs"
+    },
+    {
+      "name": "Cut",
+      "category": "Verbs"
+    },
+    {
+      "name": "Dance",
+      "category": "Verbs"
+    },
+    {
+      "name": "Done",
+      "category": "Verbs"
+    },
+    {
+      "name": "Draw",
+      "category": "Verbs"
+    },
+    {
+      "name": "Drink",
+      "category": "Verbs"
+    },
+    {
+      "name": "Eat",
+      "category": "Verbs"
+    },
+    {
+      "name": "Enter",
+      "category": "Verbs"
+    },
+    {
+      "name": "Erase",
+      "category": "Verbs"
+    },
+    {
+      "name": "Exchange",
+      "category": "Verbs"
+    },
+    {
+      "name": "Feel",
+      "category": "Verbs"
+    },
+    {
+      "name": "Fight",
+      "category": "Verbs"
+    },
+    {
+      "name": "Follow",
+      "category": "Verbs"
+    },
+    {
+      "name": "Get up",
+      "category": "Verbs"
+    },
+    {
+      "name": "Give",
+      "category": "Verbs"
+    },
+    {
+      "name": "Go",
+      "category": "Verbs"
+    },
+    {
+      "name": "Guide",
+      "category": "Verbs"
+    },
+    {
+      "name": "Hang",
+      "category": "Verbs"
+    },
+    {
+      "name": "Hear",
+      "category": "Verbs"
+    },
+    {
+      "name": "Help",
+      "category": "Verbs"
+    },
+    {
+      "name": "Hit",
+      "category": "Verbs"
+    },
+    {
+      "name": "How",
+      "category": "Verbs"
+    },
+    {
+      "name": "I know",
+      "category": "Verbs"
+    },
+    {
+      "name": "Jump",
+      "category": "Verbs"
+    },
+    {
+      "name": "Knock",
+      "category": "Verbs"
+    },
+    {
+      "name": "Laugh",
+      "category": "Verbs"
+    },
+    {
+      "name": "Lead",
+      "category": "Verbs"
+    },
+    {
+      "name": "Let",
+      "category": "Verbs"
+    },
+    {
+      "name": "Like",
+      "category": "Verbs"
+    },
+    {
+      "name": "Listen",
+      "category": "Verbs"
+    },
+    {
+      "name": "Look",
+      "category": "Verbs"
+    },
+    {
+      "name": "Love",
+      "category": "Verbs"
+    },
+    {
+      "name": "Make",
+      "category": "Verbs"
+    },
+    {
+      "name": "Meet",
+      "category": "Verbs"
+    },
+    {
+      "name": "Now",
+      "category": "Verbs"
+    },
+    {
+      "name": "Open",
+      "category": "Verbs"
+    },
+    {
+      "name": "Order",
+      "category": "Verbs"
+    },
+    {
+      "name": "Peeing",
+      "category": "Verbs"
+    },
+    {
+      "name": "Play",
+      "category": "Verbs"
+    },
+    {
+      "name": "Pull",
+      "category": "Verbs"
+    },
+    {
+      "name": "Put",
+      "category": "Verbs"
+    },
+    {
+      "name": "Quickly",
+      "category": "Verbs"
+    },
+    {
+      "name": "Run",
+      "category": "Verbs"
+    },
+    {
+      "name": "Scratch",
+      "category": "Verbs"
+    },
+    {
+      "name": "Search",
+      "category": "Verbs"
+    },
+    {
+      "name": "See",
+      "category": "Verbs"
+    },
+    {
+      "name": "Select",
+      "category": "Verbs"
+    },
+    {
+      "name": "Sell",
+      "category": "Verbs"
+    },
+    {
+      "name": "Show",
+      "category": "Verbs"
+    },
+    {
+      "name": "Sit",
+      "category": "Verbs"
+    },
+    {
+      "name": "Sleep",
+      "category": "Verbs"
+    },
+    {
+      "name": "Smile",
+      "category": "Verbs"
+    },
+    {
+      "name": "Stop",
+      "category": "Verbs"
+    },
+    {
+      "name": "Study",
+      "category": "Verbs"
+    },
+    {
+      "name": "Sweep",
+      "category": "Verbs"
+    },
+    {
+      "name": "Swim",
+      "category": "Verbs"
+    },
+    {
+      "name": "Take",
+      "category": "Verbs"
+    },
+    {
+      "name": "Talk",
+      "category": "Verbs"
+    },
+    {
+      "name": "Teach",
+      "category": "Verbs"
+    },
+    {
+      "name": "Tear",
+      "category": "Verbs"
+    },
+    {
+      "name": "Tell",
+      "category": "Verbs"
+    },
+    {
+      "name": "Text",
+      "category": "Verbs"
+    },
+    {
+      "name": "Think",
+      "category": "Verbs"
+    },
+    {
+      "name": "Throw",
+      "category": "Verbs"
+    },
+    {
+      "name": "Trust",
+      "category": "Verbs"
+    },
+    {
+      "name": "Understand",
+      "category": "Verbs"
+    },
+    {
+      "name": "Use",
+      "category": "Verbs"
+    },
+    {
+      "name": "Visit",
+      "category": "Verbs"
+    },
+    {
+      "name": "Walk",
+      "category": "Verbs"
+    },
+    {
+      "name": "Want",
+      "category": "Verbs"
+    },
+    {
+      "name": "Wash",
+      "category": "Verbs"
+    },
+    {
+      "name": "Watch",
+      "category": "Verbs"
+    },
+    {
+      "name": "Work",
+      "category": "Verbs"
+    },
+    {
+      "name": "Write",
+      "category": "Verbs"
+    }
+  ]
+}
