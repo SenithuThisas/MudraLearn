@@ -12,6 +12,7 @@ return (
 <span className='font-bold text-blue-700 text-lg mr-4'>MudraLearn</span>
 <Link to='/' className={linkClass('/')}>Home</Link>
 <Link to='/dictionary' className={linkClass('/dictionary')}>Dictionary</Link>
+<Link to='/practice' className={linkClass('/practice')}>Practice</Link>
 </nav>
 )
 }
