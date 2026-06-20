@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-06-16T15:58:30.908926",
+  "samples_scored": 636,
+  "new_queued": 50,
+  "total_pending": 50,
+  "total_labeled": 0,
+  "avg_uncertainty_new": 0.8918918812274933,
+  "correct_rate_new": 0.0
+}

@@ -1,0 +1,502 @@
+[
+  {
+    "sample_index": 455,
+    "uncertainty": 0.9245588183403015,
+    "confidence": 0.07544118911027908,
+    "predicted_class": "6. six",
+    "true_class": "Red",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908254",
+    "labeled": false
+  },
+  {
+    "sample_index": 370,
+    "uncertainty": 0.9237072467803955,
+    "confidence": 0.0762927383184433,
+    "predicted_class": "Change",
+    "true_class": "Man",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908262",
+    "labeled": false
+  },
+  {
+    "sample_index": 20,
+    "uncertainty": 0.9213069081306458,
+    "confidence": 0.07869310677051544,
+    "predicted_class": "Deaf",
+    "true_class": "Food",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908264",
+    "labeled": false
+  },
+  {
+    "sample_index": 449,
+    "uncertainty": 0.9186441898345947,
+    "confidence": 0.08135579526424408,
+    "predicted_class": "Baby",
+    "true_class": "Welcome",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908266",
+    "labeled": false
+  },
+  {
+    "sample_index": 398,
+    "uncertainty": 0.9160061478614807,
+    "confidence": 0.0839938297867775,
+    "predicted_class": "Count",
+    "true_class": "Choice",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908268",
+    "labeled": false
+  },
+  {
+    "sample_index": 366,
+    "uncertainty": 0.9142228364944458,
+    "confidence": 0.085777148604393,
+    "predicted_class": "Bus station",
+    "true_class": "Cook",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908270",
+    "labeled": false
+  },
+  {
+    "sample_index": 230,
+    "uncertainty": 0.9133701920509338,
+    "confidence": 0.08662982285022736,
+    "predicted_class": "9. nine",
+    "true_class": "To",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908272",
+    "labeled": false
+  },
+  {
+    "sample_index": 209,
+    "uncertainty": 0.9127660393714905,
+    "confidence": 0.08723394572734833,
+    "predicted_class": "Baby",
+    "true_class": "Phone",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908280",
+    "labeled": false
+  },
+  {
+    "sample_index": 352,
+    "uncertainty": 0.9108486771583557,
+    "confidence": 0.0891513079404831,
+    "predicted_class": "Change",
+    "true_class": "White",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908282",
+    "labeled": false
+  },
+  {
+    "sample_index": 224,
+    "uncertainty": 0.9105148315429688,
+    "confidence": 0.08948516100645065,
+    "predicted_class": "Bad",
+    "true_class": "Fat",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908284",
+    "labeled": false
+  },
+  {
+    "sample_index": 482,
+    "uncertainty": 0.906773567199707,
+    "confidence": 0.09322644770145416,
+    "predicted_class": "Bus station",
+    "true_class": "Today",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908285",
+    "labeled": false
+  },
+  {
+    "sample_index": 612,
+    "uncertainty": 0.9056314826011658,
+    "confidence": 0.09436850249767303,
+    "predicted_class": "Addition",
+    "true_class": "Us",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908287",
+    "labeled": false
+  },
+  {
+    "sample_index": 383,
+    "uncertainty": 0.9044998288154602,
+    "confidence": 0.0955001562833786,
+    "predicted_class": "3. three",
+    "true_class": "Red",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908289",
+    "labeled": false
+  },
+  {
+    "sample_index": 426,
+    "uncertainty": 0.9037401080131531,
+    "confidence": 0.09625988453626633,
+    "predicted_class": "Around",
+    "true_class": "Today",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908290",
+    "labeled": false
+  },
+  {
+    "sample_index": 161,
+    "uncertainty": 0.9033876657485962,
+    "confidence": 0.09661230444908142,
+    "predicted_class": "Also",
+    "true_class": "Elder bro",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908292",
+    "labeled": false
+  },
+  {
+    "sample_index": 407,
+    "uncertainty": 0.9021631479263306,
+    "confidence": 0.09783682972192764,
+    "predicted_class": "3. three",
+    "true_class": "Cut",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908293",
+    "labeled": false
+  },
+  {
+    "sample_index": 9,
+    "uncertainty": 0.9020746946334839,
+    "confidence": 0.09792532026767731,
+    "predicted_class": "Change",
+    "true_class": "Blue",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908297",
+    "labeled": false
+  },
+  {
+    "sample_index": 100,
+    "uncertainty": 0.9014211297035217,
+    "confidence": 0.09857887774705887,
+    "predicted_class": "Crocodile",
+    "true_class": "Man",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908299",
+    "labeled": false
+  },
+  {
+    "sample_index": 322,
+    "uncertainty": 0.8998106718063354,
+    "confidence": 0.10018935799598694,
+    "predicted_class": "Church",
+    "true_class": "Sleep",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908301",
+    "labeled": false
+  },
+  {
+    "sample_index": 511,
+    "uncertainty": 0.8988437056541443,
+    "confidence": 0.10115628689527512,
+    "predicted_class": "Bank",
+    "true_class": "Monday",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908302",
+    "labeled": false
+  },
+  {
+    "sample_index": 566,
+    "uncertainty": 0.8986285328865051,
+    "confidence": 0.10137148201465607,
+    "predicted_class": "Count",
+    "true_class": "Fever",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908304",
+    "labeled": false
+  },
+  {
+    "sample_index": 401,
+    "uncertainty": 0.8964906930923462,
+    "confidence": 0.1035093367099762,
+    "predicted_class": "Child",
+    "true_class": "Man",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908305",
+    "labeled": false
+  },
+  {
+    "sample_index": 531,
+    "uncertainty": 0.8945716023445129,
+    "confidence": 0.10542842000722885,
+    "predicted_class": "9. nine",
+    "true_class": "Drink",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908307",
+    "labeled": false
+  },
+  {
+    "sample_index": 351,
+    "uncertainty": 0.8903253078460693,
+    "confidence": 0.10967469215393066,
+    "predicted_class": "6. six",
+    "true_class": "Week",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908308",
+    "labeled": false
+  },
+  {
+    "sample_index": 377,
+    "uncertainty": 0.8902689218521118,
+    "confidence": 0.1097310483455658,
+    "predicted_class": "Can",
+    "true_class": "Fever",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908310",
+    "labeled": false
+  },
+  {
+    "sample_index": 107,
+    "uncertainty": 0.8896927237510681,
+    "confidence": 0.11030729860067368,
+    "predicted_class": "9. nine",
+    "true_class": "Street",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908311",
+    "labeled": false
+  },
+  {
+    "sample_index": 31,
+    "uncertainty": 0.8894146084785461,
+    "confidence": 0.11058536916971207,
+    "predicted_class": "Chain",
+    "true_class": "Yellow",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908313",
+    "labeled": false
+  },
+  {
+    "sample_index": 141,
+    "uncertainty": 0.8868139386177063,
+    "confidence": 0.11318604648113251,
+    "predicted_class": "Cut",
+    "true_class": "Today",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908314",
+    "labeled": false
+  },
+  {
+    "sample_index": 134,
+    "uncertainty": 0.8857588768005371,
+    "confidence": 0.11424112319946289,
+    "predicted_class": "Church",
+    "true_class": "White",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908316",
+    "labeled": false
+  },
+  {
+    "sample_index": 256,
+    "uncertainty": 0.8850419521331787,
+    "confidence": 0.1149580329656601,
+    "predicted_class": "Addition",
+    "true_class": "Day",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908317",
+    "labeled": false
+  },
+  {
+    "sample_index": 540,
+    "uncertainty": 0.8843280076980591,
+    "confidence": 0.11567197740077972,
+    "predicted_class": "2. two",
+    "true_class": "Full",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908319",
+    "labeled": false
+  },
+  {
+    "sample_index": 165,
+    "uncertainty": 0.8829852938652039,
+    "confidence": 0.11701472848653793,
+    "predicted_class": "9. nine",
+    "true_class": "Technology",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908320",
+    "labeled": false
+  },
+  {
+    "sample_index": 631,
+    "uncertainty": 0.881563663482666,
+    "confidence": 0.11843632161617279,
+    "predicted_class": "3. three",
+    "true_class": "Grand father",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908322",
+    "labeled": false
+  },
+  {
+    "sample_index": 461,
+    "uncertainty": 0.8814274072647095,
+    "confidence": 0.11857260018587112,
+    "predicted_class": "Bus station",
+    "true_class": "Elephant",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908324",
+    "labeled": false
+  },
+  {
+    "sample_index": 18,
+    "uncertainty": 0.8804447650909424,
+    "confidence": 0.11955525726079941,
+    "predicted_class": "Baby",
+    "true_class": "Sleep",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908325",
+    "labeled": false
+  },
+  {
+    "sample_index": 167,
+    "uncertainty": 0.880132794380188,
+    "confidence": 0.11986718326807022,
+    "predicted_class": "Change",
+    "true_class": "Beautiful",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908326",
+    "labeled": false
+  },
+  {
+    "sample_index": 252,
+    "uncertainty": 0.8780601620674133,
+    "confidence": 0.12193984538316727,
+    "predicted_class": "Count",
+    "true_class": "My",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908328",
+    "labeled": false
+  },
+  {
+    "sample_index": 476,
+    "uncertainty": 0.8759522438049316,
+    "confidence": 0.12404776364564896,
+    "predicted_class": "Bus station",
+    "true_class": "Face",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908329",
+    "labeled": false
+  },
+  {
+    "sample_index": 473,
+    "uncertainty": 0.8745473623275757,
+    "confidence": 0.12545263767242432,
+    "predicted_class": "Bathe",
+    "true_class": "Yellow",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908331",
+    "labeled": false
+  },
+  {
+    "sample_index": 500,
+    "uncertainty": 0.8736662864685059,
+    "confidence": 0.12633369863033295,
+    "predicted_class": "Child",
+    "true_class": "Yellow",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908332",
+    "labeled": false
+  },
+  {
+    "sample_index": 106,
+    "uncertainty": 0.8731508851051331,
+    "confidence": 0.12684909999370575,
+    "predicted_class": "Cover",
+    "true_class": "Eat",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908333",
+    "labeled": false
+  },
+  {
+    "sample_index": 472,
+    "uncertainty": 0.8728657960891724,
+    "confidence": 0.12713418900966644,
+    "predicted_class": "6. six",
+    "true_class": "Monday",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908335",
+    "labeled": false
+  },
+  {
+    "sample_index": 598,
+    "uncertainty": 0.8727224469184875,
+    "confidence": 0.12727755308151245,
+    "predicted_class": "Cough",
+    "true_class": "Clothing",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908336",
+    "labeled": false
+  },
+  {
+    "sample_index": 427,
+    "uncertainty": 0.8719377517700195,
+    "confidence": 0.12806223332881927,
+    "predicted_class": "Cant",
+    "true_class": "White",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908338",
+    "labeled": false
+  },
+  {
+    "sample_index": 315,
+    "uncertainty": 0.8707302808761597,
+    "confidence": 0.12926971912384033,
+    "predicted_class": "16. sixteen",
+    "true_class": "Ok",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908339",
+    "labeled": false
+  },
+  {
+    "sample_index": 139,
+    "uncertainty": 0.8700681924819946,
+    "confidence": 0.12993182241916656,
+    "predicted_class": "8. eight",
+    "true_class": "Grand father",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908341",
+    "labeled": false
+  },
+  {
+    "sample_index": 263,
+    "uncertainty": 0.8682851195335388,
+    "confidence": 0.1317148655653,
+    "predicted_class": "Bad",
+    "true_class": "I",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908342",
+    "labeled": false
+  },
+  {
+    "sample_index": 389,
+    "uncertainty": 0.8670438528060913,
+    "confidence": 0.13295616209506989,
+    "predicted_class": "Airport",
+    "true_class": "Go",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908344",
+    "labeled": false
+  },
+  {
+    "sample_index": 172,
+    "uncertainty": 0.8670369982719421,
+    "confidence": 0.13296300172805786,
+    "predicted_class": "Baby",
+    "true_class": "Exchange",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908345",
+    "labeled": false
+  },
+  {
+    "sample_index": 570,
+    "uncertainty": 0.8663457036018372,
+    "confidence": 0.13365429639816284,
+    "predicted_class": "9. nine",
+    "true_class": "Smile",
+    "correct": false,
+    "queued_at": "2026-06-16T15:58:30.908347",
+    "labeled": false
+  }
+]
