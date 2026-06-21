@@ -16,6 +16,8 @@ export default function Navigation() {
       <Link to='/' className={linkClass('/')}>Home</Link>
       <Link to='/translate' className={linkClass('/translate')}>Translate</Link>
       <Link to='/dictionary' className={linkClass('/dictionary')}>Dictionary</Link>
+      <Link to='/practice' className={linkClass('/practice')}>Practice</Link>
     </nav>
   )
+
 }
