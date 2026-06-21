@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🤟 MudraLearn
+# MudraLearn
 
 ### AI-Powered Sign Language Recognition & Learning Platform
 
