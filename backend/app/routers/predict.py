@@ -6,7 +6,7 @@ from app.services import inference
 router = APIRouter()
 
 class PredictRequest(BaseModel):
-    sequence: List[List[float]] # 30 frames x 132 features
+    sequence: List[List[float]] # 60 frames x 126 features
 
 class PredictResult(BaseModel):
     sign: str
@@ -14,10 +14,10 @@ class PredictResult(BaseModel):
 
 @router.post('/predict')
 def predict_sign(request: PredictRequest):
-    if len(request.sequence) != 30:
-        raise HTTPException(400, 'Expected exactly 30 frames')
-    if len(request.sequence[0]) != 132:
-        raise HTTPException(400, 'Expected 132 features per frame')
+    if len(request.sequence) != 60:
+        raise HTTPException(400, 'Expected exactly 60 frames')
+    if len(request.sequence[0]) != 126:
+        raise HTTPException(400, 'Expected 126 features per frame')
         
     results = inference.predict(request.sequence)
     top = results[0]
