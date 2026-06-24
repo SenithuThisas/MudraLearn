@@ -1,3 +1,4 @@
+# pyrefly: ignore [missing-import]
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.models.user import Base
@@ -18,4 +19,8 @@ def get_db():
         db.close()
 
 def create_tables():
+    # Import all models here so SQLAlchemy's metadata knows about every table.
+    # Without these imports, models defined outside user.py are invisible to
+    # Base.metadata.create_all() and their tables are silently never created.
+    from app.models import progress  # noqa: F401 — registers Progress + MasteryScore
     Base.metadata.create_all(bind=engine)
