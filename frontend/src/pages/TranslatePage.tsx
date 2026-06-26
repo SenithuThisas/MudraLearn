@@ -77,7 +77,7 @@ export default function TranslatePage() {
             {/* Controls */}
             <div className="flex items-center gap-4">
               <button
-                onClick={() => startCapture(videoRef.current!)}
+                onClick={() => startCapture(videoRef.current!, { userId: 1, targetSign: 'unknown', category: 'free' })}
                 disabled={!isReady || !cameraActive || isCapturing}
                 className="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all shadow-md active:scale-[0.98]"
               >
