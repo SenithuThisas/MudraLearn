@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { useMediaPipe } from '../hooks/useMediaPipe'
 import { predictSign, type PredictResponse } from '../services/api'
-const FRAMES_NEEDED = 30
+const FRAMES_NEEDED = 60
 const MS_PER_FRAME = 100 // capture one frame every 100ms
 export default function WebcamCapture() {
 const videoRef = useRef<HTMLVideoElement>(null)
@@ -43,7 +43,13 @@ setCapturing(false)
 setLoading(true)
 setStatusMsg('Sending to model...')
 try {
-const res = await predictSign(frameBuffer.current.slice(0, FRAMES_NEEDED))
+const res = await predictSign(
+                frameBuffer.current.slice(0, FRAMES_NEEDED),
+                1,          // guest user_id — translate page has no auth yet
+                '',         // no target sign for free translation mode
+                'translate',
+                0,
+              )
 setResult(res)
 setStatusMsg('Done!')
 } catch {
