@@ -6,6 +6,7 @@ export interface ButtonProps {
   onClick?: () => void;
   className?: string;
   type?: 'button' | 'submit';
+  style?: React.CSSProperties;
 }
 
 export interface CardProps {
