@@ -13,7 +13,7 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { label: 'About', href: '#about' },
+    { label: 'About', href: '/about' },
     { label: 'Lessons', href: '#how-it-works' },
     { label: 'Dictionary', href: '/dictionary' },
     { label: 'Community', href: '#community' }
