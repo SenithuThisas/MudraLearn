@@ -22,7 +22,7 @@ const styles = {
   },
 };
 
-export const Button = ({ variant, children, onClick, className, type = 'button' }: ButtonProps) => (
+export const Button = ({ variant, children, onClick, className, type = 'button', style: customStyle }: ButtonProps) => (
   <motion.button
     type={type}
     onClick={onClick}
@@ -32,6 +32,7 @@ export const Button = ({ variant, children, onClick, className, type = 'button' 
       borderRadius: 0,
       fontFamily: 'var(--font-body)',
       outline: 'none',
+      ...customStyle,
     }}
     whileHover={{
       x: 3,
