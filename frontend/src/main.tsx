@@ -1,7 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import App from './App'
+import LandingPage from './pages/LandingPage'
+import AboutPage from './pages/AboutPage'
+import BlogPage from './pages/BlogPage'
 import DictionaryPage from './pages/DictionaryPage'
 import TranslatePage from './pages/TranslatePage'
 import './index.css'
@@ -11,7 +13,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 <React.StrictMode>
 <BrowserRouter>
 <Routes>
-<Route path='/' element={<App />} />
+<Route path='/' element={<LandingPage />} />
+<Route path='/about' element={<AboutPage />} />
+<Route path='/blog' element={<BlogPage />} />
 <Route path='/translate' element={<TranslatePage />} />
 <Route path='/practice' element={<PracticePage />} />
 <Route path='/dictionary' element={<DictionaryPage />} />
