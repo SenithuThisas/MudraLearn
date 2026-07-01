@@ -13,10 +13,11 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
+    { label: 'About', href: '#about' },
     { label: 'Lessons', href: '#how-it-works' },
     { label: 'Dictionary', href: '/dictionary' },
-    { label: 'Community', href: '#community' },
-    { label: 'About', href: '#about' },
+    { label: 'Community', href: '#community' }
+
   ];
 
   return (
@@ -89,9 +90,14 @@ export default function Navbar() {
               {link.label}
             </a>
           ))}
-          <Button variant="primary" onClick={() => (window.location.href = '/practice')}>
+          <Button 
+            variant="primary" 
+            onClick={() => (window.location.href = '/practice')}
+            style={{ borderRadius: 10 }}
+          >
             Get Started
           </Button>
+
         </div>
 
         {/* Mobile Hamburger */}
