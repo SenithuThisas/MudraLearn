@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import LandingPage from './pages/LandingPage'
+import AboutPage from './pages/AboutPage'
 import DictionaryPage from './pages/DictionaryPage'
 import TranslatePage from './pages/TranslatePage'
 import './index.css'
@@ -12,6 +13,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 <BrowserRouter>
 <Routes>
 <Route path='/' element={<LandingPage />} />
+<Route path='/about' element={<AboutPage />} />
 <Route path='/translate' element={<TranslatePage />} />
 <Route path='/practice' element={<PracticePage />} />
 <Route path='/dictionary' element={<DictionaryPage />} />
