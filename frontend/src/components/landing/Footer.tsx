@@ -229,7 +229,7 @@ export default function Footer() {
             margin: 0,
           }}
         >
-          © 2024 MudraLearn. Empowering through Sinhala Sign Language.
+          © 2026 MudraLearn. All rights reserved.
         </p>
       </div>
 
