@@ -43,11 +43,12 @@ export default function Hero() {
                 gap: 6,
                 padding: '6px 16px',
                 border: '2px solid var(--accent)',
-                background: '#f3eeff',
-                borderRadius: 0,
+                background: '#B9FBC0',
+                borderRadius: 10,
                 fontFamily: 'var(--font-body)',
                 fontWeight: 600,
                 fontSize: 12,
+                boxShadow: '4px 4px 0px var(--primary)',
                 color: 'var(--primary)',
               }}
             >
@@ -128,12 +129,17 @@ export default function Hero() {
             style={{ display: 'flex', gap: 16, marginTop: 32 }}
             className="hero-cta"
           >
-            <Button variant="primary" onClick={() => (window.location.href = '/practice')}>
+            <Button variant="primary"
+              style={{ borderRadius: 10 }}
+              onClick={() => (window.location.href = '/practice')}>
               Start Learning Free ⚡
             </Button>
-            <Button variant="secondary" onClick={() => {
-              document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
-            }}>
+            <Button
+              variant="secondary"
+              style={{ borderRadius: 10 }}
+              onClick={() => {
+                document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+              }}>
               See How It Works ◎
             </Button>
           </motion.div>
