@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const api = axios.create({
   baseURL: 'http://localhost:8000/api',
+  withCredentials: true,
 })
 
 // ── Predict ──────────────────────────────────────────────────────────────────
@@ -29,7 +30,7 @@ export interface PredictResponse {
 
 export async function predictSign(
   sequence:    number[][],
-  userId:      number,
+  userId:      number | string,
   targetSign:  string,
   category:    string,
   responseMs:  number = 0,
@@ -53,7 +54,7 @@ export interface NextSignResponse {
   mastery:  number | null
 }
 
-export async function getNextSign(userId: number): Promise<NextSignResponse> {
+export async function getNextSign(userId: number | string): Promise<NextSignResponse> {
   const { data } = await api.get('/session/next', { params: { user_id: userId } })
   return data
 }
@@ -66,14 +67,14 @@ export interface MasteryRow {
   last_seen: string | null
 }
 
-export async function getMastery(userId: number): Promise<{ signs: MasteryRow[]; total: number }> {
+export async function getMastery(userId: number | string): Promise<{ signs: MasteryRow[]; total: number }> {
   const { data } = await api.get('/session/mastery', { params: { user_id: userId } })
   return data
 }
 
 // ── Progress history ──────────────────────────────────────────────────────────
 
-export async function getProgressHistory(userId: number, limit = 50) {
+export async function getProgressHistory(userId: number | string, limit = 50) {
   const { data } = await api.get('/progress/history', { params: { user_id: userId, limit } })
   return data
 }
