@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { fadeUp, slideLeft, slideRight, viewportConfig } from '../../hooks/useScrollAnimation';
+import { slideLeft, slideRight, viewportConfig } from '../../hooks/useScrollAnimation';
 import { Button } from '../ui/Button';
 
 const audiences = [
@@ -126,7 +126,7 @@ export default function WhoIsThisFor() {
 
           <Button
             variant="white"
-            onClick={() => (window.location.href = '/practice')}
+            onClick={() => (window.location.href = '/signin')}
           >
             <span
               style={{
