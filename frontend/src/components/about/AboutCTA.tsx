@@ -94,7 +94,7 @@ export default function AboutCTA() {
         >
           <Button
             variant="white"
-            onClick={() => (window.location.href = '/practice')}
+            onClick={() => (window.location.href = '/signin')}
           >
             <span style={{ fontFamily: 'var(--font-pixel)', fontSize: 10, padding: '2px 8px' }}>
               START LEARNING FREE
