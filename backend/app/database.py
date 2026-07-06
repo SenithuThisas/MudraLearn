@@ -23,4 +23,5 @@ def create_tables():
     # Without these imports, models defined outside user.py are invisible to
     # Base.metadata.create_all() and their tables are silently never created.
     from app.models import progress  # noqa: F401 — registers Progress + MasteryScore
+    from app.models.user import EmailOTP  # noqa: F401 — registers email_otps table
     Base.metadata.create_all(bind=engine)
