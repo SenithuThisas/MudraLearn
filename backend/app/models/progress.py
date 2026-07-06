@@ -1,5 +1,6 @@
 # pyrefly: ignore [missing-import]
 from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 from app.models.user import Base
 
@@ -9,7 +10,7 @@ class Progress(Base):
     __tablename__ = 'progress'
 
     id          = Column(Integer, primary_key=True, index=True)
-    user_id     = Column(Integer, ForeignKey('users.id'), nullable=False)
+    user_id     = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
     sign_id     = Column(String, nullable=False)   # e.g. 'Ayubowan'
     category    = Column(String, nullable=False)   # e.g. 'Greetings'
     confidence  = Column(Float, nullable=False)    # 0.0 – 1.0
@@ -28,7 +29,7 @@ class MasteryScore(Base):
     __tablename__ = 'mastery_scores'
 
     id            = Column(Integer, primary_key=True, index=True)
-    user_id       = Column(Integer, ForeignKey('users.id'), nullable=False)
+    user_id       = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
     sign_id       = Column(String, nullable=False)
     score         = Column(Float, default=0.0)      # 0.0 – 1.0  EWMA mastery
     attempts      = Column(Integer, default=0)
