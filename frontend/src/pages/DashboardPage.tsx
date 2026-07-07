@@ -4,29 +4,12 @@ import PixelButton from '../components/auth/PixelButton'
 
 export default function DashboardPage() {
   const navigate = useNavigate()
-  const { user, signOut, loading } = useAuth()
+  const { user, signOut } = useAuth()
 
-  if (loading) {
-    return (
-      <div
-        style={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: '#f9fafb',
-          fontFamily: "'Inter', sans-serif",
-        }}
-      >
-        <p style={{ color: '#6B7280' }}>Loading...</p>
-      </div>
-    )
-  }
-
-  if (!user) {
-    navigate('/signin', { replace: true })
-    return null
-  }
+  // ProtectedRoute guarantees a resolved, authenticated user before this
+  // page renders, so no loading state or redirect is needed here. This guard
+  // is purely a type-narrowing safety net.
+  if (!user) return null
 
   const handleSignOut = async () => {
     await signOut()

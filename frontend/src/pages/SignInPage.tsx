@@ -1,16 +1,25 @@
-import { useState, type FormEvent } from 'react'
+import { useState, useEffect, type FormEvent } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import SplitLayout from '../components/auth/SplitLayout'
 import RightPanel from '../components/auth/RightPanel'
 import PixelInput from '../components/auth/PixelInput'
 import PixelButton from '../components/auth/PixelButton'
 import { requestOTP } from '../services/auth'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function SignInPage() {
   const navigate = useNavigate()
+  const { user, loading: authLoading } = useAuth()
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  // Already signed in? Skip the login form and go straight to the dashboard.
+  useEffect(() => {
+    if (!authLoading && user) {
+      navigate('/dashboard', { replace: true })
+    }
+  }, [authLoading, user, navigate])
 
   const handleEmailSubmit = async (e: FormEvent) => {
     e.preventDefault()

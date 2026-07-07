@@ -2,8 +2,28 @@ import axios from 'axios'
 
 const api = axios.create({
   baseURL: 'http://localhost:8000/api',
-  withCredentials: true,
+  withCredentials: true, // sends the httpOnly session cookie automatically
 })
+
+// If a protected data call comes back 401 (session expired mid-use), send the
+// user to sign in. Guarded so we never loop while already on an auth page.
+// The auth service (getMe) is intentionally NOT wrapped: a 401 there is the
+// normal "not logged in yet" signal that AuthContext handles on load.
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      const path = window.location.pathname
+      const onAuthPage = ['/signin', '/verify-email', '/onboarding'].some((p) =>
+        path.startsWith(p),
+      )
+      if (!onAuthPage) {
+        window.location.assign('/signin')
+      }
+    }
+    return Promise.reject(error)
+  },
+)
 
 // ── Predict ──────────────────────────────────────────────────────────────────
 
@@ -79,14 +99,6 @@ export async function getProgressHistory(userId: number | string, limit = 50) {
   return data
 }
 
-// ── Auth ──────────────────────────────────────────────────────────────────────
-
-export async function login(username: string, password: string) {
-  const { data } = await api.post('/auth/login', { username, password })
-  return data
-}
-
-export async function register(username: string, email: string, password: string) {
-  const { data } = await api.post('/auth/register', { username, email, password })
-  return data
-}
+// Auth lives in services/auth.ts — this app uses the passwordless OTP + Google
+// cookie flow, not username/password. The old login()/register() helpers pointed
+// at backend routes that do not exist and have been removed.

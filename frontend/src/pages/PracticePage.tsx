@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
 import Navigation from '../components/Navigation'
 import { useHandLandmarker } from '../hooks/useHandLandmarker'
 import { getNextSign, type NextSignResponse } from '../services/api'
@@ -30,21 +29,14 @@ const FEEDBACK_LABEL: Record<string, string> = {
 }
 
 export default function PracticePage() {
-  const navigate                            = useNavigate()
   const { user }                            = useAuth()
   const videoRef                            = useRef<HTMLVideoElement>(null)
   const [nextSign,    setNextSign]          = useState<NextSignResponse | null>(null)
   const [loadingSign, setLoadingSign]       = useState(true)
   const [signError,   setSignError]         = useState<string | null>(null)
 
-
-  // Redirect to sign in if not authenticated
-  useEffect(() => {
-    if (!user) {
-      navigate('/signin', { replace: true })
-    }
-  }, [user, navigate])
-
+  // ProtectedRoute already guards this page; this guard is purely a
+  // type-narrowing safety net so `user` is non-null below.
   if (!user) return null
 
   const {

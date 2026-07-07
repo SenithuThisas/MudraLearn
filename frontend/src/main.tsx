@@ -15,6 +15,7 @@ import VerifyEmailPage from './pages/VerifyEmailPage'
 import OnboardingNamePage from './pages/OnboardingNamePage'
 import OnboardingUsernamePage from './pages/OnboardingUsernamePage'
 import DashboardPage from './pages/DashboardPage'
+import ProtectedRoute from './components/ProtectedRoute'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 <React.StrictMode>
@@ -25,14 +26,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 <Route path='/about' element={<AboutPage />} />
 <Route path='/blog' element={<BlogPage />} />
 <Route path='/translate' element={<TranslatePage />} />
-<Route path='/practice' element={<PracticePage />} />
+<Route path='/practice' element={<ProtectedRoute><PracticePage /></ProtectedRoute>} />
 <Route path='/dictionary' element={<DictionaryPage />} />
 <Route path='/splash' element={<SplashPage />} />
 <Route path='/signin' element={<SignInPage />} />
 <Route path='/verify-email' element={<VerifyEmailPage />} />
 <Route path='/onboarding/name' element={<OnboardingNamePage />} />
 <Route path='/onboarding/username' element={<OnboardingUsernamePage />} />
-<Route path='/dashboard' element={<DashboardPage />} />
+<Route path='/dashboard' element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
 </Routes>
 </AuthProvider>
 </BrowserRouter>
