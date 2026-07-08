@@ -1,20 +1,36 @@
 import { useState, useEffect, type FormEvent } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import SplitLayout from '../components/auth/SplitLayout'
 import RightPanel from '../components/auth/RightPanel'
 import PixelInput from '../components/auth/PixelInput'
 import PixelButton from '../components/auth/PixelButton'
 import { useAuth } from '../contexts/AuthContext'
-import { checkUsername } from '../services/auth'
+import { checkUsername, authErrorMessage } from '../services/auth'
+
+const PASSWORD_MIN_LEN = 8
 
 export default function OnboardingUsernamePage() {
   const navigate = useNavigate()
-  const { completeUsername } = useAuth()
+  const location = useLocation()
+  const { user, loading: authLoading, completeSignup, completeUsername } = useAuth()
+  // Email-signup branch: wizard state carried from verify-email → name page.
+  // Absent for the authenticated branch (e.g. Google), which only needs a username.
+  const { signupToken, firstName, lastName } = (location.state as any) ?? {}
+  const isSignup = Boolean(signupToken)
   const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [checking, setChecking] = useState(false)
   const [availability, setAvailability] = useState<{ available: boolean; error?: string } | null>(null)
+
+  // No wizard state and not signed in → nothing to onboard; restart the flow.
+  useEffect(() => {
+    if (!isSignup && !authLoading && !user) {
+      navigate('/signin', { replace: true })
+    }
+  }, [isSignup, authLoading, user, navigate])
 
   // Debounced availability check
   useEffect(() => {
@@ -53,13 +69,28 @@ export default function OnboardingUsernamePage() {
       return
     }
 
+    if (isSignup) {
+      if (password.length < PASSWORD_MIN_LEN) {
+        setError(`Password must be at least ${PASSWORD_MIN_LEN} characters`)
+        return
+      }
+      if (password !== confirmPassword) {
+        setError('Passwords do not match')
+        return
+      }
+    }
+
     setLoading(true)
     try {
-      await completeUsername(username.trim())
+      if (isSignup) {
+        // Creates the account and the cookie session in one step.
+        await completeSignup(signupToken, password, firstName, lastName, username.trim())
+      } else {
+        await completeUsername(username.trim())
+      }
       navigate('/dashboard', { replace: true })
     } catch (err: any) {
-      const msg = err?.response?.data?.detail || 'Something went wrong. Please try again.'
-      setError(msg)
+      setError(authErrorMessage(err, 'Something went wrong. Please try again.'))
     } finally {
       setLoading(false)
     }
@@ -175,6 +206,31 @@ export default function OnboardingUsernamePage() {
               </div>
             </div>
 
+            {isSignup && (
+              <>
+                <PixelInput
+                  label="Password"
+                  type="password"
+                  placeholder="At least 8 characters"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={PASSWORD_MIN_LEN}
+                  autoComplete="new-password"
+                />
+                <PixelInput
+                  label="Confirm Password"
+                  type="password"
+                  placeholder="Repeat your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  minLength={PASSWORD_MIN_LEN}
+                  autoComplete="new-password"
+                />
+              </>
+            )}
+
             {error && (
               <p
                 style={{
@@ -192,9 +248,14 @@ export default function OnboardingUsernamePage() {
               type="submit"
               variant="primary"
               fullWidth
-              disabled={loading || !username || !availability?.available}
+              disabled={
+                loading ||
+                !username ||
+                !availability?.available ||
+                (isSignup && (!password || !confirmPassword))
+              }
             >
-              {loading ? 'SAVING...' : 'Continue'}
+              {loading ? (isSignup ? 'CREATING ACCOUNT...' : 'SAVING...') : 'Continue'}
             </PixelButton>
           </form>
         </div>

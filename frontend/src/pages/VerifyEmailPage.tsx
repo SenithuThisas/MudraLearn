@@ -3,7 +3,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom'
 import SplitLayout from '../components/auth/SplitLayout'
 import RightPanel from '../components/auth/RightPanel'
 import PixelButton from '../components/auth/PixelButton'
-import { useAuth } from '../contexts/AuthContext'
+import { verifyOTP, requestOTP, authErrorMessage } from '../services/auth'
 
 const DIGITS = 6
 const RESEND_COOLDOWN = 30
@@ -12,7 +12,6 @@ export default function VerifyEmailPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const email = (location.state as any)?.email || 'user@email.com' // fallback for direct visits in dev
-  const { signInWithOTP } = useAuth()
 
   const [digits, setDigits] = useState<string[]>(Array(DIGITS).fill(''))
   const [loading, setLoading] = useState(false)
@@ -82,15 +81,12 @@ export default function VerifyEmailPage() {
 
     setLoading(true)
     try {
-      const user = await signInWithOTP(email, otp)
-      if (user.is_new || !user.onboarding_complete) {
-        navigate('/onboarding/name', { replace: true })
-      } else {
-        navigate('/dashboard', { replace: true })
-      }
+      // Proves email ownership only — no account or session exists yet. The
+      // signup_token is exchanged for both at the end of the onboarding wizard.
+      const { signup_token: signupToken } = await verifyOTP(email, otp)
+      navigate('/onboarding/name', { replace: true, state: { signupToken, email } })
     } catch (err: any) {
-      const msg = err?.response?.data?.detail || 'Invalid code. Please try again.'
-      setError(msg)
+      setError(authErrorMessage(err, 'Invalid code. Please try again.'))
       setDigits(Array(DIGITS).fill(''))
       inputRefs.current[0]?.focus()
     } finally {
@@ -105,10 +101,9 @@ export default function VerifyEmailPage() {
     setError('')
 
     try {
-      const { requestOTP } = await import('../services/auth')
       await requestOTP(email)
-    } catch {
-      setError('Failed to resend code. Please try again.')
+    } catch (err) {
+      setError(authErrorMessage(err, 'Failed to resend code. Please try again.'))
     }
   }
 

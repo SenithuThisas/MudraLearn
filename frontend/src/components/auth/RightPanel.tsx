@@ -1,4 +1,4 @@
-export default function RightPanel({ variant = 'signin' }: { variant?: 'signin' | 'verify' | 'onboarding' }) {
+export default function RightPanel({ variant = 'signin' }: { variant?: 'signin' | 'verify' | 'onboarding' | 'secure' }) {
   return (
     <>
       {/* Faint vertical grid lines — background texture */}
@@ -111,8 +111,8 @@ export default function RightPanel({ variant = 'signin' }: { variant?: 'signin' 
           </svg>
         </div>
 
-        {/* Badges for 'signin' variant */}
-        {variant === 'signin' && (
+        {/* Badges for 'signin' and 'secure' variants */}
+        {(variant === 'signin' || variant === 'secure') && (
           <>
             {/* Badge — top-left, overlapping */}
             <div

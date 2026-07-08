@@ -6,8 +6,14 @@ interface AuthContextValue {
   user: UserProfile | null
   loading: boolean
   signInWithGoogle: (idToken: string) => Promise<UserProfile>
-  signInWithOTP: (email: string, otp: string) => Promise<UserProfile>
-  completeProfile: (firstName: string, lastName: string) => Promise<void>
+  signInWithPassword: (email: string, password: string) => Promise<UserProfile>
+  completeSignup: (
+    signupToken: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+    username: string,
+  ) => Promise<UserProfile>
   completeUsername: (username: string) => Promise<void>
   signOut: () => Promise<void>
   refreshSession: () => Promise<void>
@@ -40,16 +46,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return profile
   }, [])
 
-  const signInWithOTP = useCallback(async (email: string, otp: string) => {
-    const { user: profile } = await auth.verifyOTP(email, otp)
+  // Returning-user login: password only, establishes the cookie session.
+  const signInWithPassword = useCallback(async (email: string, password: string) => {
+    const { user: profile } = await auth.login(email, password)
     setUser(profile)
     return profile
   }, [])
 
-  const completeProfile = useCallback(async (firstName: string, lastName: string) => {
-    const { user: profile } = await auth.saveProfile(firstName, lastName)
-    setUser(profile)
-  }, [])
+  // Final signup step: exchanges the signup_token from verifyOTP for a real
+  // account + cookie session. This is the point the user becomes signed in.
+  const completeSignup = useCallback(
+    async (signupToken: string, password: string, firstName: string, lastName: string, username: string) => {
+      const { user: profile } = await auth.completeSignup(signupToken, password, firstName, lastName, username)
+      setUser(profile)
+      return profile
+    },
+    [],
+  )
 
   const completeUsername = useCallback(async (username: string) => {
     const { user: profile } = await auth.saveUsername(username)
@@ -71,8 +84,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         loading,
         signInWithGoogle,
-        signInWithOTP,
-        completeProfile,
+        signInWithPassword,
+        completeSignup,
         completeUsername,
         signOut,
         refreshSession,

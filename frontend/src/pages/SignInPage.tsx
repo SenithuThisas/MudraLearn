@@ -4,7 +4,7 @@ import SplitLayout from '../components/auth/SplitLayout'
 import RightPanel from '../components/auth/RightPanel'
 import PixelInput from '../components/auth/PixelInput'
 import PixelButton from '../components/auth/PixelButton'
-import { requestOTP } from '../services/auth'
+import { checkEmail, requestOTP, authErrorMessage } from '../services/auth'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function SignInPage() {
@@ -33,11 +33,17 @@ export default function SignInPage() {
 
     setLoading(true)
     try {
-      await requestOTP(email)
-      navigate('/verify-email', { state: { email } })
+      // Branch on whether the email already has an account. Existing users log
+      // in with their password (no OTP); new emails go through the OTP signup.
+      const { registered } = await checkEmail(email)
+      if (registered) {
+        navigate('/login', { state: { email } })
+      } else {
+        await requestOTP(email)
+        navigate('/verify-email', { state: { email } })
+      }
     } catch (err: any) {
-      const msg = err?.response?.data?.detail || 'Something went wrong. Please try again.'
-      setError(msg)
+      setError(authErrorMessage(err, 'Something went wrong. Please try again.'))
     } finally {
       setLoading(false)
     }

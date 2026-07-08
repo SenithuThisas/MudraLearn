@@ -1,20 +1,28 @@
-import { useState, type FormEvent } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useState, useEffect, type FormEvent } from 'react'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import SplitLayout from '../components/auth/SplitLayout'
 import RightPanel from '../components/auth/RightPanel'
 import PixelInput from '../components/auth/PixelInput'
 import PixelButton from '../components/auth/PixelButton'
-import { useAuth } from '../contexts/AuthContext'
 
 export default function OnboardingNamePage() {
   const navigate = useNavigate()
-  const { user, completeProfile } = useAuth()
+  const location = useLocation()
+  // Carried from the OTP verification step. No account exists yet — names are
+  // collected locally and only written at /complete-signup on the final step.
+  const { signupToken, email } = (location.state as any) ?? {}
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
-  const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const handleSubmit = async (e: FormEvent) => {
+  // Direct visit or expired wizard state — restart the flow.
+  useEffect(() => {
+    if (!signupToken) {
+      navigate('/signin', { replace: true })
+    }
+  }, [signupToken, navigate])
+
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     setError('')
 
@@ -23,16 +31,10 @@ export default function OnboardingNamePage() {
       return
     }
 
-    setLoading(true)
-    try {
-      await completeProfile(firstName.trim(), lastName.trim())
-      navigate('/onboarding/username', { replace: true })
-    } catch (err: any) {
-      const msg = err?.response?.data?.detail || 'Something went wrong. Please try again.'
-      setError(msg)
-    } finally {
-      setLoading(false)
-    }
+    navigate('/onboarding/username', {
+      replace: true,
+      state: { signupToken, email, firstName: firstName.trim(), lastName: lastName.trim() },
+    })
   }
 
   return (
@@ -102,7 +104,7 @@ export default function OnboardingNamePage() {
             NAME?
           </h1>
 
-          {user?.email && (
+          {email && (
             <p
               style={{
                 fontFamily: "'Inter', sans-serif",
@@ -111,7 +113,7 @@ export default function OnboardingNamePage() {
                 marginBottom: 24,
               }}
             >
-              Signed in as <strong style={{ color: '#14213D' }}>{user.email}</strong>
+              Signing up as <strong style={{ color: '#14213D' }}>{email}</strong>
             </p>
           )}
 
@@ -149,9 +151,9 @@ export default function OnboardingNamePage() {
               type="submit"
               variant="primary"
               fullWidth
-              disabled={loading || !firstName || !lastName}
+              disabled={!firstName || !lastName}
             >
-              {loading ? 'SAVING...' : 'Continue'}
+              Continue
             </PixelButton>
           </form>
         </div>
