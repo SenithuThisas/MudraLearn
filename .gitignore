@@ -67,6 +67,16 @@ build/
 .out/
 .tmp/
 .cache/
+*.tsbuildinfo
+
+# Secrets / credentials
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local tooling
+.claude/settings.local.json
 
 # Archives
 *.zip
@@ -76,3 +86,9 @@ build/
 
 # Local overrides
 *.local
+
+# Markdown notes & audit docs — ignore all .md by default, but keep READMEs tracked.
+# Add "!path/to/keep.md" here for any other markdown you want committed.
+*.md
+!README.md
+!**/README.md
