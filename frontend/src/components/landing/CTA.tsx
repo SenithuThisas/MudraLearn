@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { fadeUp, slideLeft, slideRight, viewportConfig } from '../../hooks/useScrollAnimation';
 import { Button } from '../ui/Button';
 
 export default function CTA() {
+  const navigate = useNavigate();
   return (
     <section
       style={{
@@ -73,7 +75,7 @@ export default function CTA() {
         >
           <Button
             variant="white"
-            onClick={() => (window.location.href = '/practice')}
+            onClick={() => navigate('/splash?to=/signin')}
             className="cta-btn"
           >
             <span style={{ fontFamily: 'var(--font-pixel)', fontSize: 11, padding: '4px 16px' }}>

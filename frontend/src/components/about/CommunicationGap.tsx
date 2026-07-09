@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { fadeUp, slideLeft, slideRight, viewportConfig } from '../../hooks/useScrollAnimation';
+import { slideLeft, slideRight, viewportConfig } from '../../hooks/useScrollAnimation';
 
 export default function CommunicationGap() {
   return (

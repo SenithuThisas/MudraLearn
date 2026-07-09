@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
-import { fadeUp, fadeIn, slideRight, viewportConfig } from '../../hooks/useScrollAnimation';
+import { useNavigate } from 'react-router-dom';
+import { fadeUp, fadeIn, slideRight } from '../../hooks/useScrollAnimation';
 import { Button } from '../ui/Button';
 
 export default function Hero() {
+  const navigate = useNavigate();
   return (
     <section
       style={{
@@ -131,7 +133,7 @@ export default function Hero() {
           >
             <Button variant="primary"
               style={{ borderRadius: 10 }}
-              onClick={() => (window.location.href = '/practice')}>
+              onClick={() => navigate('/splash?to=/signin')}>
               Start Learning Free ⚡
             </Button>
             <Button

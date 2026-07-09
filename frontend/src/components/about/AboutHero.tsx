@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { fadeUp, slideLeft, slideRight, viewportConfig } from '../../hooks/useScrollAnimation';
+import { fadeUp, viewportConfig } from '../../hooks/useScrollAnimation';
 
 const stats = [
   { number: '384', label: 'SSL SIGNS' },

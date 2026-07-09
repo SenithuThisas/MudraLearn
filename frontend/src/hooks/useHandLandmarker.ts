@@ -9,7 +9,7 @@ import { predictSign, type PredictResponse } from '../services/api';
 const NUM_LANDMARKS     = 21;
 const NUM_COORDS        = 3;
 const FEATURES_PER_HAND = NUM_LANDMARKS * NUM_COORDS; // 63
-const NUM_FEATURES      = FEATURES_PER_HAND * 2;      // 126
+
 export const SEQUENCE_LEN = 60;
 
 const MODEL_URL =
@@ -19,7 +19,7 @@ const MODEL_URL =
 
 /** Context passed into startCapture so every predict call carries full metadata. */
 export interface PredictContext {
-  userId:     number
+  userId:     number | string
   targetSign: string
   category:   string
 }

@@ -91,9 +91,9 @@ export default function Navbar() {
               {link.label}
             </a>
           ))}
-          <Button
-            variant="primary"
-            onClick={() => (window.location.href = '/practice')}
+          <Button 
+            variant="primary" 
+            onClick={() => (window.location.href = '/signin')}
             style={{ borderRadius: 10 }}
           >
             Get Started
@@ -179,7 +179,7 @@ export default function Navbar() {
                   variant="primary"
                   onClick={() => {
                     setMobileOpen(false);
-                    window.location.href = '/practice';
+                    window.location.href = '/signin';
                   }}
                   className="w-full"
                 >
