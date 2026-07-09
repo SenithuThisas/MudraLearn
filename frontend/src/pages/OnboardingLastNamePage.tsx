@@ -6,36 +6,35 @@ import PixelInput from '../components/auth/PixelInput'
 import PixelButton from '../components/auth/PixelButton'
 
 /**
- * Signup wizard step 2/4 — first name only. Password (step 1) is carried in
- * router state and forwarded, unchanged, to the last-name step. No account
- * exists yet; everything is written once at the final username step.
+ * Signup wizard step 3/4 — last name. Standardised on the split layout (the
+ * reference screenshot's centred column is drift). Carries the accumulated
+ * signup state forward to the final username step.
  */
-export default function OnboardingNamePage() {
+export default function OnboardingLastNamePage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const state = (location.state as { signupToken?: string; email?: string; password?: string }) ?? {}
-  const { signupToken, password } = state
+  const state = (location.state as { signupToken?: string; password?: string; firstName?: string }) ?? {}
+  const { signupToken, password, firstName } = state
 
-  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [error, setError] = useState('')
 
-  // Direct visit or lost wizard state (e.g. refresh) — restart the flow.
   useEffect(() => {
-    if (!signupToken || !password) {
+    if (!signupToken || !password || !firstName) {
       navigate('/signin', { replace: true })
     }
-  }, [signupToken, password, navigate])
+  }, [signupToken, password, firstName, navigate])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     setError('')
-    if (!firstName.trim()) {
-      setError('Please enter your first name')
+    if (!lastName.trim()) {
+      setError('Please enter your last name')
       return
     }
-    navigate('/onboarding/last', {
+    navigate('/onboarding/username', {
       replace: true,
-      state: { ...state, firstName: firstName.trim() },
+      state: { ...state, lastName: lastName.trim() },
     })
   }
 
@@ -44,29 +43,29 @@ export default function OnboardingNamePage() {
       <div
         style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '48px 64px', maxWidth: 520, margin: '0 auto', width: '100%' }}
       >
-        <StepProgress current={2} total={4} />
+        <StepProgress current={3} total={4} />
 
         <h1 style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 26, color: '#14213D', lineHeight: 1.5, margin: '0 0 16px 0' }}>
-          WHAT'S YOUR
+          AND YOUR
           <br />
-          FIRST NAME?
+          LAST NAME?
         </h1>
         <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 15, color: '#6B7280', marginBottom: 32, lineHeight: 1.6 }}>
-          This is how you'll appear to the MudraLearn community.
+          Almost there — just one more step after this.
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           <PixelInput
-            label="First Name"
-            placeholder="Enter your first name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            autoComplete="given-name"
+            label="Last Name"
+            placeholder="Enter your last name"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            autoComplete="family-name"
             autoFocus
             error={error || undefined}
           />
 
-          <PixelButton type="submit" variant="primary" fullWidth disabled={!firstName.trim()}>
+          <PixelButton type="submit" variant="primary" fullWidth disabled={!lastName.trim()}>
             <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
               CONTINUE
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">

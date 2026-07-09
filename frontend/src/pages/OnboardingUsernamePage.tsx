@@ -1,266 +1,171 @@
 import { useState, useEffect, type FormEvent } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
-import SplitLayout from '../components/auth/SplitLayout'
-import RightPanel from '../components/auth/RightPanel'
+import AuthSplitLayout from '../components/auth/AuthSplitLayout'
+import StepProgress from '../components/auth/StepProgress'
 import PixelInput from '../components/auth/PixelInput'
 import PixelButton from '../components/auth/PixelButton'
 import { useAuth } from '../contexts/AuthContext'
-import { checkUsername, authErrorMessage } from '../services/auth'
+import { authErrorMessage } from '../services/auth'
+import { useUsernameAvailability } from '../hooks/useUsernameAvailability'
 
-const PASSWORD_MIN_LEN = 8
-
+/**
+ * Signup wizard step 4/4 — username. This is the single write: on submit it
+ * POSTs the whole accumulated payload (password + names + username) to
+ * /complete-signup. Password now arrives via router state (collected at step 1),
+ * so this page no longer collects it.
+ *
+ * The authenticated branch (no signupToken — e.g. Google, created before a
+ * username exists) only sets the username on the already-signed-in user.
+ */
 export default function OnboardingUsernamePage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { user, loading: authLoading, completeSignup, completeUsername } = useAuth()
-  // Email-signup branch: wizard state carried from verify-email → name page.
-  // Absent for the authenticated branch (e.g. Google), which only needs a username.
-  const { signupToken, firstName, lastName } = (location.state as any) ?? {}
+  const { signupToken, email, password, firstName, lastName } =
+    (location.state as {
+      signupToken?: string
+      email?: string
+      password?: string
+      firstName?: string
+      lastName?: string
+    }) ?? {}
   const isSignup = Boolean(signupToken)
+
   const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [checking, setChecking] = useState(false)
-  const [availability, setAvailability] = useState<{ available: boolean; error?: string } | null>(null)
+  const availability = useUsernameAvailability(username)
 
-  // No wizard state and not signed in → nothing to onboard; restart the flow.
+  // Signup branch needs the full carried state; authenticated branch needs a user.
   useEffect(() => {
-    if (!isSignup && !authLoading && !user) {
+    if (isSignup) {
+      if (!password || !firstName || !lastName) navigate('/signin', { replace: true })
+    } else if (!authLoading && !user) {
       navigate('/signin', { replace: true })
     }
-  }, [isSignup, authLoading, user, navigate])
-
-  // Debounced availability check
-  useEffect(() => {
-    if (!username || username.length < 3) {
-      setAvailability(null)
-      setChecking(false)
-      return
-    }
-
-    setChecking(true)
-    const timer = setTimeout(async () => {
-      try {
-        const result = await checkUsername(username)
-        setAvailability(result)
-      } catch {
-        setAvailability({ available: false, error: 'Failed to check availability' })
-      } finally {
-        setChecking(false)
-      }
-    }, 400)
-
-    return () => clearTimeout(timer)
-  }, [username])
+  }, [isSignup, password, firstName, lastName, authLoading, user, navigate])
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setError('')
-
-    if (!username.trim()) {
-      setError('Please enter a username')
+    if (availability.status !== 'available') {
+      setError(availability.error || 'Please choose an available username')
       return
-    }
-
-    if (!availability?.available) {
-      setError(availability?.error || 'Username is not available')
-      return
-    }
-
-    if (isSignup) {
-      if (password.length < PASSWORD_MIN_LEN) {
-        setError(`Password must be at least ${PASSWORD_MIN_LEN} characters`)
-        return
-      }
-      if (password !== confirmPassword) {
-        setError('Passwords do not match')
-        return
-      }
     }
 
     setLoading(true)
     try {
       if (isSignup) {
-        // Creates the account and the cookie session in one step.
-        await completeSignup(signupToken, password, firstName, lastName, username.trim())
+        await completeSignup(signupToken!, password!, firstName!, lastName!, username.trim())
       } else {
         await completeUsername(username.trim())
       }
-      navigate('/dashboard', { replace: true })
-    } catch (err: any) {
+      navigate('/welcome', { replace: true, state: { username: username.trim().toLowerCase(), firstName } })
+    } catch (err) {
       setError(authErrorMessage(err, 'Something went wrong. Please try again.'))
     } finally {
       setLoading(false)
     }
   }
 
-  const getStatusIndicator = () => {
-    if (!username || username.length < 3) return null
-    if (checking) return <span style={{ color: '#6B7280', fontSize: 13 }}>Checking...</span>
-    if (availability?.available) {
+  const renderStatus = () => {
+    if (availability.status === 'checking') {
+      return <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: '#6B7280' }}>Checking…</span>
+    }
+    if (availability.status === 'available') {
       return (
-        <span style={{ color: '#059669', fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <circle cx="7" cy="7" r="7" fill="#059669" />
-            <path d="M4 7l2 2 4-4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          Available
+        <span
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            padding: '4px 10px',
+            background: '#A8F0CE',
+            border: '2px solid #14213D',
+            fontFamily: "'Press Start 2P', monospace",
+            fontSize: 9,
+            color: '#14213D',
+            letterSpacing: 0.5,
+          }}
+        >
+          ✓ USERNAME AVAILABLE!
         </span>
       )
     }
-    return (
-      <span style={{ color: '#dc2626', fontSize: 13, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <circle cx="7" cy="7" r="7" fill="#dc2626" />
-          <path d="M5 5l4 4M9 5l-4 4" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-        {availability?.error || 'Already taken'}
-      </span>
-    )
+    if (availability.status === 'taken') {
+      return (
+        <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, fontWeight: 600, color: '#DC2626' }}>
+          {availability.error || 'Already taken'}
+        </span>
+      )
+    }
+    return null
   }
 
   return (
-    <SplitLayout
-      left={
-        <div
-          style={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '48px 64px',
-            maxWidth: 480,
-            margin: '0 auto',
-            width: '100%',
-          }}
-        >
-          <Link
-            to="/"
-            style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: 11,
-              color: '#000000',
-              textDecoration: 'none',
-              marginBottom: 64,
-              display: 'inline-block',
-              letterSpacing: 1,
-            }}
-          >
-            MudraLearn
-          </Link>
+    <AuthSplitLayout>
+      <div
+        style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '48px 64px', maxWidth: 520, margin: '0 auto', width: '100%' }}
+      >
+        <StepProgress current={4} total={4} />
 
-          {/* Step indicator */}
-          <div
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontSize: 12,
-              color: '#6B7280',
-              fontWeight: 600,
-              marginBottom: 12,
-              letterSpacing: 1,
-            }}
-          >
-            STEP 2 OF 2
+        <h1 style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 26, color: '#14213D', lineHeight: 1.5, margin: '0 0 16px 0' }}>
+          PICK YOUR
+          <br />
+          USERNAME.
+        </h1>
+        <p style={{ fontFamily: "'Inter', sans-serif", fontSize: 15, color: '#6B7280', marginBottom: 32, lineHeight: 1.6 }}>
+          Your unique identity on MudraLearn. You can change this later.
+        </p>
+
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <PixelInput
+            aria-label="Username"
+            leading="@"
+            placeholder="your_username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value.replace(/\s/g, ''))}
+            autoComplete="off"
+            autoFocus
+            minLength={3}
+            maxLength={20}
+          />
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, minHeight: 24 }}>
+            <div aria-live="polite">{renderStatus()}</div>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: '#6B7280', textAlign: 'right' }}>
+              3–20 characters. Letters, numbers, and underscores only.
+            </span>
           </div>
 
-          {/* Heading */}
-          <h1
-            style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: 22,
-              color: '#14213D',
-              lineHeight: 1.5,
-              margin: '0 0 12px 0',
-            }}
-          >
-            PICK A
-          </h1>
-          <h1
-            style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: 22,
-              color: '#6D28D9',
-              lineHeight: 1.5,
-              margin: '0 0 24px 0',
-            }}
-          >
-            USERNAME.
-          </h1>
+          {error && (
+            <p aria-live="polite" style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: '#DC2626', margin: 0 }}>
+              {error}
+            </p>
+          )}
 
-          {/* Username form */}
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div>
-              <PixelInput
-                label="Username"
-                placeholder="kasun_perera"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                minLength={3}
-                maxLength={20}
-                style={{ marginBottom: 8 }}
-              />
-              <div style={{ minHeight: 20, display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
-                {getStatusIndicator()}
-              </div>
-            </div>
-
-            {isSignup && (
-              <>
-                <PixelInput
-                  label="Password"
-                  type="password"
-                  placeholder="At least 8 characters"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={PASSWORD_MIN_LEN}
-                  autoComplete="new-password"
-                />
-                <PixelInput
-                  label="Confirm Password"
-                  type="password"
-                  placeholder="Repeat your password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  minLength={PASSWORD_MIN_LEN}
-                  autoComplete="new-password"
-                />
-              </>
+          <PixelButton type="submit" variant="primary" fullWidth disabled={loading || availability.status !== 'available'}>
+            {loading ? 'CREATING ACCOUNT…' : (
+              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+                CREATE MY ACCOUNT
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
             )}
+          </PixelButton>
+        </form>
 
-            {error && (
-              <p
-                style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontSize: 13,
-                  color: '#dc2626',
-                  margin: 0,
-                }}
-              >
-                {error}
-              </p>
-            )}
-
-            <PixelButton
-              type="submit"
-              variant="primary"
-              fullWidth
-              disabled={
-                loading ||
-                !username ||
-                !availability?.available ||
-                (isSignup && (!password || !confirmPassword))
-              }
-            >
-              {loading ? (isSignup ? 'CREATING ACCOUNT...' : 'SAVING...') : 'Continue'}
-            </PixelButton>
-          </form>
+        <div style={{ marginTop: 20, textAlign: 'center' }}>
+          <Link
+            to="/onboarding/last"
+            state={{ signupToken, email, password, firstName, lastName }}
+            style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 9, color: '#6B7280', textDecoration: 'none', letterSpacing: 0.5 }}
+          >
+            BACK TO STEP 3
+          </Link>
         </div>
-      }
-      right={<RightPanel />}
-    />
+      </div>
+    </AuthSplitLayout>
   )
 }

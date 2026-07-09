@@ -84,7 +84,7 @@ export default function VerifyEmailPage() {
       // Proves email ownership only — no account or session exists yet. The
       // signup_token is exchanged for both at the end of the onboarding wizard.
       const { signup_token: signupToken } = await verifyOTP(email, otp)
-      navigate('/onboarding/name', { replace: true, state: { signupToken, email } })
+      navigate('/onboarding/password', { replace: true, state: { signupToken, email } })
     } catch (err: any) {
       setError(authErrorMessage(err, 'Invalid code. Please try again.'))
       setDigits(Array(DIGITS).fill(''))
