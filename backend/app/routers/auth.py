@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from pydantic import BaseModel, EmailStr
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
@@ -328,7 +329,15 @@ def complete_signup(req: CompleteSignupRequest, db: Session = Depends(get_db)):
     )
     db.add(user)
     session.consumed = True          # single-use token, consumed atomically with creation
-    db.commit()
+    # The pre-checks above narrow the race window but don't close it; the DB
+    # unique constraints on email/username are the real guard. Two concurrent
+    # signups claiming the same username both pass the check, then one commit
+    # loses — surface that as a clean 409 rather than a 500.
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(409, 'Username is already taken')
     db.refresh(user)
 
     return auth_response(user, is_new=True)
@@ -370,7 +379,8 @@ def login(request: Request, req: LoginRequest, db: Session = Depends(get_db)):
 # ─── Username availability (signup wizard + Google onboarding) ───────────────────
 
 @router.get('/username-available')
-def username_available(u: str = '', db: Session = Depends(get_db)):
+@limiter.limit('30/minute')
+def username_available(request: Request, u: str = '', db: Session = Depends(get_db)):
     error = validate_username_format(u)
     if error:
         return {'available': False, 'error': error}
