@@ -2,9 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import Navigation from '../components/Navigation'
 import { useHandLandmarker } from '../hooks/useHandLandmarker'
 import { getNextSign, type NextSignResponse } from '../services/api'
-
-// ─── Temporary: hardcoded until auth context is wired in ──────────────────────
-const USER_ID = 1
+import { useAuth } from '../contexts/AuthContext'
 
 // ─── Mode badge colours ───────────────────────────────────────────────────────
 const MODE_STYLE: Record<string, string> = {
@@ -31,11 +29,15 @@ const FEEDBACK_LABEL: Record<string, string> = {
 }
 
 export default function PracticePage() {
+  const { user }                            = useAuth()
   const videoRef                            = useRef<HTMLVideoElement>(null)
   const [nextSign,    setNextSign]          = useState<NextSignResponse | null>(null)
   const [loadingSign, setLoadingSign]       = useState(true)
   const [signError,   setSignError]         = useState<string | null>(null)
-  const [autoNext,    setAutoNext]          = useState(false) // tiny delay between attempts
+
+  // ProtectedRoute already guards this page; this guard is purely a
+  // type-narrowing safety net so `user` is non-null below.
+  if (!user) return null
 
   const {
     isReady,
@@ -69,7 +71,7 @@ export default function PracticePage() {
     setLoadingSign(true)
     setSignError(null)
     try {
-      const sign = await getNextSign(USER_ID)
+      const sign = await getNextSign(user!.id)
       setNextSign(sign)
     } catch {
       setSignError('Could not reach the server — is the backend running?')
@@ -93,7 +95,7 @@ export default function PracticePage() {
   function handleStart() {
     if (!videoRef.current || !isReady || !nextSign) return
     startCapture(videoRef.current, {
-      userId:     USER_ID,
+      userId:     user!.id,
       targetSign: nextSign.sign,
       category:   nextSign.category,
     })
