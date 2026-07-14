@@ -39,7 +39,7 @@ export default function DashboardPage() {
               <div style={{ width: 48, height: 3, background: '#6D28D9', marginBottom: 20 }} />
               <div style={{ display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
                 <MasteryDonut percent={mockMasteryOverall} />
-                <p style={{ flex: 1, minWidth: 200, fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#374151', lineHeight: 1.6, margin: 0 }}>
+                <p style={{ flex: 1, minWidth: 200, maxWidth: '60ch', fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#374151', lineHeight: 1.6, margin: 0 }}>
                   You are almost halfway to full mastery of the current syllabus. Focus on
                   &lsquo;Needs Review&rsquo; signs to bump up your score.
                 </p>
@@ -70,6 +70,9 @@ export default function DashboardPage() {
           min-width: 0;
         }
         .dashboard-content {
+          max-width: 1440px;
+          width: 100%;
+          margin: 0 auto;
           padding: 32px 40px 60px;
           display: flex;
           flex-direction: column;
@@ -80,6 +83,24 @@ export default function DashboardPage() {
           grid-template-columns: 1fr 1fr;
           gap: 24px;
           align-items: stretch;
+        }
+        @media (min-width: 1280px) {
+          .dashboard-content {
+            padding: 40px 56px 72px;
+            gap: 28px;
+          }
+          .dashboard-grid-2 {
+            gap: 28px;
+          }
+        }
+        @media (min-width: 1536px) {
+          .dashboard-content {
+            padding: 48px 64px 80px;
+            gap: 32px;
+          }
+          .dashboard-grid-2 {
+            gap: 32px;
+          }
         }
         @media (max-width: 900px) {
           .dashboard-shell {

@@ -54,7 +54,7 @@ export default function SignMasteryTable({ rows }: SignMasteryTableProps) {
       <div style={{ width: 48, height: 3, background: '#6D28D9', marginBottom: 20 }} />
 
       <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: "'Inter', sans-serif", fontSize: 13, minWidth: 640 }}>
+        <table style={{ width: '100%', maxWidth: 1000, margin: '0 auto', borderCollapse: 'collapse', fontFamily: "'Inter', sans-serif", fontSize: 13, minWidth: 640 }}>
           <thead>
             <tr style={{ borderBottom: '2px solid #14213D' }}>
               {['Sign Name', 'Category', 'Tier', 'Mastery Level', 'Score'].map((h) => (

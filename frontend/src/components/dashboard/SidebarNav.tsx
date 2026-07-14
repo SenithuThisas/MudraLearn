@@ -3,33 +3,33 @@ import { useAuth } from '../../contexts/AuthContext'
 
 const ICONS: Record<string, JSX.Element> = {
   dashboard: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
       <rect x="3" y="3" width="8" height="8" /><rect x="13" y="3" width="8" height="8" />
       <rect x="3" y="13" width="8" height="8" /><rect x="13" y="13" width="8" height="8" />
     </svg>
   ),
   practice: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
       <path d="M8 12V6a2 2 0 0 1 4 0v5M12 11V5a2 2 0 0 1 4 0v6M16 12V8a2 2 0 0 1 4 0v6a8 8 0 0 1-16 0v-2l-1.5-2A1.5 1.5 0 0 1 5 11.5" />
     </svg>
   ),
   dictionary: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
       <path d="M4 4h13a3 3 0 0 1 3 3v13a3 3 0 0 0-3-3H4z" /><path d="M4 4v13a3 3 0 0 1 3-3h13" />
     </svg>
   ),
   translate: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
       <circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
     </svg>
   ),
   progress: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
       <path d="M4 20V10M12 20V4M20 20v-7" />
     </svg>
   ),
   logout: (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
       <path d="M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4M16 17l5-5-5-5M21 12H9" />
     </svg>
   ),
@@ -81,26 +81,33 @@ export default function SidebarNav() {
         <nav className="dashboard-sidebar-nav">
           {NAV_ITEMS.map((item) => {
             const active = item.path === pathname
+            const soon = !item.path
             const content = (
               <>
-                <span style={{ display: 'flex', color: active ? '#14213D' : '#ffffff' }}>{ICONS[item.icon]}</span>
+                <span style={{ display: 'flex' }}>{ICONS[item.icon]}</span>
                 <span>{item.label}</span>
+                {soon && (
+                  <span
+                    style={{
+                      fontFamily: "'Press Start 2P', monospace", fontSize: 7, letterSpacing: 0.5,
+                      color: '#14213D', background: '#FBE24A', border: '1px solid #14213D',
+                      padding: '3px 5px', marginLeft: 'auto',
+                    }}
+                  >
+                    SOON
+                  </span>
+                )}
               </>
             )
-            const sharedStyle: React.CSSProperties = {
-              display: 'flex', alignItems: 'center', gap: 12,
-              padding: '10px 20px', margin: '0 12px', textDecoration: 'none',
-              fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 600,
-              color: active ? '#14213D' : '#ffffff',
-              background: active ? '#A8F0CE' : 'transparent',
-              border: active ? '2px solid #14213D' : '2px solid transparent',
-              cursor: item.path ? 'pointer' : 'default',
-              opacity: item.path ? 1 : 0.5,
-            }
+            const className = [
+              'sidebar-nav-item',
+              active && 'sidebar-nav-item--active',
+              soon && 'sidebar-nav-item--soon',
+            ].filter(Boolean).join(' ')
             return item.path ? (
-              <Link key={item.label} to={item.path} style={sharedStyle}>{content}</Link>
+              <Link key={item.label} to={item.path} className={className}>{content}</Link>
             ) : (
-              <span key={item.label} style={sharedStyle} title="Coming soon">{content}</span>
+              <span key={item.label} className={className} title="Coming soon">{content}</span>
             )
           })}
         </nav>
@@ -111,6 +118,7 @@ export default function SidebarNav() {
           style={{
             width: 32, height: 32, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
             background: '#FBE24A', border: '2px solid #14213D', color: '#14213D',
+            boxShadow: '2px 2px 0px #ffffff',
             fontFamily: "'Press Start 2P', monospace", fontSize: 10,
           }}
         >
@@ -149,6 +157,41 @@ export default function SidebarNav() {
           display: flex;
           flex-direction: column;
           gap: 4px;
+        }
+        .sidebar-nav-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 20px;
+          margin: 0 12px;
+          text-decoration: none;
+          font-family: 'Inter', sans-serif;
+          font-size: 14px;
+          font-weight: 600;
+          color: #ffffff;
+          background: transparent;
+          border: 2px solid transparent;
+          cursor: pointer;
+          transition: background 150ms ease;
+        }
+        .sidebar-nav-item:hover {
+          background: rgba(255, 255, 255, 0.15);
+        }
+        .sidebar-nav-item--active {
+          color: #14213D;
+          background: #A8F0CE;
+          border: 2px solid #14213D;
+          box-shadow: 4px 4px 0px #14213D;
+        }
+        .sidebar-nav-item--active:hover {
+          background: #A8F0CE;
+        }
+        .sidebar-nav-item--soon {
+          color: #9CA3AF;
+          cursor: default;
+        }
+        .sidebar-nav-item--soon:hover {
+          background: transparent;
         }
         .dashboard-sidebar-footer {
           display: flex;
