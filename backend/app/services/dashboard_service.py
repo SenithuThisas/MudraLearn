@@ -7,15 +7,6 @@ This module does not compute a second mastery score. Every per-sign
 mastery value comes from app.services.mastery_engine's EWMA MasteryScore
 rows via get_mastery_summary() — the same source /api/session/mastery
 already serves to the adaptive engine.
-
-The one exception: MasteryScore stores only the *current* score, not
-history, so there is no stored record of *when* a sign first crossed the
-mastered threshold. Recent Activity's "Mastered" events need that
-crossing timestamp, so _replay_scores() re-runs mastery_engine's own EWMA
-recurrence (same ALPHA, same attempt_score branching) over a sign's
-chronological Progress rows to find it. It is a replay of the existing
-formula for a read-only purpose the live upsert doesn't serve — not an
-independent scoring system.
 """
 
 from __future__ import annotations
@@ -28,7 +19,7 @@ from sqlalchemy.orm import Session
 
 from app.models.progress import Progress
 from app.services import mastery_engine
-from app.services.mastery_engine import ALPHA, TIER_SCORE_THRESHOLD, TIER_ATTEMPT_THRESHOLD
+from app.services.mastery_engine import TIER_SCORE_THRESHOLD, TIER_ATTEMPT_THRESHOLD
 
 AVG_SECONDS_PER_ATTEMPT = 8  # rough estimate — no real session/duration tracking exists yet
 
@@ -66,29 +57,6 @@ def tier_for_score(score: float) -> str:
 def is_mastered(score: float, attempts: int) -> bool:
     """Same gate mastery_engine uses to advance tier_unlocked — one 'mastered' definition, not two."""
     return score >= TIER_SCORE_THRESHOLD and attempts >= TIER_ATTEMPT_THRESHOLD
-
-
-def _replay_scores(rows: list[Progress]) -> list[tuple[datetime, float]]:
-    """Re-run mastery_engine's exact EWMA recurrence over one sign's chronological history."""
-    score: float | None = None
-    out: list[tuple[datetime, float]] = []
-    for row in rows:
-        attempt_score = row.confidence if row.correct else row.confidence * 0.3
-        score = attempt_score if score is None else ALPHA * attempt_score + (1 - ALPHA) * score
-        out.append((row.timestamp, score))
-    return out
-
-
-def _mastered_crossings(rows: list[Progress]) -> list[datetime]:
-    """Timestamps at which this sign's replayed score first became mastered."""
-    crossings: list[datetime] = []
-    was_mastered = False
-    for i, (ts, score) in enumerate(_replay_scores(rows)):
-        now_mastered = is_mastered(score, i + 1)
-        if now_mastered and not was_mastered:
-            crossings.append(ts)
-        was_mastered = now_mastered
-    return crossings
 
 
 def _progress_by_sign(db: Session, user_id) -> dict[str, list[Progress]]:
@@ -155,13 +123,6 @@ def build_summary(db: Session, user_id) -> dict:
                 "sign": sign_id,
                 "timestamp": row.timestamp,
             })
-        for ts in _mastered_crossings(rows):
-            events.append({
-                "id": f"{sign_id}-mastered-{ts.isoformat()}",
-                "type": "mastered",
-                "sign": sign_id,
-                "timestamp": ts,
-            })
     events.sort(key=lambda e: e["timestamp"], reverse=True)
     recent_activity = [{**e, "timestamp": e["timestamp"].isoformat()} for e in events[:10]]
 
@@ -187,12 +148,12 @@ def build_signs_page(
     page_size: int,
 ) -> dict:
     mastery_rows = mastery_engine.get_mastery_summary(db, user_id)
-    mastery_by_sign = {r["sign_id"]: r for r in mastery_rows}
+    mastery_by_sign = {r["sign_id"].strip().lower(): r for r in mastery_rows}
 
     entries = []
     for sign in ALL_SIGNS:
         name = sign["name"]
-        row = mastery_by_sign.get(name)
+        row = mastery_by_sign.get(name.strip().lower())
         score = row["score"] if row else 0.0
         entries.append({
             "sign": name,
