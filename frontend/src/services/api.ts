@@ -1,4 +1,5 @@
 import axios from 'axios'
+import type { Tier, NeedsReviewItem, ActivityItem, SignMasteryRow } from '../data/mockDashboard'
 
 const api = axios.create({
   baseURL: 'http://localhost:8000/api',
@@ -96,6 +97,58 @@ export async function getMastery(userId: number | string): Promise<{ signs: Mast
 
 export async function getProgressHistory(userId: number | string, limit = 50) {
   const { data } = await api.get('/progress/history', { params: { user_id: userId, limit } })
+  return data
+}
+
+// ── Dashboard ──────────────────────────────────────────────────────────────────
+// Auth is cookie-based (see api instance above), so these calls don't take a
+// userId — the backend resolves current_user from the session cookie.
+
+// Wire shape differs slightly from mockDashboard.ts's DashboardStats
+// (minutesPracticedEstimate vs minutesPracticed) — left un-named and mapped
+// at the call site so we don't touch StatsHeader.tsx's existing prop type.
+export interface DashboardSummary {
+  stats: {
+    signsMastered:            number
+    dayStreak:                number
+    minutesPracticedEstimate: number
+  }
+  masteryOverall: number
+  tierBreakdown:  Record<Tier, number>
+  needsReview:    NeedsReviewItem[]
+  recentActivity: ActivityItem[]
+  hasProgress:    boolean
+}
+
+export async function getDashboardSummary(): Promise<DashboardSummary> {
+  const { data } = await api.get('/dashboard/summary')
+  return data
+}
+
+export interface SignsPageParams {
+  search?:   string
+  category?: string
+  page?:     number
+  pageSize?: number
+}
+
+export interface SignsPage {
+  signs:      SignMasteryRow[]
+  page:       number
+  pageSize:   number
+  total:      number
+  totalPages: number
+}
+
+export async function getDashboardSigns(params: SignsPageParams = {}): Promise<SignsPage> {
+  const { data } = await api.get('/dashboard/signs', {
+    params: {
+      search: params.search ?? '',
+      category: params.category ?? '',
+      page: params.page ?? 1,
+      page_size: params.pageSize ?? 100,
+    },
+  })
   return data
 }
 

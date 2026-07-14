@@ -16,6 +16,11 @@ export default function NeedsReviewList({ items }: NeedsReviewListProps) {
       <div style={{ width: 48, height: 3, background: '#DC2626', marginBottom: 20 }} />
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+        {items.length === 0 && (
+          <p style={{ padding: '24px 0', textAlign: 'center', color: '#6B7280', fontFamily: "'Inter', sans-serif", fontSize: 14, margin: 0 }}>
+            Nothing needs review yet — start practicing to build your first scores!
+          </p>
+        )}
         {items.map((item) => (
           <div key={item.sign} style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
             <div style={{ flex: 1, minWidth: 140 }}>

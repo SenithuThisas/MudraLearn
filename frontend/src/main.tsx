@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from './contexts/AuthContext'
 import LandingPage from './pages/LandingPage'
 import AboutPage from './pages/AboutPage'
@@ -21,8 +22,11 @@ import WelcomePage from './pages/WelcomePage'
 import DashboardPage from './pages/DashboardPage'
 import ProtectedRoute from './components/ProtectedRoute'
 
+const queryClient = new QueryClient()
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
 <React.StrictMode>
+<QueryClientProvider client={queryClient}>
 <BrowserRouter>
 <AuthProvider>
 <Routes>
@@ -45,5 +49,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 </Routes>
 </AuthProvider>
 </BrowserRouter>
+</QueryClientProvider>
 </React.StrictMode>
 )

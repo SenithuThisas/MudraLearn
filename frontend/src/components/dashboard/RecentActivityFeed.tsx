@@ -13,6 +13,11 @@ export default function RecentActivityFeed({ items }: RecentActivityFeedProps) {
       <div style={{ width: 48, height: 3, background: '#6D28D9', marginBottom: 20 }} />
 
       <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {items.length === 0 && (
+          <p style={{ padding: '24px 0', textAlign: 'center', color: '#6B7280', fontFamily: "'Inter', sans-serif", fontSize: 14, margin: 0 }}>
+            No activity yet — your practice history will show up here.
+          </p>
+        )}
         {items.map((item, i) => (
           <div key={item.id} style={{ display: 'flex', gap: 12, position: 'relative' }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
