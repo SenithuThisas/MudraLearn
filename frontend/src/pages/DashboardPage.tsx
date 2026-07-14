@@ -1,121 +1,98 @@
-import { useNavigate, Link } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext';
-import PixelButton from '../components/auth/PixelButton'
+import { useAuth } from '../contexts/AuthContext'
+import SidebarNav from '../components/dashboard/SidebarNav'
+import StatsHeader from '../components/dashboard/StatsHeader'
+import MasteryDonut from '../components/dashboard/MasteryDonut'
+import TierBreakdown from '../components/dashboard/TierBreakdown'
+import NeedsReviewList from '../components/dashboard/NeedsReviewList'
+import RecentActivityFeed from '../components/dashboard/RecentActivityFeed'
+import SignMasteryTable from '../components/dashboard/SignMasteryTable'
+import {
+  mockStats,
+  mockMasteryOverall,
+  mockTierBreakdown,
+  mockNeedsReview,
+  mockRecentActivity,
+  mockSignMastery,
+} from '../data/mockDashboard'
 
 export default function DashboardPage() {
-  const navigate = useNavigate()
-  const { user, signOut } = useAuth()
+  const { user } = useAuth()
 
   // ProtectedRoute guarantees a resolved, authenticated user before this
   // page renders, so no loading state or redirect is needed here. This guard
   // is purely a type-narrowing safety net.
   if (!user) return null
 
-  const handleSignOut = async () => {
-    await signOut()
-    navigate('/signin', { replace: true })
-  }
-
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background: '#f9fafb',
-        fontFamily: "'Inter', sans-serif",
-      }}
-    >
-      {/* Simple header */}
-      <header
-        style={{
-          background: '#ffffff',
-          borderBottom: '2px solid #000000',
-          padding: '16px 40px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Link
-          to="/"
-          style={{
-            fontFamily: "'Press Start 2P', monospace",
-            fontSize: 12,
-            color: '#6D28D9',
-            textDecoration: 'none',
-          }}
-        >
-          MUDRALEARN
-        </Link>
+    <div className="dashboard-shell">
+      <SidebarNav />
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontSize: 14,
-              color: '#14213D',
-              fontWeight: 600,
-            }}
-          >
-            {user.first_name} {user.last_name}{user.username ? ` (@${user.username})` : ''}
-          </span>
-          <PixelButton variant="secondary" onClick={handleSignOut}>
-            Sign Out
-          </PixelButton>
+      <div className="dashboard-main">
+        <StatsHeader firstName={user.first_name} username={user.username} stats={mockStats} />
+
+        <div className="dashboard-content">
+          <div className="dashboard-grid-2">
+            <div style={{ background: '#ffffff', border: '2px solid #14213D', boxShadow: '4px 4px 0px #14213D', padding: 24 }}>
+              <h2 style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 14, color: '#14213D', margin: '0 0 8px' }}>
+                OVERALL PROGRESS
+              </h2>
+              <div style={{ width: 48, height: 3, background: '#6D28D9', marginBottom: 20 }} />
+              <div style={{ display: 'flex', gap: 24, alignItems: 'center', flexWrap: 'wrap' }}>
+                <MasteryDonut percent={mockMasteryOverall} />
+                <p style={{ flex: 1, minWidth: 200, fontFamily: "'Inter', sans-serif", fontSize: 14, color: '#374151', lineHeight: 1.6, margin: 0 }}>
+                  You are almost halfway to full mastery of the current syllabus. Focus on
+                  &lsquo;Needs Review&rsquo; signs to bump up your score.
+                </p>
+              </div>
+            </div>
+
+            <TierBreakdown data={mockTierBreakdown} />
+          </div>
+
+          <div className="dashboard-grid-2">
+            <NeedsReviewList items={mockNeedsReview} />
+            <RecentActivityFeed items={mockRecentActivity} />
+          </div>
+
+          <SignMasteryTable rows={mockSignMastery} />
         </div>
-      </header>
+      </div>
 
-      {/* Main content */}
-      <main
-        style={{
-          maxWidth: 900,
-          margin: '0 auto',
-          padding: '80px 40px',
-          textAlign: 'center',
-        }}
-      >
-        <h1
-          style={{
-            fontFamily: "'Press Start 2P', monospace",
-            fontSize: 24,
-            color: '#14213D',
-            marginBottom: 16,
-          }}
-        >
-          WELCOME,
-        </h1>
-        <h1
-          style={{
-            fontFamily: "'Press Start 2P', monospace",
-            fontSize: 24,
-            color: '#6D28D9',
-            marginBottom: 24,
-          }}
-        >
-          {user.first_name?.toUpperCase() || 'SIGNER'}!
-        </h1>
-
-        <p
-          style={{
-            fontSize: 16,
-            color: '#6B7280',
-            maxWidth: 500,
-            margin: '0 auto 48px',
-            lineHeight: 1.7,
-          }}
-        >
-          Your account is ready. Start learning Sinhala Sign Language with interactive
-          AI-powered lessons.
-        </p>
-
-        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <PixelButton variant="primary" onClick={() => navigate('/practice')}>
-            START LEARNING →
-          </PixelButton>
-          <PixelButton variant="secondary" onClick={() => navigate('/dictionary')}>
-            BROWSE DICTIONARY
-          </PixelButton>
-        </div>
-      </main>
+      <style>{`
+        .dashboard-shell {
+          display: flex;
+          min-height: 100vh;
+          background: #F7F6F3;
+          font-family: 'Inter', sans-serif;
+        }
+        .dashboard-main {
+          flex: 1;
+          min-width: 0;
+        }
+        .dashboard-content {
+          padding: 32px 40px 60px;
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+        .dashboard-grid-2 {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 24px;
+          align-items: stretch;
+        }
+        @media (max-width: 900px) {
+          .dashboard-shell {
+            flex-direction: column;
+          }
+          .dashboard-content {
+            padding: 24px 20px 40px;
+          }
+          .dashboard-grid-2 {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
     </div>
   )
 }
