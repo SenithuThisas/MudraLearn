@@ -193,6 +193,7 @@ export default function SidebarNav() {
         .dashboard-sidebar {
           flex-shrink: 0;
           background: #1B2340;
+          border-right: 4px solid #6D28D9;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
@@ -391,6 +392,8 @@ export default function SidebarNav() {
             align-items: center;
             justify-content: space-between;
             padding: 8px 12px;
+            border-right: none;
+            border-bottom: 4px solid #6D28D9;
           }
           .dashboard-sidebar-top {
             display: flex;
