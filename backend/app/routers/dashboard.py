@@ -54,6 +54,7 @@ class DashboardSummaryResponse(CamelModel):
     tier_breakdown: dict[str, int]
     needs_review: list[NeedsReviewItemModel]
     recent_activity: list[ActivityItemModel]
+    has_progress: bool
 
 
 class SignMasteryRowModel(CamelModel):

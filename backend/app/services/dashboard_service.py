@@ -136,6 +136,9 @@ def build_summary(db: Session, user_id) -> dict:
         "tier_breakdown": tier_breakdown,
         "needs_review": needs_review,
         "recent_activity": recent_activity,
+        # True once the user has any Progress row at all — lets the frontend
+        # distinguish "never attempted" (show "—") from "attempted, scored 0%".
+        "has_progress": bool(by_sign),
     }
 
 
