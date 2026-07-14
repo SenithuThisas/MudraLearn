@@ -15,6 +15,7 @@ class User(Base):
     first_name = Column(String, nullable=True)
     last_name = Column(String, nullable=True)
     username = Column(String, unique=True, nullable=True)
+    role = Column(String, default='user')
     auth_provider = Column(String, default='email')
     google_id = Column(String, unique=True, nullable=True)
     email_verified_at = Column(DateTime, nullable=True)
