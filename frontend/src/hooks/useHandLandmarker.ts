@@ -19,7 +19,6 @@ const MODEL_URL =
 
 /** Context passed into startCapture so every predict call carries full metadata. */
 export interface PredictContext {
-  userId:     number | string
   targetSign: string
   category:   string
 }
@@ -115,7 +114,7 @@ export function useHandLandmarker() {
   /**
    * Start recording frames from a video element.
    * @param videoEl  — the <video> element to detect from
-   * @param ctx      — adaptive learning context (userId, targetSign, category)
+   * @param ctx      — adaptive learning context (targetSign, category)
    */
   const startCapture = useCallback(
     (videoEl: HTMLVideoElement, ctx: PredictContext) => {
@@ -184,7 +183,6 @@ export function useHandLandmarker() {
     try {
       const data = await predictSign(
         frames,
-        ctx.userId,
         ctx.targetSign,
         ctx.category,
         responseMs,
