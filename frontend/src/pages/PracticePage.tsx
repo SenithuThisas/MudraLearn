@@ -71,7 +71,7 @@ export default function PracticePage() {
     setLoadingSign(true)
     setSignError(null)
     try {
-      const sign = await getNextSign(user!.id)
+      const sign = await getNextSign()
       setNextSign(sign)
     } catch {
       setSignError('Could not reach the server — is the backend running?')
@@ -95,7 +95,6 @@ export default function PracticePage() {
   function handleStart() {
     if (!videoRef.current || !isReady || !nextSign) return
     startCapture(videoRef.current, {
-      userId:     user!.id,
       targetSign: nextSign.sign,
       category:   nextSign.category,
     })
