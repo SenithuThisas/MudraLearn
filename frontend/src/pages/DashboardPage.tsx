@@ -8,7 +8,12 @@ import TierBreakdown from '../components/dashboard/TierBreakdown'
 import NeedsReviewList from '../components/dashboard/NeedsReviewList'
 import RecentActivityFeed from '../components/dashboard/RecentActivityFeed'
 import SignMasteryTable from '../components/dashboard/SignMasteryTable'
+import XPLevelCard from '../components/dashboard/XPLevelCard'
+import StreakCounter from '../components/dashboard/StreakCounter'
+import CategoryBadgeGrid from '../components/dashboard/CategoryBadgeGrid'
+import DifficultyTierList, { type DifficultyTierEntry } from '../components/dashboard/DifficultyTierList'
 import { TIERS, type DashboardStats, type TierProgress } from '../data/mockDashboard'
+import { getDashboardGamificationData } from '../services/dashboardData'
 
 // ─── Loading / error placeholders ──────────────────────────────────────────
 // The six dashboard components are pure presentational (props only, no
@@ -112,6 +117,24 @@ export default function DashboardPage() {
     ? TIERS.map((tier) => ({ tier, percent: summary.tierBreakdown[tier] ?? 0 }))
     : undefined
 
+  const gamification = getDashboardGamificationData()
+
+  // requiredMasteryPercent thresholds are mock (Adaptive Engine gating policy
+  // isn't built yet); currentMasteryPercent/unlocked are derived here from the
+  // same real tierBreakdownData TierBreakdown renders, so the two components
+  // never disagree on a tier's actual mastery %.
+  const difficultyTierEntries: DifficultyTierEntry[] | undefined = tierBreakdownData
+    ? gamification.difficultyTiers.map((threshold, i) => {
+        const currentMasteryPercent = i === 0 ? 100 : tierBreakdownData[i - 1].percent
+        return {
+          name: threshold.name,
+          requiredMasteryPercent: threshold.requiredMasteryPercent,
+          currentMasteryPercent,
+          unlocked: i === 0 || currentMasteryPercent >= threshold.requiredMasteryPercent,
+        }
+      })
+    : undefined
+
   return (
     <div className="dashboard-shell">
       <SidebarNav />
@@ -124,6 +147,33 @@ export default function DashboardPage() {
         )}
 
         <div className="dashboard-content">
+          <div className="dashboard-grid-2">
+            <XPLevelCard
+              level={gamification.level.current}
+              title={gamification.level.title}
+              currentLevelXp={gamification.xp.currentLevelXp}
+              xpToNextLevel={gamification.xp.xpToNextLevel}
+              totalXp={gamification.xp.total}
+            />
+            {stats ? (
+              <StreakCounter
+                currentDays={stats.dayStreak}
+                active={gamification.streakExtras.active}
+                longestDays={gamification.streakExtras.longestDays}
+              />
+            ) : (
+              <CardPlaceholder title="STREAK" accent="#6D28D9" state={summaryQuery.isError ? 'error' : 'loading'} />
+            )}
+          </div>
+
+          <CategoryBadgeGrid categories={gamification.categories} />
+
+          {difficultyTierEntries ? (
+            <DifficultyTierList tiers={difficultyTierEntries} />
+          ) : (
+            <CardPlaceholder title="DIFFICULTY TIERS" accent="#6D28D9" state={summaryQuery.isError ? 'error' : 'loading'} />
+          )}
+
           <div className="dashboard-grid-2">
             {summary ? (
               <div style={{ background: '#ffffff', border: '2px solid #14213D', boxShadow: '4px 4px 0px #14213D', padding: 24 }}>
