@@ -34,6 +34,10 @@ export default {
         pixel: ["'Press Start 2P'", 'monospace'],
         body: ["'Inter'", 'sans-serif'],
       },
+      spacing: {
+        // Collapsed sidebar rail width — icon + padding only.
+        18: '4.5rem',
+      },
       boxShadow: {
         // Hard offset, no blur, navy — the signature element.
         'hard-sm': '2px 2px 0 #14213D',
