@@ -17,11 +17,19 @@ import re
 
 router = APIRouter()
 
+# ─── Secrets (module load — fail fast if missing) ─────────────────────────────────
+SECRET_KEY = os.environ['SECRET_KEY']
+
+OTP_PEPPER = os.getenv('OTP_PEPPER')
+if not OTP_PEPPER:
+    raise ValueError('OTP_PEPPER env var not set')
+
 # ─── Constants ────────────────────────────────────────────────────────────────────
 # Session-length access token. There is no /refresh route (no rotation or
 # revocation store by design), so this doubles as the whole session lifetime —
 # short enough to bound a stolen token, long enough to not log users out mid-use.
-ACCESS_TOKEN_EXPIRE = 8 * 60   # minutes (8 hours)
+# Not a secret, so a default is fine here (unlike SECRET_KEY/OTP_PEPPER above).
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES', 240))
 OTP_EXPIRE = 10             # minutes
 OTP_MAX_ATTEMPTS = 5
 OTP_RATE_LIMIT_PER_EMAIL = 5    # per hour
@@ -80,28 +88,26 @@ def verify_password(password: str, password_hash: str) -> bool:
         return False
 
 def hash_otp(code: str) -> str:
-    pepper = os.getenv('OTP_PEPPER', 'mudralearn-otp-pepper')
-    return hashlib.sha256(f'{code}{pepper}'.encode()).hexdigest()
+    return hashlib.sha256(f'{code}{OTP_PEPPER}'.encode()).hexdigest()
 
 def generate_otp() -> str:
     return f'{secrets.randbelow(1000000):06d}'
 
 def hash_token(raw: str) -> str:
     """SHA-256 with the app secret as pepper — used for signup-session tokens."""
-    pepper = os.getenv('SECRET_KEY', 'mudralearn-token-pepper')
-    return hashlib.sha256(f'{raw}{pepper}'.encode()).hexdigest()
+    return hashlib.sha256(f'{raw}{SECRET_KEY}'.encode()).hexdigest()
 
 def make_access_token(user_id: str) -> str:
     payload = {
         'sub': user_id,
-        'exp': datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE),
+        'exp': datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
         'type': 'access',
     }
-    return jwt.encode(payload, os.getenv('SECRET_KEY'), algorithm='HS256')
+    return jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
 def verify_access_token(token: str) -> str | None:
     try:
-        payload = jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=['HS256'])
+        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
         if payload.get('type') != 'access':
             return None
         return payload.get('sub')
@@ -112,7 +118,7 @@ def set_auth_cookies(response: JSONResponse, access_token: str):
     is_dev = os.getenv('ENV', 'development') != 'production'
     response.set_cookie(
         key='access_token', value=access_token, httponly=True,
-        secure=not is_dev, samesite='lax', max_age=ACCESS_TOKEN_EXPIRE * 60, path='/',
+        secure=not is_dev, samesite='lax', max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60, path='/',
     )
 
 def validate_username_format(u: str) -> str | None:
