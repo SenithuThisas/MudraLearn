@@ -28,7 +28,8 @@ def predict(sequence: list) -> list:
     # sequence: list of 60 frames, each frame is 126 floats
     arr = np.array(sequence, dtype=np.float32) # (60, 126)
     arr = arr.reshape(1, 60, 126) # (1, 60, 126)
-    probs = model.predict(arr, verbose=0)[0] # (383,)
+    probs = model.predict(arr, verbose=0)[0] # (204,)
+    assert probs.shape[0] == len(label_map)
     # Return top 3 predictions
     top3 = np.argsort(probs)[-3:][::-1]
     return [
