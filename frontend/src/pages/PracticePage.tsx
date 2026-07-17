@@ -47,7 +47,7 @@ export default function PracticePage() {
     frameCount,
     startCapture,
     stopCapture,
-    SEQUENCE_LEN,
+    MAX_CAPTURE_FRAMES,
   } = useHandLandmarker()
 
   // ── Start webcam ────────────────────────────────────────────────────────────
@@ -169,12 +169,12 @@ export default function PracticePage() {
           <div className="w-full max-w-sm">
             <div className="flex justify-between text-xs text-gray-400 mb-1">
               <span>Capturing frames…</span>
-              <span>{frameCount} / {SEQUENCE_LEN}</span>
+              <span>{frameCount} / {MAX_CAPTURE_FRAMES}</span>
             </div>
             <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2">
               <div
                 className="bg-indigo-500 h-2 rounded-full transition-all"
-                style={{ width: `${(frameCount / SEQUENCE_LEN) * 100}%` }}
+                style={{ width: `${Math.min((frameCount / MAX_CAPTURE_FRAMES) * 100, 100)}%` }}
               />
             </div>
           </div>
