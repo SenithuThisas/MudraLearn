@@ -1,5 +1,5 @@
 import pathlib, json
-data_root = pathlib.Path('data/archive/Dataset - MP - CSV')
+data_root = pathlib.Path('data/archive/Dataset - Hand - CSV')
 signs = []
 for category_dir in sorted(data_root.iterdir()):
     if not category_dir.is_dir(): continue
