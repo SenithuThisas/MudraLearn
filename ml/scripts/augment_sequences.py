@@ -88,7 +88,9 @@ def aug_spatial_jitter(sequence: np.ndarray, rng: np.random.Generator) -> np.nda
 
 def aug_hand_mirror(sequence: np.ndarray, rng: np.random.Generator) -> np.ndarray:
     """
-    Swap left-hand features (indices 0:63) with right-hand features (indices 63:126).
+    Swap left-hand features (indices 0:63) with right-hand features (indices 63:126),
+    then negate every x-coordinate in both blocks. Coordinates are wrist-relative, so
+    a left/right hand swap without x-negation is not an anatomically valid mirror.
     Simulates left-handed signing.
     """
     mirrored = sequence.copy()
@@ -96,6 +98,7 @@ def aug_hand_mirror(sequence: np.ndarray, rng: np.random.Generator) -> np.ndarra
         sequence[:, FEATURES_PER_HAND:].copy(),
         sequence[:, :FEATURES_PER_HAND].copy(),
     )
+    mirrored[:, 0::3] *= -1
     return mirrored
 
 
