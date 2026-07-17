@@ -2,7 +2,7 @@
 """
 extract_hand_landmarks.py
 =========================
-Re-extract hand landmarks from original SSL400 .mp4 videos using
+Re-extract hand landmarks from original SSL400 .mp4/.mov videos (case-insensitive) using
 MediaPipe HandLandmarker (21 landmarks × 3 coords × 2 hands = 126 features).
 
 Applies per-frame normalisation:
@@ -44,6 +44,9 @@ MIN_RAW_FRAMES = 5         # skip videos with fewer detected frames
 SRC_ROOT = pathlib.Path("data/archive/Dataset - Original")
 DST_ROOT = pathlib.Path("data/archive/Dataset - Hand - CSV")
 LOG_FILE = pathlib.Path("logs/extract_hand_landmarks.log")
+
+# Case-insensitive — source dataset mixes .mp4/.MP4/.mov/.MOV
+VIDEO_EXTENSIONS = {".mp4", ".mov"}
 
 # MediaPipe HandLandmarker model path — downloaded automatically
 MODEL_URL = "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task"
@@ -228,13 +231,15 @@ def main():
     # Download model
     download_model_if_needed()
 
-    # Collect all video files
-    video_files = sorted(SRC_ROOT.rglob("*.mp4"))
+    # Collect all video files (case-insensitive extension match)
+    video_files = sorted(
+        p for p in SRC_ROOT.rglob("*") if p.is_file() and p.suffix.lower() in VIDEO_EXTENSIONS
+    )
     total_videos = len(video_files)
-    log.info(f"Found {total_videos} .mp4 files")
+    log.info(f"Found {total_videos} video files ({', '.join(sorted(VIDEO_EXTENSIONS))}, case-insensitive)")
 
     if total_videos == 0:
-        log.error("No .mp4 files found. Check SRC_ROOT path.")
+        log.error("No video files found. Check SRC_ROOT path.")
         sys.exit(1)
 
     # Create HandLandmarker detector
