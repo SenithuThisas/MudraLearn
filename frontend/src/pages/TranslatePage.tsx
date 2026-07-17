@@ -4,7 +4,7 @@ import Navigation from '../components/Navigation';
 
 export default function TranslatePage() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { isReady, isCapturing, prediction, error, frameCount, SEQUENCE_LEN, startCapture, stopCapture } = useHandLandmarker();
+  const { isReady, isCapturing, prediction, error, frameCount, MAX_CAPTURE_FRAMES, startCapture, stopCapture } = useHandLandmarker();
   const [cameraActive, setCameraActive] = useState(false);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export default function TranslatePage() {
     };
   }, []);
 
-  const progressPct = Math.min((frameCount / SEQUENCE_LEN) * 100, 100);
+  const progressPct = Math.min((frameCount / MAX_CAPTURE_FRAMES) * 100, 100);
 
   return (
     <div className="w-full flex-1 bg-gray-50 dark:bg-[#16171d] text-gray-800 dark:text-gray-200 font-sans text-left">
@@ -81,7 +81,7 @@ export default function TranslatePage() {
                 disabled={!isReady || !cameraActive || isCapturing}
                 className="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all shadow-md active:scale-[0.98]"
               >
-                {!isReady ? 'Loading AI Model...' : isCapturing ? 'Recording...' : 'Record Sign (2s)'}
+                {!isReady ? 'Loading AI Model...' : isCapturing ? 'Recording...' : 'Record Sign'}
               </button>
               {isCapturing && (
                 <button 
@@ -101,7 +101,7 @@ export default function TranslatePage() {
               ></div>
             </div>
             <p className="text-xs text-center mt-2 text-gray-500 dark:text-gray-400">
-              {frameCount} / {SEQUENCE_LEN} frames captured
+              {frameCount} frames captured
             </p>
           </div>
 
