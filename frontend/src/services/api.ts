@@ -51,14 +51,12 @@ export interface PredictResponse {
 
 export async function predictSign(
   sequence:    number[][],
-  userId:      number | string,
   targetSign:  string,
   category:    string,
   responseMs:  number = 0,
 ): Promise<PredictResponse> {
   const { data } = await api.post('/predict', {
     sequence,
-    user_id:     userId,
     target_sign: targetSign,
     category,
     response_ms: responseMs,
@@ -75,8 +73,8 @@ export interface NextSignResponse {
   mastery:  number | null
 }
 
-export async function getNextSign(userId: number | string): Promise<NextSignResponse> {
-  const { data } = await api.get('/session/next', { params: { user_id: userId } })
+export async function getNextSign(): Promise<NextSignResponse> {
+  const { data } = await api.get('/session/next')
   return data
 }
 
@@ -88,15 +86,15 @@ export interface MasteryRow {
   last_seen: string | null
 }
 
-export async function getMastery(userId: number | string): Promise<{ signs: MasteryRow[]; total: number }> {
-  const { data } = await api.get('/session/mastery', { params: { user_id: userId } })
+export async function getMastery(): Promise<{ signs: MasteryRow[]; total: number }> {
+  const { data } = await api.get('/session/mastery')
   return data
 }
 
 // ── Progress history ──────────────────────────────────────────────────────────
 
-export async function getProgressHistory(userId: number | string, limit = 50) {
-  const { data } = await api.get('/progress/history', { params: { user_id: userId, limit } })
+export async function getProgressHistory(limit = 50) {
+  const { data } = await api.get('/progress/history', { params: { limit } })
   return data
 }
 

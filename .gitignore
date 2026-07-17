@@ -49,10 +49,12 @@ venv/
 ENV/
 .env
 .env.*
+!.env.example
 
 # Backend
 backend/.env
 backend/.env.*
+!backend/.env.example
 backend/logs/
 backend/instance/
 

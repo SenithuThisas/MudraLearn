@@ -45,7 +45,6 @@ setStatusMsg('Sending to model...')
 try {
 const res = await predictSign(
                 frameBuffer.current.slice(0, FRAMES_NEEDED),
-                1,          // guest user_id — translate page has no auth yet
                 '',         // no target sign for free translation mode
                 'translate',
                 0,
