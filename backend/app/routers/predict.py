@@ -7,6 +7,8 @@ from sqlalchemy.orm import Session
 from app.services import inference
 from app.database import get_db
 from app.models.progress import Progress
+from app.models.user import User
+from app.routers.auth import get_current_user
 from app.services import mastery_engine
 
 router = APIRouter()
@@ -14,7 +16,6 @@ router = APIRouter()
 
 class PredictRequest(BaseModel):
     sequence:    List[List[float]]  # 60 frames × 126 features
-    user_id:     int
     target_sign: str                # sign the user was asked to perform
     category:    str
     response_ms: int = 0            # optional: time taken in ms
@@ -35,7 +36,11 @@ class PredictResponse(BaseModel):
 
 
 @router.post("/predict", response_model=PredictResponse)
-def predict_sign(request: PredictRequest, db: Session = Depends(get_db)):
+def predict_sign(
+    request: PredictRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     if len(request.sequence) != 60:
         raise HTTPException(400, "Expected exactly 60 frames")
     if any(len(frame) != 126 for frame in request.sequence):
@@ -51,7 +56,7 @@ def predict_sign(request: PredictRequest, db: Session = Depends(get_db)):
 
     # ── Persist the raw attempt ───────────────────────────────────────────────
     attempt = Progress(
-        user_id     = request.user_id,
+        user_id     = current_user.id,
         sign_id     = request.target_sign,
         category    = request.category,
         confidence  = confidence,
@@ -59,14 +64,16 @@ def predict_sign(request: PredictRequest, db: Session = Depends(get_db)):
         response_ms = request.response_ms,
     )
     db.add(attempt)
-    db.commit()
 
     # ── Update rolling mastery score ──────────────────────────────────────────
+    # Single commit below covers both this Progress row and the MasteryScore
+    # upsert inside update_mastery() so the two writes land atomically.
     mastery_row = mastery_engine.update_mastery(
-        db, request.user_id, request.target_sign, confidence, correct
+        db, current_user.id, request.target_sign, confidence, correct
     )
+    db.commit()
     mastery_info = mastery_engine.get_sign_mastery(
-        db, request.user_id, request.target_sign
+        db, current_user.id, request.target_sign
     )
 
     return {

@@ -2,7 +2,7 @@
 from sqlalchemy import Column, String, Integer, DateTime, Boolean, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
-from datetime import datetime
+from datetime import datetime, timezone
 import uuid
 
 Base = declarative_base()
@@ -24,8 +24,8 @@ class User(Base):
     signup_step = Column(String, default='email')            # email | otp_verified | completed
     failed_login_attempts = Column(Integer, default=0)
     locked_until = Column(DateTime, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
 
 class EmailOTP(Base):
@@ -36,7 +36,7 @@ class EmailOTP(Base):
     otp_hash = Column(String, nullable=False)
     expires_at = Column(DateTime, nullable=False)
     attempts = Column(Integer, default=0)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
 
 class AuthSession(Base):
@@ -55,4 +55,4 @@ class AuthSession(Base):
     purpose = Column(String, nullable=False)        # 'signup_temp' | 'login_temp'
     consumed = Column(Boolean, default=False)
     expires_at = Column(DateTime, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
