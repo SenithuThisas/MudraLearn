@@ -4,13 +4,16 @@ import {
   FilesetResolver,
 } from '@mediapipe/tasks-vision';
 import { predictSign, type PredictResponse } from '../services/api';
+import { resampleSequence } from '../utils/resample';
 
 // ── Constants — must match training pipeline ─────────────────────────────────
 const NUM_LANDMARKS     = 21;
 const NUM_COORDS        = 3;
 const FEATURES_PER_HAND = NUM_LANDMARKS * NUM_COORDS; // 63
 
-export const SEQUENCE_LEN = 60;
+export const SEQUENCE_LEN = 60; // resample target — must match training (interpolate_to_fixed)
+export const MAX_CAPTURE_FRAMES = 180; // safety cap: ~6s at 30fps
+const NO_HAND_FRAME_LIMIT = 30; // ~1s of no detected hand ends capture
 
 const MODEL_URL =
   'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task';
@@ -131,6 +134,8 @@ export function useHandLandmarker() {
       setFrameCount(0);
 
       let lastTimestamp = -1;
+      let noHandStreak  = 0;
+      let hasSeenHand   = false;
 
       function processFrame() {
         if (!isRecording.current || !detectorRef.current) return;
@@ -140,15 +145,22 @@ export function useHandLandmarker() {
         lastTimestamp = ts;
 
         try {
-          const result   = detectorRef.current.detectForVideo(videoEl, ts);
-          const features = extractFrameFeatures(result);
+          const result       = detectorRef.current.detectForVideo(videoEl, ts);
+          const handDetected = !!(result.landmarks && result.landmarks.length > 0);
+          const features      = extractFrameFeatures(result);
           frameBuffer.current.push(features);
           setFrameCount(frameBuffer.current.length);
 
-          if (frameBuffer.current.length >= SEQUENCE_LEN) {
+          if (handDetected) hasSeenHand = true;
+          noHandStreak = handDetected ? 0 : noHandStreak + 1;
+
+          const hitMaxFrames = frameBuffer.current.length >= MAX_CAPTURE_FRAMES;
+          const handDropped  = hasSeenHand && noHandStreak >= NO_HAND_FRAME_LIMIT;
+
+          if (hitMaxFrames || handDropped) {
             isRecording.current = false;
             setIsCapturing(false);
-            sendPrediction(frameBuffer.current.slice(0, SEQUENCE_LEN));
+            sendPrediction(resampleSequence(frameBuffer.current, SEQUENCE_LEN));
             return;
           }
         } catch (err) {
@@ -210,5 +222,6 @@ export function useHandLandmarker() {
     startCapture,
     stopCapture,
     SEQUENCE_LEN,
+    MAX_CAPTURE_FRAMES,
   };
 }
