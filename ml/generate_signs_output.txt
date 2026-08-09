@@ -1,0 +1,2 @@
+Written 312 signs to ../frontend/public/signs_data.json
+Excluded 71 signs (below training threshold)

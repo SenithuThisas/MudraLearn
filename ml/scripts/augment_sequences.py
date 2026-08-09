@@ -8,7 +8,8 @@ Generate synthetic training data via 4 augmentation strategies:
   3. Spatial jitter    — simulates slight hand position offset
   4. Hand mirroring    — simulates left-handed vs right-handed signing
 
-Produces AUG_FACTOR synthetic copies of every training sample.
+Produces synthetic copies of every training sample, with the copy count scaled
+per class by aug_factor_for() — thin classes get boosted harder than AUG_FACTOR.
 Val and test sets are NEVER touched.
 
 Usage:
@@ -23,7 +24,7 @@ from scipy.interpolate import interp1d
 # ──────────────────────────────────────────────────────────────────────────────
 # Constants
 # ──────────────────────────────────────────────────────────────────────────────
-DATA_DIR   = pathlib.Path("data/hand_v2")
+DATA_DIR   = pathlib.Path("data/hand_v3")
 AUG_FACTOR = 5       # 5 synthetic copies per real sample → 6× total
 SEED       = 42
 SEQUENCE_LEN = 60
@@ -34,6 +35,16 @@ NOISE_STD       = 0.008     # Gaussian noise std (0.8% of palm size)
 STRETCH_MIN     = 0.80      # Temporal stretch factor lower bound
 STRETCH_MAX     = 1.20      # Temporal stretch factor upper bound
 JITTER_MAX      = 0.02      # Spatial jitter max shift (2% of palm size)
+
+
+def aug_factor_for(n_samples: int) -> int:
+    """Scale augmentation inversely with class size — flat AUG_FACTOR preserves
+    imbalance ratio exactly rather than narrowing it. Boost only the thin tail."""
+    if n_samples <= 4:
+        return 15
+    if n_samples <= 9:
+        return 8
+    return 5
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -151,21 +162,34 @@ def main():
     n_train = X_train.shape[0]
     print(f"Original training size: {n_train}")
     print(f"Original shape: {X_train.shape}")
-    print(f"Augmentation factor: {AUG_FACTOR} (total will be {AUG_FACTOR + 1}× originals)")
 
-    # Generate augmented samples
+    # Decode one-hot labels to class indices so we can group samples by class
+    class_idx = np.argmax(y_train, axis=1)
+    unique_classes, class_counts = np.unique(class_idx, return_counts=True)
+    print(f"Classes: {len(unique_classes)}  "
+          f"(per-class augmentation factor via aug_factor_for: "
+          f"≤4→15×, 5-9→8×, >9→{AUG_FACTOR}×)")
+
+    # Generate augmented samples, per class, scaled by class size
     X_aug_list = [X_train]  # Start with originals
     y_aug_list = [y_train]
 
-    for aug_idx in range(AUG_FACTOR):
-        print(f"  Generating augmentation pass {aug_idx + 1}/{AUG_FACTOR}...")
-        X_augmented = np.zeros_like(X_train)
+    for cls, n_cls in zip(unique_classes, class_counts):
+        factor = aug_factor_for(int(n_cls))
+        cls_mask = class_idx == cls
+        X_cls = X_train[cls_mask]
+        y_cls = y_train[cls_mask]
 
-        for i in range(n_train):
-            X_augmented[i] = augment_single(X_train[i], rng)
+        print(f"  Class {cls} ({n_cls} samples): factor {factor} "
+              f"(total will be {factor + 1}× for this class)")
 
-        X_aug_list.append(X_augmented)
-        y_aug_list.append(y_train.copy())
+        for aug_idx in range(factor):
+            X_augmented = np.zeros_like(X_cls)
+            for i in range(len(X_cls)):
+                X_augmented[i] = augment_single(X_cls[i], rng)
+
+            X_aug_list.append(X_augmented)
+            y_aug_list.append(y_cls.copy())
 
     # Concatenate all
     X_train_aug = np.concatenate(X_aug_list, axis=0)
@@ -179,8 +203,12 @@ def main():
     print(f"\nAugmented training size: {X_train_aug.shape[0]} ({X_train_aug.shape[0] / n_train:.1f}× original)")
     print(f"Augmented shape: {X_train_aug.shape}")
 
-    # Sanity checks
-    assert X_train_aug.shape[0] == n_train * (AUG_FACTOR + 1), "Shape mismatch!"
+    # Sanity checks — expected total computed dynamically from the per-class factors
+    expected_total = sum(
+        int(n_cls) * (aug_factor_for(int(n_cls)) + 1)
+        for n_cls in class_counts
+    )
+    assert X_train_aug.shape[0] == expected_total, "Shape mismatch!"
     assert X_train_aug.shape[1:] == (SEQUENCE_LEN, X_train.shape[2]), "Feature shape mismatch!"
     assert len(y_train_aug) == len(X_train_aug), "Label count mismatch!"
 
@@ -189,6 +217,21 @@ def main():
     print(f"Value range: [{vmin:.3f}, {vmax:.3f}]")
     if abs(vmin) > 10 or abs(vmax) > 10:
         print("WARNING: Values out of expected range (-5 to +5). Check augmentation parameters.")
+
+    # Post-augmentation per-class balance summary
+    aug_class_idx = np.argmax(y_train_aug, axis=1)
+    _, aug_class_counts = np.unique(aug_class_idx, return_counts=True)
+
+    print("\n" + "=" * 50)
+    print("AUGMENTATION SUMMARY")
+    print("=" * 50)
+    print(f"Total original samples  : {n_train}")
+    print(f"Total augmented samples : {X_train_aug.shape[0]}")
+    print(f"Samples/class (post-aug): "
+          f"min={aug_class_counts.min()}  "
+          f"max={aug_class_counts.max()}  "
+          f"mean={aug_class_counts.mean():.1f}")
+    print("=" * 50)
 
     # Save
     X_aug_path = DATA_DIR / "X_train_aug.npy"

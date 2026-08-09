@@ -1,6 +1,10 @@
 {
-  "total": 204,
+  "total": 312,
   "signs": [
+    {
+      "name": "Bad",
+      "category": "Adjectives"
+    },
     {
       "name": "Beautiful",
       "category": "Adjectives"
@@ -23,6 +27,10 @@
     },
     {
       "name": "Double",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Fast",
       "category": "Adjectives"
     },
     {
@@ -50,6 +58,14 @@
       "category": "Adjectives"
     },
     {
+      "name": "Healthy",
+      "category": "Adjectives"
+    },
+    {
+      "name": "High",
+      "category": "Adjectives"
+    },
+    {
       "name": "Independent",
       "category": "Adjectives"
     },
@@ -58,7 +74,23 @@
       "category": "Adjectives"
     },
     {
+      "name": "Loose",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Low",
+      "category": "Adjectives"
+    },
+    {
       "name": "Next",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Nice",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Not good",
       "category": "Adjectives"
     },
     {
@@ -98,6 +130,18 @@
       "category": "Adjectives"
     },
     {
+      "name": "Soft",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Strong",
+      "category": "Adjectives"
+    },
+    {
+      "name": "Tight",
+      "category": "Adjectives"
+    },
+    {
       "name": "Welcome",
       "category": "Adjectives"
     },
@@ -114,6 +158,14 @@
       "category": "Adverb"
     },
     {
+      "name": "Can",
+      "category": "Adverb"
+    },
+    {
+      "name": "Cant",
+      "category": "Adverb"
+    },
+    {
       "name": "Here",
       "category": "Adverb"
     },
@@ -123,6 +175,14 @@
     },
     {
       "name": "Never",
+      "category": "Adverb"
+    },
+    {
+      "name": "When",
+      "category": "Adverb"
+    },
+    {
+      "name": "Why",
       "category": "Adverb"
     },
     {
@@ -182,11 +242,43 @@
       "category": "Days"
     },
     {
+      "name": "Friday",
+      "category": "Days"
+    },
+    {
+      "name": "Good evening",
+      "category": "Days"
+    },
+    {
+      "name": "Good morning",
+      "category": "Days"
+    },
+    {
+      "name": "Good night",
+      "category": "Days"
+    },
+    {
       "name": "Hour",
       "category": "Days"
     },
     {
       "name": "Monday",
+      "category": "Days"
+    },
+    {
+      "name": "Night",
+      "category": "Days"
+    },
+    {
+      "name": "Saturday",
+      "category": "Days"
+    },
+    {
+      "name": "Sunday",
+      "category": "Days"
+    },
+    {
+      "name": "Thursday",
       "category": "Days"
     },
     {
@@ -198,12 +290,48 @@
       "category": "Days"
     },
     {
+      "name": "Tomorrow",
+      "category": "Days"
+    },
+    {
+      "name": "Tuesday",
+      "category": "Days"
+    },
+    {
+      "name": "Wednesday",
+      "category": "Days"
+    },
+    {
+      "name": "Week",
+      "category": "Days"
+    },
+    {
+      "name": "Yesterday",
+      "category": "Days"
+    },
+    {
+      "name": "No",
+      "category": "Determiner"
+    },
+    {
+      "name": "Alright",
+      "category": "Greetings"
+    },
+    {
+      "name": "Ayubowan",
+      "category": "Greetings"
+    },
+    {
       "name": "Hello",
       "category": "Greetings"
     },
     {
       "name": "Thank you",
       "category": "Greetings"
+    },
+    {
+      "name": "Yes",
+      "category": "Interjection"
     },
     {
       "name": "April",
@@ -262,6 +390,14 @@
       "category": "Nouns"
     },
     {
+      "name": "Bag",
+      "category": "Nouns"
+    },
+    {
+      "name": "Bed",
+      "category": "Nouns"
+    },
+    {
       "name": "Book",
       "category": "Nouns"
     },
@@ -278,11 +414,27 @@
       "category": "Nouns"
     },
     {
+      "name": "Ceiling fan",
+      "category": "Nouns"
+    },
+    {
+      "name": "Cell phone",
+      "category": "Nouns"
+    },
+    {
       "name": "Children",
       "category": "Nouns"
     },
     {
       "name": "Choice",
+      "category": "Nouns"
+    },
+    {
+      "name": "Clothing",
+      "category": "Nouns"
+    },
+    {
+      "name": "Computer",
       "category": "Nouns"
     },
     {
@@ -318,15 +470,23 @@
       "category": "Nouns"
     },
     {
-      "name": "Flower",
-      "category": "Nouns"
-    },
-    {
       "name": "Food",
       "category": "Nouns"
     },
     {
       "name": "Group",
+      "category": "Nouns"
+    },
+    {
+      "name": "Gun",
+      "category": "Nouns"
+    },
+    {
+      "name": "Hat",
+      "category": "Nouns"
+    },
+    {
+      "name": "He",
       "category": "Nouns"
     },
     {
@@ -350,7 +510,19 @@
       "category": "Nouns"
     },
     {
+      "name": "Key",
+      "category": "Nouns"
+    },
+    {
+      "name": "Laptop",
+      "category": "Nouns"
+    },
+    {
       "name": "List",
+      "category": "Nouns"
+    },
+    {
+      "name": "Lock",
       "category": "Nouns"
     },
     {
@@ -406,6 +578,10 @@
       "category": "Nouns"
     },
     {
+      "name": "Pencil",
+      "category": "Nouns"
+    },
+    {
       "name": "Phone",
       "category": "Nouns"
     },
@@ -422,7 +598,15 @@
       "category": "Nouns"
     },
     {
+      "name": "Radio",
+      "category": "Nouns"
+    },
+    {
       "name": "Ring",
+      "category": "Nouns"
+    },
+    {
+      "name": "Shirt",
       "category": "Nouns"
     },
     {
@@ -450,6 +634,14 @@
       "category": "Nouns"
     },
     {
+      "name": "Suit",
+      "category": "Nouns"
+    },
+    {
+      "name": "Table",
+      "category": "Nouns"
+    },
+    {
       "name": "Team",
       "category": "Nouns"
     },
@@ -470,6 +662,18 @@
       "category": "Nouns"
     },
     {
+      "name": "Who",
+      "category": "Nouns"
+    },
+    {
+      "name": "Whom",
+      "category": "Nouns"
+    },
+    {
+      "name": "Window",
+      "category": "Nouns"
+    },
+    {
       "name": "You",
       "category": "Nouns"
     },
@@ -478,7 +682,43 @@
       "category": "Numbers"
     },
     {
+      "name": "10. ten",
+      "category": "Numbers"
+    },
+    {
+      "name": "11. eleven",
+      "category": "Numbers"
+    },
+    {
+      "name": "13. thirteen",
+      "category": "Numbers"
+    },
+    {
+      "name": "14. fourteen",
+      "category": "Numbers"
+    },
+    {
+      "name": "15. fifteen",
+      "category": "Numbers"
+    },
+    {
+      "name": "16. sixteen",
+      "category": "Numbers"
+    },
+    {
+      "name": "18. eighteen",
+      "category": "Numbers"
+    },
+    {
+      "name": "19. nineteen",
+      "category": "Numbers"
+    },
+    {
       "name": "2. two",
+      "category": "Numbers"
+    },
+    {
+      "name": "3. three",
       "category": "Numbers"
     },
     {
@@ -490,11 +730,63 @@
       "category": "Numbers"
     },
     {
+      "name": "6. six",
+      "category": "Numbers"
+    },
+    {
+      "name": "7. seven",
+      "category": "Numbers"
+    },
+    {
+      "name": "8. eight",
+      "category": "Numbers"
+    },
+    {
+      "name": "9. nine",
+      "category": "Numbers"
+    },
+    {
+      "name": "Addition",
+      "category": "Numbers"
+    },
+    {
+      "name": "Count",
+      "category": "Numbers"
+    },
+    {
+      "name": "Divide",
+      "category": "Numbers"
+    },
+    {
       "name": "Equal",
       "category": "Numbers"
     },
     {
+      "name": "Multiplication",
+      "category": "Numbers"
+    },
+    {
+      "name": "Subtraction",
+      "category": "Numbers"
+    },
+    {
+      "name": "Aunt",
+      "category": "People"
+    },
+    {
+      "name": "Baby",
+      "category": "People"
+    },
+    {
+      "name": "Bro",
+      "category": "People"
+    },
+    {
       "name": "Child",
+      "category": "People"
+    },
+    {
+      "name": "Daughter",
       "category": "People"
     },
     {
@@ -510,7 +802,31 @@
       "category": "People"
     },
     {
+      "name": "Family",
+      "category": "People"
+    },
+    {
+      "name": "Father",
+      "category": "People"
+    },
+    {
       "name": "Grand father",
+      "category": "People"
+    },
+    {
+      "name": "Grand mother",
+      "category": "People"
+    },
+    {
+      "name": "Grand son",
+      "category": "People"
+    },
+    {
+      "name": "Husband",
+      "category": "People"
+    },
+    {
+      "name": "Lady",
       "category": "People"
     },
     {
@@ -522,7 +838,27 @@
       "category": "People"
     },
     {
+      "name": "Player",
+      "category": "People"
+    },
+    {
+      "name": "Sister",
+      "category": "People"
+    },
+    {
+      "name": "Son",
+      "category": "People"
+    },
+    {
+      "name": "Uncle",
+      "category": "People"
+    },
+    {
       "name": "Us",
+      "category": "People"
+    },
+    {
+      "name": "Wife",
       "category": "People"
     },
     {
@@ -530,7 +866,27 @@
       "category": "People"
     },
     {
+      "name": "Younger sister",
+      "category": "People"
+    },
+    {
       "name": "House",
+      "category": "Places"
+    },
+    {
+      "name": "Location",
+      "category": "Places"
+    },
+    {
+      "name": "Police station",
+      "category": "Places"
+    },
+    {
+      "name": "Road",
+      "category": "Places"
+    },
+    {
+      "name": "Shop",
       "category": "Places"
     },
     {
@@ -582,11 +938,31 @@
       "category": "Preposition"
     },
     {
+      "name": "Bicycle",
+      "category": "Vehicles"
+    },
+    {
+      "name": "Boat",
+      "category": "Vehicles"
+    },
+    {
+      "name": "Bus",
+      "category": "Vehicles"
+    },
+    {
+      "name": "Car",
+      "category": "Vehicles"
+    },
+    {
       "name": "Motorcycle",
       "category": "Vehicles"
     },
     {
       "name": "Plane",
+      "category": "Vehicles"
+    },
+    {
+      "name": "Van",
       "category": "Vehicles"
     },
     {
@@ -642,6 +1018,10 @@
       "category": "Verbs"
     },
     {
+      "name": "Dance",
+      "category": "Verbs"
+    },
+    {
       "name": "Done",
       "category": "Verbs"
     },
@@ -690,6 +1070,10 @@
       "category": "Verbs"
     },
     {
+      "name": "Hang",
+      "category": "Verbs"
+    },
+    {
       "name": "Hear",
       "category": "Verbs"
     },
@@ -702,11 +1086,27 @@
       "category": "Verbs"
     },
     {
+      "name": "How",
+      "category": "Verbs"
+    },
+    {
+      "name": "Knock",
+      "category": "Verbs"
+    },
+    {
+      "name": "Laugh",
+      "category": "Verbs"
+    },
+    {
       "name": "Lead",
       "category": "Verbs"
     },
     {
       "name": "Let",
+      "category": "Verbs"
+    },
+    {
+      "name": "Like",
       "category": "Verbs"
     },
     {
@@ -746,11 +1146,23 @@
       "category": "Verbs"
     },
     {
+      "name": "Put",
+      "category": "Verbs"
+    },
+    {
       "name": "Run",
       "category": "Verbs"
     },
     {
+      "name": "Scratch",
+      "category": "Verbs"
+    },
+    {
       "name": "See",
+      "category": "Verbs"
+    },
+    {
+      "name": "Select",
       "category": "Verbs"
     },
     {
@@ -766,7 +1178,15 @@
       "category": "Verbs"
     },
     {
+      "name": "Smile",
+      "category": "Verbs"
+    },
+    {
       "name": "Stop",
+      "category": "Verbs"
+    },
+    {
+      "name": "Study",
       "category": "Verbs"
     },
     {
@@ -774,7 +1194,15 @@
       "category": "Verbs"
     },
     {
+      "name": "Take",
+      "category": "Verbs"
+    },
+    {
       "name": "Teach",
+      "category": "Verbs"
+    },
+    {
+      "name": "Tear",
       "category": "Verbs"
     },
     {
@@ -787,6 +1215,10 @@
     },
     {
       "name": "Think",
+      "category": "Verbs"
+    },
+    {
+      "name": "Understand",
       "category": "Verbs"
     },
     {
