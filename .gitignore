@@ -86,6 +86,9 @@ build/
 *.tar.gz
 *.tgz
 
+# Generated diagrams
+docs/architecture/
+
 # Local overrides
 *.local
 
