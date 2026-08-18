@@ -64,6 +64,10 @@ ml/saved_models/
 ml/notebooks/.ipynb_checkpoints/
 ml/scripts/__pycache__/
 
+# MediaPipe runtime assets (WASM + hand-landmarker model) — fetched by
+# frontend/scripts/setup-mediapipe-assets.mjs (runs on `npm install`), not committed.
+frontend/public/mediapipe/
+
 # Build artifacts
 build/
 .out/
