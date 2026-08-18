@@ -12,8 +12,11 @@ const FEATURES_PER_HAND = NUM_LANDMARKS * NUM_COORDS; // 63
 
 export const SEQUENCE_LEN = 60;
 
-const MODEL_URL =
-  'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task';
+// Served locally from public/mediapipe (see frontend/public/mediapipe) instead of
+// fetched from a CDN at runtime — the CDN fetch was stalling on slow/restricted
+// networks, leaving the UI stuck on "Loading AI Model..." forever.
+const MODEL_URL = '/mediapipe/hand_landmarker.task';
+const WASM_URL  = '/mediapipe/wasm';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -87,9 +90,7 @@ export function useHandLandmarker() {
 
     async function init() {
       try {
-        const vision = await FilesetResolver.forVisionTasks(
-          'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm',
-        );
+        const vision = await FilesetResolver.forVisionTasks(WASM_URL);
         const detector = await HandLandmarker.createFromOptions(vision, {
           baseOptions:                 { modelAssetPath: MODEL_URL },
           runningMode:                 'VIDEO',
