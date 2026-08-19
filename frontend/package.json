@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "setup:mediapipe": "node scripts/setup-mediapipe-assets.mjs",
-    "postinstall": "node scripts/setup-mediapipe-assets.mjs"
+    "setup:reference": "node scripts/setup-reference-clips.mjs",
+    "postinstall": "node scripts/setup-mediapipe-assets.mjs && node scripts/setup-reference-clips.mjs"
   },
   "dependencies": {
     "@mediapipe/tasks-vision": "^0.10.35",
