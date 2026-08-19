@@ -68,6 +68,10 @@ ml/scripts/__pycache__/
 # frontend/scripts/setup-mediapipe-assets.mjs (runs on `npm install`), not committed.
 frontend/public/mediapipe/
 
+# Practice reference clips — copied out of the (also ignored) ml/data dataset by
+# frontend/scripts/setup-reference-clips.mjs (runs on `npm install`).
+frontend/public/reference/
+
 # Build artifacts
 build/
 .out/
