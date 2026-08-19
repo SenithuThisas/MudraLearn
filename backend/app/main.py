@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
-from app.routers import predict, auth, session, progress, dashboard
+from app.routers import predict, auth, session, progress, dashboard, practice
 from app.services import inference
 from app.rate_limit import limiter
 from loguru import logger
@@ -58,6 +58,7 @@ app.include_router(auth.router,     prefix='/api/auth',  tags=['auth'])
 app.include_router(session.router,  prefix='/api',      tags=['session'])
 app.include_router(progress.router, prefix='/api',      tags=['progress'])
 app.include_router(dashboard.router, prefix='/api',     tags=['dashboard'])
+app.include_router(practice.router,  prefix='/api',     tags=['practice'])
 
 @app.get('/')
 def root():
