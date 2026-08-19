@@ -10,6 +10,14 @@ import DictionaryPage from './pages/DictionaryPage'
 import TranslatePage from './pages/TranslatePage'
 import './index.css'
 import PracticePage from './pages/PracticePage'
+import PracticeLayout from './pages/PracticeLayout'
+import {
+  BatchOverviewPage,
+  BatchResultPage,
+  ChallengePage,
+  PracticeSignPage,
+  PreviewPage,
+} from './pages/practiceScreens'
 import SplashPage from './pages/SplashPage'
 import SignInPage from './pages/SignInPage'
 import SignInPasswordPage from './pages/SignInPasswordPage'
@@ -34,7 +42,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 <Route path='/about' element={<AboutPage />} />
 <Route path='/blog' element={<BlogPage />} />
 <Route path='/translate' element={<TranslatePage />} />
-<Route path='/practice' element={<ProtectedRoute><PracticePage /></ProtectedRoute>} />
+<Route path='/practice' element={<ProtectedRoute><PracticeLayout /></ProtectedRoute>}>
+<Route index element={<PracticePage />} />
+<Route path='batches/:batchId' element={<BatchOverviewPage />} />
+<Route path='batches/:batchId/preview/:signId' element={<PreviewPage />} />
+<Route path='batches/:batchId/practice/:signId' element={<PracticeSignPage />} />
+<Route path='batches/:batchId/challenge' element={<ChallengePage />} />
+<Route path='batches/:batchId/result' element={<BatchResultPage />} />
+</Route>
 <Route path='/dictionary' element={<DictionaryPage />} />
 <Route path='/splash' element={<SplashPage />} />
 <Route path='/signin' element={<SignInPage />} />
