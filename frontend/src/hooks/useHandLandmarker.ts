@@ -26,6 +26,13 @@ export interface PredictContext {
   category:   string
 }
 
+/** Optional override — Challenge posts to /practice/.../challenge/attempt instead of /predict. */
+export type SequenceSubmitter = (
+  frames: number[][],
+  ctx: PredictContext,
+  responseMs: number,
+) => Promise<void>
+
 // ── Normalisation (must match extract_hand_landmarks.py) ─────────────────────
 
 function normaliseHand(landmarks: { x: number; y: number; z: number }[]): number[] {
@@ -70,19 +77,22 @@ function extractFrameFeatures(result: ReturnType<HandLandmarker['detect']>): num
 
 // ── Hook ──────────────────────────────────────────────────────────────────────
 
-export function useHandLandmarker() {
+export function useHandLandmarker(submitSequence?: SequenceSubmitter) {
   const detectorRef     = useRef<HandLandmarker | null>(null);
   const frameBuffer     = useRef<number[][]>([]);
   const isRecording     = useRef(false);
   const animFrameRef    = useRef<number>(0);
   const captureStartRef = useRef<number>(0);           // for response_ms tracking
   const predictCtxRef   = useRef<PredictContext | null>(null); // set on startCapture
+  const submitRef       = useRef<SequenceSubmitter | undefined>(submitSequence);
+  submitRef.current     = submitSequence;
 
-  const [isReady,     setIsReady]     = useState(false);
-  const [isCapturing, setIsCapturing] = useState(false);
-  const [prediction,  setPrediction]  = useState<PredictResponse | null>(null);
-  const [error,       setError]       = useState<string | null>(null);
-  const [frameCount,  setFrameCount]  = useState(0);
+  const [isReady,       setIsReady]       = useState(false);
+  const [isCapturing,   setIsCapturing]   = useState(false);
+  const [isSubmitting,  setIsSubmitting]  = useState(false);
+  const [prediction,    setPrediction]    = useState<PredictResponse | null>(null);
+  const [error,         setError]         = useState<string | null>(null);
+  const [frameCount,    setFrameCount]    = useState(0);
 
   // Initialise HandLandmarker
   useEffect(() => {
@@ -171,7 +181,7 @@ export function useHandLandmarker() {
     cancelAnimationFrame(animFrameRef.current);
   }, []);
 
-  // Send the 60-frame sequence to the backend
+  // Send the 60-frame sequence to the backend (or a caller-provided submitter)
   async function sendPrediction(frames: number[][]) {
     const ctx         = predictCtxRef.current;
     const responseMs  = Math.round(performance.now() - captureStartRef.current);
@@ -181,7 +191,13 @@ export function useHandLandmarker() {
       return;
     }
 
+    setIsSubmitting(true);
     try {
+      const custom = submitRef.current;
+      if (custom) {
+        await custom(frames, ctx, responseMs);
+        return;
+      }
       const data = await predictSign(
         frames,
         ctx.targetSign,
@@ -191,6 +207,8 @@ export function useHandLandmarker() {
       setPrediction(data);
     } catch (err) {
       setError(`Prediction failed: ${err}`);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -202,14 +220,21 @@ export function useHandLandmarker() {
     };
   }, []);
 
+  const clearPrediction = useCallback(() => {
+    setPrediction(null);
+    setError(null);
+  }, []);
+
   return {
     isReady,
     isCapturing,
+    isSubmitting,
     prediction,   // full PredictResponse including correct, mastery, feedback
     error,
     frameCount,
     startCapture,
     stopCapture,
+    clearPrediction,
     SEQUENCE_LEN,
   };
 }

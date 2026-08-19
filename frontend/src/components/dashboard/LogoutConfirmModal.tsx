@@ -6,7 +6,7 @@ interface LogoutConfirmModalProps {
   open: boolean
   onClose: () => void
   onConfirm: () => void
-  triggerRef: RefObject<HTMLElement>
+  triggerRef: RefObject<HTMLElement | null>
 }
 
 const FOCUSABLE_SELECTOR = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
