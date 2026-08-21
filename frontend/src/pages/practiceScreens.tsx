@@ -329,22 +329,34 @@ export function ChallengePage() {
       .catch((err) => setLoadError(practiceErrorMessage(err)))
   }, [batchId, navigate])
 
-  const category = overview.data?.signs.find((s) => s.signId === state?.currentSignId)?.category ?? 'Uncategorized'
+  const category = (
+    overview.data?.signs.find((s) => s.signId === state?.currentSignId)?.category
+    ?? state?.currentResult?.topSign  // fallback: not ideal but avoids 'Uncategorized'
+    ?? 'Uncategorized'
+  )
   const lastVerdict: Verdict | undefined = state?.verdict
   const lastTop3 = state?.top3 ?? []
   const nice = lastVerdict === 'great' || lastVerdict === 'okay'
 
   async function onHint() {
-    const next = await useChallengeHint(batchId)
-    setState(next)
-    setShowResult(false)
+    try {
+      const next = await useChallengeHint(batchId)
+      setState(next)
+      setShowResult(false)
+    } catch (err) {
+      setCamError(practiceErrorMessage(err))
+    }
   }
 
   async function onSkip() {
-    const next = await skipChallengeRetry(batchId)
-    setState(next)
-    setShowResult(false)
-    if (next.done) navigate(`/practice/batches/${batchId}/result`)
+    try {
+      const next = await skipChallengeRetry(batchId)
+      setState(next)
+      setShowResult(false)
+      if (next.done) navigate(`/practice/batches/${batchId}/result`)
+    } catch (err) {
+      setCamError(practiceErrorMessage(err))
+    }
   }
 
   if (loadError) {
