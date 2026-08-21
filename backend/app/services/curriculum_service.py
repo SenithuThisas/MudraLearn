@@ -19,7 +19,11 @@ def apply_seed(db: Session, payload: dict | None = None) -> dict:
     data = payload if payload is not None else load_seed_json(DEFAULT_SEED_JSON)
     batch_by_sign: dict[str, int] = {}
     for batch in data["batches"]:
-        batch_by_sign.update({sign_id: batch["batch_id"] for sign_id in batch["sign_ids"]})
+        for sign_id in batch["sign_ids"]:
+            # First occurrence wins — keeps a sign's primary batch stable when
+            # the same sign_id appears in multiple batches (e.g. after manual
+            # batch edits where the sign was not removed from the old batch row).
+            batch_by_sign.setdefault(sign_id, batch["batch_id"])
         row = db.get(Batch, batch["batch_id"])
         if row is None:
             row = Batch(id=batch["batch_id"])
