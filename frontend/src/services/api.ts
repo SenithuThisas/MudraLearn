@@ -68,9 +68,9 @@ export async function predictSign(
 // ── Session / Adaptive Engine ─────────────────────────────────────────────────
 
 export interface NextSignResponse {
-  sign:     string
-  category: string
-  mode:     'cold_start' | 'review' | 'new'
+  sign:     string | null
+  category: string | null
+  mode:     'cold_start' | 'review' | 'new' | 'complete'
   mastery:  number | null
 }
 
