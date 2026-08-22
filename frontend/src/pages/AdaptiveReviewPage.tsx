@@ -7,11 +7,20 @@
  * patterns that swap JSX trees on isLoading/isError must NOT be used here —
  * instead, show loading/error state inside the left column while the right column
  * (webcam) stays in the DOM untouched.
+ *
+ * Two modes, chosen by URL query params, share one render path below:
+ *   - Global mode (default, no params): the original behaviour — queries
+ *     getNextSign() (the adaptive algorithm) each round, endless spaced-repetition
+ *     loop, "complete" terminal state when the whole curriculum is mastered.
+ *   - Batch mode (?mode=batch&batchId=N): walks a fixed, already-computed
+ *     recommendation list from getBatchRecommendations(batchId) — a snapshot,
+ *     not re-adaptive. Never calls getNextSign(). Terminates after the last
+ *     recommended sign instead of looping forever.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import type { RefObject } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import PixelButton from '../components/auth/PixelButton'
 import {
@@ -25,8 +34,9 @@ import {
 import { useHandLandmarker, SEQUENCE_LEN } from '../hooks/useHandLandmarker'
 import { getNextSign } from '../services/api'
 import type { NextSignResponse } from '../services/api'
+import { getBatchRecommendations, type RecommendationReason } from '../services/practiceApi'
 
-// ── Mode badge ────────────────────────────────────────────────────────────────
+// ── Mode badge (global mode) ────────────────────────────────────────────────
 
 const MODE_LABEL: Record<NonNullable<NextSignResponse['mode']>, string> = {
   cold_start: 'NEW SIGN',
@@ -40,6 +50,21 @@ function ModeBadge({ mode }: { mode: NextSignResponse['mode'] }) {
   return (
     <span className="inline-block border-2 border-ink bg-sticker-yellow px-2 py-0.5 font-pixel text-[9px] tracking-wide text-ink shadow-hard-sm">
       {MODE_LABEL[mode]}
+    </span>
+  )
+}
+
+// ── Reason badge (batch list-walk mode) ─────────────────────────────────────
+
+const REASON_LABEL: Record<RecommendationReason, string> = {
+  weak_this_batch: 'JUST STRUGGLED',
+  decayed:         'FADING',
+}
+
+function ReasonBadge({ reason }: { reason: RecommendationReason }) {
+  return (
+    <span className="inline-block border-2 border-ink bg-sticker-yellow px-2 py-0.5 font-pixel text-[9px] tracking-wide text-ink shadow-hard-sm">
+      {REASON_LABEL[reason]}
     </span>
   )
 }
@@ -66,7 +91,7 @@ function useCamera(
   }, [videoRef, setError])
 }
 
-// ── Completion card ───────────────────────────────────────────────────────────
+// ── Completion cards ────────────────────────────────────────────────────────
 
 function CompletionCard() {
   return (
@@ -85,17 +110,33 @@ function CompletionCard() {
   )
 }
 
+function BatchWalkDoneCard({ batchId, reviewedCount }: { batchId: number; reviewedCount: number }) {
+  return (
+    <HardCard tone="mint" className="p-6 text-center space-y-4">
+      <p className="font-pixel text-xs text-ink">✅ REVIEW COMPLETE</p>
+      <p className="font-body text-sm text-ink">
+        {reviewedCount > 0
+          ? `You've reviewed all ${reviewedCount} recommended sign${reviewedCount === 1 ? '' : 's'}.`
+          : 'No recommended signs to review right now.'}
+      </p>
+      <Link to={`/practice/batches/${batchId}`}>
+        <PixelButton>← BACK TO BATCH</PixelButton>
+      </Link>
+    </HardCard>
+  )
+}
+
 // ── Left column — sign info card ──────────────────────────────────────────────
 
 function SignCard({
   sign,
   category,
-  mode,
+  badge,
   mastery,
 }: {
   sign: string
   category: string
-  mode: 'cold_start' | 'review' | 'new'
+  badge: ReactNode
   mastery: number | null
 }) {
   return (
@@ -105,7 +146,7 @@ function SignCard({
           <p className="font-body text-xs text-muted">{category}</p>
           <p className="font-pixel text-sm leading-6 text-ink">{sign}</p>
         </div>
-        <ModeBadge mode={mode} />
+        {badge}
       </div>
 
       {mastery !== null && (
@@ -129,11 +170,28 @@ function SignCard({
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function AdaptiveReviewPage() {
-  const [fetchKey, setFetchKey] = useState(0)
+  const [searchParams] = useSearchParams()
+  const batchIdRaw = searchParams.get('batchId')
+  const batchIdParam = batchIdRaw !== null ? Number(batchIdRaw) : NaN
+  const isBatchMode = searchParams.get('mode') === 'batch' && Number.isFinite(batchIdParam)
 
+  const [fetchKey, setFetchKey] = useState(0)
+  const [walkIndex, setWalkIndex] = useState(0)
+
+  // Global mode only — never fired in batch mode.
   const signQuery = useQuery({
     queryKey: ['adaptive', 'next', fetchKey],
     queryFn:  getNextSign,
+    staleTime: 0,
+    enabled: !isBatchMode,
+  })
+
+  // Batch mode only — a one-shot snapshot fetch, not re-adaptive. Walked
+  // locally via walkIndex; getNextSign() is never called in this mode.
+  const recommendationsQuery = useQuery({
+    queryKey: ['practice', 'batch', batchIdParam, 'recommendations'],
+    queryFn:  () => getBatchRecommendations(batchIdParam),
+    enabled:  isBatchMode,
     staleTime: 0,
   })
 
@@ -164,27 +222,57 @@ export default function AdaptiveReviewPage() {
 
   function handleNext() {
     clearPrediction()
-    setFetchKey((k) => k + 1)
+    if (isBatchMode) {
+      setWalkIndex((i) => i + 1)
+    } else {
+      setFetchKey((k) => k + 1)
+    }
   }
 
-  const nextSign   = signQuery.data
-  const isLoading  = signQuery.isLoading
-  const isQueryErr = signQuery.isError
-  const isComplete = nextSign?.mode === 'complete'
-  const activeSign = (!isLoading && !isQueryErr && nextSign && !isComplete)
-    ? (nextSign as { sign: string; category: string; mode: 'cold_start' | 'review' | 'new'; mastery: number | null })
-    : null
   const busy = isCapturing || isSubmitting
+  const backLink = isBatchMode ? `/practice/batches/${batchIdParam}` : '/practice'
+
+  // ── Normalize both modes into one shared shape for the shared render below ──
+  const isLoading  = isBatchMode ? recommendationsQuery.isLoading : signQuery.isLoading
+  const isQueryErr = isBatchMode ? recommendationsQuery.isError : signQuery.isError
+
+  const recommendations = recommendationsQuery.data?.recommendations ?? []
+  const nextSign = signQuery.data
+
+  const isDone = isBatchMode
+    ? (!isLoading && !isQueryErr && walkIndex >= recommendations.length)
+    : nextSign?.mode === 'complete'
+
+  const current = isBatchMode
+    ? ((!isLoading && !isQueryErr && !isDone) ? recommendations[walkIndex] : null)
+    : ((!isLoading && !isQueryErr && nextSign && !isDone)
+        ? (nextSign as { sign: string; category: string; mode: 'cold_start' | 'review' | 'new'; mastery: number | null })
+        : null)
+
+  const currentBadge: ReactNode = isBatchMode
+    ? (current ? <ReasonBadge reason={(current as { reason: RecommendationReason }).reason} /> : null)
+    : (current ? <ModeBadge mode={(current as { mode: NextSignResponse['mode'] }).mode} /> : null)
+
+  const headerTitle = isBatchMode ? 'RECOMMENDED REVIEW' : 'PRACTICE SIGN'
+  const headerSubtitle = isBatchMode
+    ? (recommendations.length > 0
+        ? `Sign ${Math.min(walkIndex + 1, recommendations.length)} of ${recommendations.length} — signs the system flagged from your last batch.`
+        : '')
+    : 'The engine picks what you need most. Sign each prompt — it learns from every attempt.'
 
   // Completion is the only case where we don't need the webcam at all.
-  if (isComplete) {
+  if (isDone) {
     return (
       <div className="space-y-6 max-w-lg">
         <div>
           <p className="font-pixel text-[10px] text-primary">ADAPTIVE REVIEW</p>
-          <h1 className="mt-2 font-pixel text-lg leading-7 text-ink">YOU'RE DONE</h1>
+          <h1 className="mt-2 font-pixel text-lg leading-7 text-ink">
+            {isBatchMode ? 'REVIEW COMPLETE' : "YOU'RE DONE"}
+          </h1>
         </div>
-        <CompletionCard />
+        {isBatchMode
+          ? <BatchWalkDoneCard batchId={batchIdParam} reviewedCount={recommendations.length} />
+          : <CompletionCard />}
       </div>
     )
   }
@@ -195,9 +283,9 @@ export default function AdaptiveReviewPage() {
       {/* Page header */}
       <div>
         <p className="font-pixel text-[10px] text-primary">ADAPTIVE REVIEW</p>
-        <h1 className="mt-2 font-pixel text-lg leading-7 text-ink">PRACTICE SIGN</h1>
+        <h1 className="mt-2 font-pixel text-lg leading-7 text-ink">{headerTitle}</h1>
         <p className="mt-3 max-w-2xl font-body text-sm text-muted">
-          The engine picks what you need most. Sign each prompt — it learns from every attempt.
+          {headerSubtitle}
         </p>
       </div>
 
@@ -208,7 +296,7 @@ export default function AdaptiveReviewPage() {
           {isLoading && (
             <HardCard tone="white" className="p-5">
               <p className="animate-pulse font-body text-sm text-muted" role="status">
-                Choosing your next sign…
+                {isBatchMode ? 'Loading your recommendations…' : 'Choosing your next sign…'}
               </p>
             </HardCard>
           )}
@@ -216,23 +304,29 @@ export default function AdaptiveReviewPage() {
           {isQueryErr && (
             <HardCard tone="yellow" className="p-5 space-y-3">
               <p className="font-body text-sm text-danger" role="alert">
-                Couldn't fetch your next sign. Check your connection.
+                {isBatchMode
+                  ? "Couldn't load recommendations. Check your connection."
+                  : "Couldn't fetch your next sign. Check your connection."}
               </p>
-              <PixelButton onClick={() => setFetchKey((k) => k + 1)}>RETRY</PixelButton>
+              {isBatchMode ? (
+                <Link to={backLink}><PixelButton>← BACK TO BATCH</PixelButton></Link>
+              ) : (
+                <PixelButton onClick={() => setFetchKey((k) => k + 1)}>RETRY</PixelButton>
+              )}
             </HardCard>
           )}
 
-          {activeSign && (
+          {current && (
             <>
               <SignCard
-                sign={activeSign.sign}
-                category={activeSign.category}
-                mode={activeSign.mode}
-                mastery={activeSign.mastery}
+                sign={current.sign}
+                category={current.category}
+                badge={currentBadge}
+                mastery={current.mastery}
               />
               <ReferenceVideo
-                signId={activeSign.sign}
-                label={`REFERENCE — ${activeSign.sign.toUpperCase()}`}
+                signId={current.sign}
+                label={`REFERENCE — ${current.sign.toUpperCase()}`}
               />
             </>
           )}
@@ -257,7 +351,7 @@ export default function AdaptiveReviewPage() {
           )}
 
           {/* Verdict shown after a scored attempt */}
-          {activeSign && prediction && !isCapturing && (
+          {current && prediction && !isCapturing && (
             <VerdictCard
               verdict={prediction.feedback as 'great' | 'okay' | 'retry'}
               attempt={prediction}
@@ -276,11 +370,11 @@ export default function AdaptiveReviewPage() {
           )}
 
           {/* Capture controls — only when a sign is active and not yet scored */}
-          {activeSign && !prediction && (
+          {current && !prediction && (
             <div className="flex gap-3">
               <PixelButton
                 id="adaptive-capture-btn"
-                onClick={() => handleCapture(activeSign.sign, activeSign.category)}
+                onClick={() => handleCapture(current.sign, current.category)}
                 disabled={busy || !isReady || !!cameraError}
               >
                 {isCapturing
@@ -290,7 +384,7 @@ export default function AdaptiveReviewPage() {
                     : 'SIGN NOW'}
               </PixelButton>
 
-              <Link to="/practice">
+              <Link to={backLink}>
                 <PixelButton>← BACK</PixelButton>
               </Link>
             </div>
@@ -298,7 +392,7 @@ export default function AdaptiveReviewPage() {
 
           {/* Show back button when loading or errored so user isn't stuck */}
           {(isLoading || isQueryErr) && (
-            <Link to="/practice">
+            <Link to={backLink}>
               <PixelButton>← BACK</PixelButton>
             </Link>
           )}
