@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
 from app.database import get_db
@@ -67,6 +67,21 @@ class OnboardingUsernameRequest(BaseModel):
 
 class GoogleCallbackRequest(BaseModel):
     id_token: str
+
+class UpdateProfileRequest(BaseModel):
+    """Name-only edit. extra='forbid' rejects an email/username field outright
+    (422) rather than silently ignoring it — those two fields are never
+    editable through this endpoint."""
+    model_config = ConfigDict(extra='forbid')
+    first_name: str
+    last_name: str
+
+class DeleteAccountRequest(BaseModel):
+    """Exactly one of these is meaningful, chosen server-side by
+    current_user.auth_provider — see delete_me(). Both optional so either
+    shape of client payload parses; the unused one is simply ignored."""
+    password: str | None = None
+    confirmation: str | None = None
 
 # ─── Password + OTP + token helpers ──────────────────────────────────────────────
 
@@ -291,7 +306,8 @@ def verify_otp(request: Request, req: VerifyOTPRequest, db: Session = Depends(ge
 
 
 @router.post('/complete-signup')
-def complete_signup(req: CompleteSignupRequest, db: Session = Depends(get_db)):
+@limiter.limit('10/minute')
+def complete_signup(request: Request, req: CompleteSignupRequest, db: Session = Depends(get_db)):
     """Create the account from a verified signup_token + collected profile.
 
     This is the single point where a User row is written — with a verified
@@ -403,8 +419,12 @@ def onboarding_username(
     """Set a username for an already-authenticated but incomplete account.
 
     Used by the Google branch, where the user is created (verified email +
-    name) before choosing a username.
+    name) before choosing a username. One-time — once onboarding is complete
+    the username is locked; this is not a general username-change endpoint.
     """
+    if current_user.signup_step == 'completed':
+        raise HTTPException(409, 'Username has already been set and cannot be changed.')
+
     username = req.username.strip().lower()
     error = validate_username_format(username)
     if error:
@@ -444,3 +464,63 @@ def logout():
 @router.get('/me')
 def me(current_user: User = Depends(get_current_user)):
     return {'user': user_public(current_user)}
+
+
+@router.patch('/me')
+@limiter.limit('20/minute')
+def update_me(
+    request: Request,
+    req: UpdateProfileRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Edit first/last name only. email and username are immutable here by
+    construction — UpdateProfileRequest has no such fields, and extra='forbid'
+    turns an attempt to send either into a 422 rather than a silent no-op."""
+    first_name = req.first_name.strip()
+    last_name = req.last_name.strip()
+    if not first_name or not last_name:
+        raise HTTPException(400, 'First and last name are required')
+
+    current_user.first_name = first_name
+    current_user.last_name = last_name
+    current_user.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(current_user)
+
+    return {'user': user_public(current_user)}
+
+
+@router.delete('/me', status_code=204)
+@limiter.limit('5/minute')
+def delete_me(
+    request: Request,
+    req: DeleteAccountRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Hard-deletes the user row; the 6 user_id FKs (progress, mastery_scores,
+    user_batch_progress, xp_ledger, user_streak, auth_sessions) are cascaded
+    or nulled at the DB level by migration 0005_user_delete_cascade.
+
+    Re-auth branch is decided from current_user.auth_provider (server state),
+    never from which field the client happened to send — a Google-onboarded
+    account with no password_hash could otherwise be deleted by anyone who
+    guesses to send a `password` field instead of `confirmation`.
+    """
+    if current_user.auth_provider == 'google':
+        expected = (current_user.username or '').strip().lower()
+        if not req.confirmation or req.confirmation.strip().lower() != expected:
+            raise HTTPException(401, 'Confirmation does not match.')
+    else:
+        if not current_user.password_hash or not req.password or not verify_password(
+            req.password, current_user.password_hash
+        ):
+            raise HTTPException(401, 'Incorrect password.')
+
+    db.delete(current_user)
+    db.commit()
+
+    response = Response(status_code=204)
+    response.delete_cookie('access_token', path='/')
+    return response

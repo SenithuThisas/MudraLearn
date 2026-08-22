@@ -49,7 +49,7 @@ class AuthSession(Base):
     __tablename__ = 'auth_sessions'
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=True)
+    user_id = Column(UUID(as_uuid=True), ForeignKey('users.id', ondelete='SET NULL'), nullable=True)
     email = Column(String, nullable=True)           # set for signup_temp (no user yet)
     token_hash = Column(String, nullable=False)
     purpose = Column(String, nullable=False)        # 'signup_temp' | 'login_temp'
