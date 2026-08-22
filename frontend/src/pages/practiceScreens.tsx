@@ -7,6 +7,7 @@ import { HardCard, ModelSaw, ReferenceVideo, StatusBanner, VerdictCard, WebcamPa
 import { useHandLandmarker } from '../hooks/useHandLandmarker'
 import {
   getBatchOverview,
+  getBatchRecommendations,
   getChallenge,
   markSignPracticed,
   practiceErrorMessage,
@@ -54,6 +55,12 @@ export function BatchOverviewPage() {
     queryFn: () => getBatchOverview(batchId),
     enabled: Number.isFinite(batchId),
   })
+  const [recommendationsDismissed, setRecommendationsDismissed] = useState(false)
+  const recommendationsQuery = useQuery({
+    queryKey: ['practice', 'batch', batchId, 'recommendations'],
+    queryFn: () => getBatchRecommendations(batchId),
+    enabled: Number.isFinite(batchId) && Boolean(query.data?.challengeUnlocked),
+  })
 
   if (query.isLoading) {
     return <p role="status" className="animate-pulse font-body text-sm text-muted">Loading batch…</p>
@@ -68,6 +75,8 @@ export function BatchOverviewPage() {
   }
 
   const data = query.data
+  const recommendations = recommendationsQuery.data?.recommendations ?? []
+  const showRecommendations = data.challengeUnlocked && !recommendationsDismissed && recommendations.length > 0
 
   return (
     <div className="space-y-6">
@@ -79,6 +88,32 @@ export function BatchOverviewPage() {
           Preview each sign, then practice. Challenge unlocks after all five.
         </p>
       </div>
+
+      {showRecommendations && (
+        <HardCard tone="yellow" className="space-y-3 p-4">
+          <p className="font-pixel text-[10px] leading-4 text-ink">
+            SYSTEM RECOMMENDS REVIEWING {recommendations.length} SIGN{recommendations.length === 1 ? '' : 'S'} BEFORE MOVING ON
+          </p>
+          <ul className="space-y-1 font-body text-xs text-ink">
+            {recommendations.map((r) => (
+              <li key={r.sign}>
+                <span className="font-semibold">{r.sign}</span>
+                <span className="text-muted"> — {r.category} · {r.reason === 'weak_this_batch' ? 'just struggled' : 'fading'}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="flex flex-wrap gap-3">
+            <PixelButton
+              onClick={() => navigate(`/practice/review?mode=batch&batchId=${batchId}`)}
+            >
+              REVIEW NOW
+            </PixelButton>
+            <PixelButton variant="secondary" onClick={() => setRecommendationsDismissed(true)}>
+              SKIP
+            </PixelButton>
+          </div>
+        </HardCard>
+      )}
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-5">
         {data.signs.map((sign, index) => {
