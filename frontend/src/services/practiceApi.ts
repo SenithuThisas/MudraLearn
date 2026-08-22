@@ -45,6 +45,20 @@ export interface BatchOverview {
   nextPracticeSignId: string | null
 }
 
+export type RecommendationReason = 'weak_this_batch' | 'decayed'
+
+export interface BatchRecommendation {
+  sign: string
+  category: string
+  reason: RecommendationReason
+  mastery: number | null
+}
+
+export interface BatchRecommendations {
+  recommendations: BatchRecommendation[]
+  count: number
+}
+
 export interface SignAttemptResult {
   verdict: Verdict
   confidence: number
@@ -217,6 +231,15 @@ function mapChallenge(raw: Record<string, unknown>): ChallengeState {
   }
 }
 
+function mapRecommendation(raw: Record<string, unknown>): BatchRecommendation {
+  return {
+    sign: String(raw.sign),
+    category: String(raw.category),
+    reason: raw.reason as RecommendationReason,
+    mastery: (raw.mastery as number | null) ?? null,
+  }
+}
+
 export function practiceErrorMessage(err: unknown): string {
   const detail = (err as { response?: { data?: { detail?: unknown } } })?.response?.data?.detail
   if (typeof detail === 'string') return detail
@@ -245,6 +268,14 @@ export async function getBatchOverview(batchId: number): Promise<BatchOverview> 
 export async function markSignPracticed(batchId: number, signId: string): Promise<BatchOverview> {
   const { data } = await api.post(`/practice/batches/${batchId}/practiced`, { sign_id: signId })
   return mapOverview(data)
+}
+
+export async function getBatchRecommendations(batchId: number): Promise<BatchRecommendations> {
+  const { data } = await api.get(`/practice/batches/${batchId}/recommendations`)
+  return {
+    recommendations: ((data.recommendations as Record<string, unknown>[]) ?? []).map(mapRecommendation),
+    count: Number(data.count ?? 0),
+  }
 }
 
 export async function restartBatch(batchId: number): Promise<BatchOverview> {
