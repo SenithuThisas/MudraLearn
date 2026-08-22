@@ -12,6 +12,7 @@ export interface UserProfile {
   last_name?: string
   username?: string
   auth_provider: 'google' | 'email'
+  has_password: boolean
   onboarding_complete: boolean
   is_new?: boolean
 }

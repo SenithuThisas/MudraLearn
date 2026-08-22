@@ -283,6 +283,57 @@ class GoogleAccountDeleteTests(unittest.TestCase):
             db.close()
 
 
+class HasPasswordFieldTests(unittest.TestCase):
+    """has_password (user_public()) reflects password_hash directly, not
+    auth_provider -- a Google-linked account (auth_provider stays 'email',
+    password_hash untouched -- see google_callback()'s account-linking
+    branch) must still report has_password: true, proving the frontend's
+    re-auth branch (DeleteAccountModal.tsx) can rely on this field instead
+    of auth_provider as a proxy for it."""
+
+    def setUp(self) -> None:
+        limiter.reset()
+        self.client = TestClient(app)
+        self.user_id = uuid.uuid4()
+        self.username = _unique_username()
+        db = SessionLocal()
+        try:
+            db.add(User(
+                id=self.user_id,
+                email=f"pytest-linked-{self.user_id}@example.com",
+                username=self.username,
+                first_name="Linked",
+                last_name="User",
+                password_hash="fake-bcrypt-hash",
+                auth_provider="email",
+                google_id=f"g-{self.user_id}",
+                signup_step="completed",
+            ))
+            db.commit()
+        finally:
+            db.close()
+        token = make_access_token(str(self.user_id))
+        self.client.headers.update({"Authorization": f"Bearer {token}"})
+
+    def tearDown(self) -> None:
+        db = SessionLocal()
+        try:
+            db.query(User).filter(User.id == self.user_id).delete()
+            db.commit()
+        finally:
+            db.close()
+        limiter.reset()
+
+    def test_google_linked_user_with_password_reports_has_password_true(self) -> None:
+        resp = self.client.get("/api/auth/me")
+        self.assertEqual(resp.status_code, 200, resp.text)
+        user = resp.json()["user"]
+        self.assertTrue(user["has_password"])
+        # auth_provider is unchanged by linking -- confirms has_password is
+        # not just re-deriving auth_provider under a new name.
+        self.assertEqual(user["auth_provider"], "email")
+
+
 class OnboardingUsernameGuardTests(_SignedUpUserTestCase):
     def test_reentry_after_completed_signup_returns_409(self) -> None:
         resp = self.client.post("/api/auth/onboarding/username", json={"username": "somenewname"})
