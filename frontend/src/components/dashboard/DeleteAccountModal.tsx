@@ -27,7 +27,12 @@ export default function DeleteAccountModal({ open, user, onClose, onDeleted, tri
   const panelRef = useRef<HTMLDivElement>(null)
   const reduceMotion = useReducedMotion()
 
-  const isGoogleAccount = user.auth_provider === 'google'
+  // Matches the backend's own re-auth branch (delete_me() in auth.py): the
+  // fact that decides which input to show is whether the account has a
+  // password, not how it originated. auth_provider stays purely descriptive
+  // (see google_callback()'s account-linking, which can leave a Google-
+  // linked account with auth_provider='email' and a password_hash intact).
+  const needsConfirmationPhrase = !user.has_password
   const [inputValue, setInputValue] = useState('')
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -79,7 +84,7 @@ export default function DeleteAccountModal({ open, user, onClose, onDeleted, tri
     setError('')
     setSubmitting(true)
     try {
-      if (isGoogleAccount) {
+      if (needsConfirmationPhrase) {
         await deleteAccount({ confirmation: inputValue })
       } else {
         await deleteAccount({ password: inputValue })
@@ -148,7 +153,7 @@ export default function DeleteAccountModal({ open, user, onClose, onDeleted, tri
             </p>
 
             <div style={{ marginBottom: 20 }}>
-              {isGoogleAccount ? (
+              {needsConfirmationPhrase ? (
                 <PixelInput
                   label={`Type your username ("${user.username}") to confirm`}
                   placeholder={user.username ?? ''}
