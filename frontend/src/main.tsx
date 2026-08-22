@@ -29,6 +29,7 @@ import OnboardingUsernamePage from './pages/OnboardingUsernamePage'
 import WelcomePage from './pages/WelcomePage'
 import DashboardPage from './pages/DashboardPage'
 import ProtectedRoute from './components/ProtectedRoute'
+import AdaptiveReviewPage from './pages/AdaptiveReviewPage'
 
 const queryClient = new QueryClient()
 
@@ -49,6 +50,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 <Route path='batches/:batchId/practice/:signId' element={<PracticeSignPage />} />
 <Route path='batches/:batchId/challenge' element={<ChallengePage />} />
 <Route path='batches/:batchId/result' element={<BatchResultPage />} />
+<Route path='review' element={<AdaptiveReviewPage />} />
 </Route>
 <Route path='/dictionary' element={<DictionaryPage />} />
 <Route path='/splash' element={<SplashPage />} />

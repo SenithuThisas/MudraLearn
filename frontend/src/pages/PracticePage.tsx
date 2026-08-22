@@ -63,6 +63,23 @@ export default function PracticePage() {
 
   return (
     <div className="space-y-8">
+      {/* ── Adaptive Review entry ─────────────────────────────────────── */}
+      <Link to="/practice/review" className="block no-underline" id="adaptive-review-card-link">
+        <HardCard tone="navy" className="p-5 flex items-center justify-between gap-4">
+          <div>
+            <p className="font-pixel text-[9px] tracking-wide text-sticker-yellow">ADAPTIVE ENGINE</p>
+            <h2 className="mt-1 font-pixel text-xs leading-5 text-white">ADAPTIVE REVIEW</h2>
+            <p className="mt-2 font-body text-xs text-white/70">
+              Spaced repetition — the engine picks what you need most.
+            </p>
+          </div>
+          <span className="shrink-0 border-2 border-sticker-yellow px-3 py-1 font-pixel text-[9px] text-sticker-yellow shadow-hard-sm">
+            START →
+          </span>
+        </HardCard>
+      </Link>
+
+      {/* ── Batch Map ─────────────────────────────────────────────────── */}
       <div>
         <p className="font-pixel text-[10px] text-primary">PRACTICE PATH</p>
         <h1 className="mt-2 font-pixel text-lg leading-7 text-ink">BATCH MAP</h1>

@@ -9,7 +9,7 @@
       "gate_passed": true,
       "category": "Numbers",
       "difficulty_rank": 1,
-      "in_batch": true
+      "in_batch": false
     },
     {
       "sign_id": "Children",
@@ -19,7 +19,7 @@
       "gate_passed": true,
       "category": "Nouns",
       "difficulty_rank": 2,
-      "in_batch": true
+      "in_batch": false
     },
     {
       "sign_id": "Deaf",
@@ -29,7 +29,7 @@
       "gate_passed": true,
       "category": "Adjectives",
       "difficulty_rank": 3,
-      "in_batch": true
+      "in_batch": false
     },
     {
       "sign_id": "Deep",
@@ -39,7 +39,7 @@
       "gate_passed": true,
       "category": "Adjectives",
       "difficulty_rank": 4,
-      "in_batch": true
+      "in_batch": false
     },
     {
       "sign_id": "Different",
@@ -59,7 +59,7 @@
       "gate_passed": true,
       "category": "Nouns",
       "difficulty_rank": 6,
-      "in_batch": true
+      "in_batch": false
     },
     {
       "sign_id": "Equal",
@@ -1030,11 +1030,11 @@
       "tier_label": "Novice",
       "difficulty_rank": 1,
       "sign_ids": [
-        "1. one",
-        "Children",
-        "Deaf",
-        "Deep",
-        "Door"
+        "Thank you",
+        "House",
+        "Sleep",
+        "Visit",
+        "Walk"
       ]
     },
     {
