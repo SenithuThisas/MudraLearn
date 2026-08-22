@@ -49,7 +49,7 @@ class UserBatchProgress(Base):
     __table_args__ = (UniqueConstraint("user_id", "batch_id", name="uq_user_batch_progress"),)
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     batch_id = Column(Integer, ForeignKey("batches.id"), nullable=False)
     status = Column(String, nullable=False, default="locked")
     best_score = Column(Integer, nullable=False, default=0)
@@ -62,7 +62,7 @@ class XpLedger(Base):
     __tablename__ = "xp_ledger"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     amount = Column(Integer, nullable=False)
     reason = Column(String, nullable=False)
     batch_id = Column(Integer, ForeignKey("batches.id"), nullable=True)
@@ -73,7 +73,7 @@ class XpLedger(Base):
 class UserStreak(Base):
     __tablename__ = "user_streak"
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), primary_key=True)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
     last_active_date = Column(Date, nullable=True)
     current_streak = Column(Integer, nullable=False, default=0)
     longest_streak = Column(Integer, nullable=False, default=0)
