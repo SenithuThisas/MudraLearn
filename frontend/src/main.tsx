@@ -28,6 +28,7 @@ import OnboardingLastNamePage from './pages/OnboardingLastNamePage'
 import OnboardingUsernamePage from './pages/OnboardingUsernamePage'
 import WelcomePage from './pages/WelcomePage'
 import DashboardPage from './pages/DashboardPage'
+import ProfilePage from './pages/ProfilePage'
 import ProtectedRoute from './components/ProtectedRoute'
 import AdaptiveReviewPage from './pages/AdaptiveReviewPage'
 
@@ -63,6 +64,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 <Route path='/onboarding/username' element={<OnboardingUsernamePage />} />
 <Route path='/welcome' element={<WelcomePage />} />
 <Route path='/dashboard' element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+<Route path='/profile' element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
 </Routes>
 </AuthProvider>
 </BrowserRouter>

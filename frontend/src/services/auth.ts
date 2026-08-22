@@ -90,6 +90,26 @@ export async function logout(): Promise<void> {
   await authApi.post('/logout')
 }
 
+// Name-only edit — email/username have no field here and never will; the
+// backend rejects either with a 422 if somehow sent.
+export async function updateProfile(firstName: string, lastName: string): Promise<{ user: UserProfile }> {
+  const { data } = await authApi.patch('/me', { first_name: firstName, last_name: lastName })
+  return data
+}
+
+export interface DeleteAccountPayload {
+  // Send only the field matching the current user's auth_provider — the
+  // server decides which check applies from its own session state anyway,
+  // but there's no reason to send both.
+  password?: string
+  confirmation?: string
+}
+
+// 204 No Content on success — nothing to return.
+export async function deleteAccount(payload: DeleteAccountPayload): Promise<void> {
+  await authApi.delete('/me', { data: payload })
+}
+
 export async function getMe(): Promise<{ user: UserProfile }> {
   const { data } = await authApi.get('/me')
   return data
