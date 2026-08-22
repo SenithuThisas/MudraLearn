@@ -42,7 +42,8 @@ from datetime import datetime
 # pyrefly: ignore [missing-import]
 from sqlalchemy.orm import Session
 
-from app.models.progress import MasteryScore
+from app.models.curriculum import Batch
+from app.models.progress import MasteryScore, Progress
 from app.services.mastery_engine import TIER_ATTEMPT_THRESHOLD, TIER_SCORE_THRESHOLD
 
 # ── Tuning constants ──────────────────────────────────────────────────────────
@@ -249,3 +250,104 @@ def _build_response(
         "mastery":  round(mastery_map.get(sign["name"], 0.0), 4)
         if sign["name"] in mastery_map else None,
     }
+
+
+# ── Batch checkpoint recommendations ────────────────────────────────────────
+#
+# A snapshot, computed once when a batch is completed -- unlike get_next_sign()
+# this does not keep re-adapting; the caller walks the returned list, in
+# order, once. Two pools:
+#
+#   weak_this_batch  -- signs that belong to the batch just finished
+#                        (Batch.sign_ids) whose most recent Progress attempt
+#                        was incorrect. `Progress.correct` is already the
+#                        boolean predict.py set at write time against its own
+#                        0.60 match bar -- reusing it means no threshold
+#                        constant at all is needed here (new or reused).
+#                        Progress has no batch_id/session marker to scope
+#                        "since batch start" precisely, but a sign only ever
+#                        belongs to one batch (SignDifficulty.batch_id is
+#                        1:1), so filtering Progress by
+#                        `sign_id IN batch.sign_ids` already isolates this
+#                        batch's history -- the "most recent attempt per sign"
+#                        is the closest available proxy for "how did this
+#                        practice session go" without a schema change.
+#
+#   decayed          -- MasteryScore rows for signs OUTSIDE this batch,
+#                        scored below TIER_SCORE_THRESHOLD, ranked by the same
+#                        recency-weight formula _adaptive() already uses
+#                        (last_seen-driven -- no new field, no new formula).
+
+
+def get_batch_recommendations(db: Session, user_id, batch_id: int) -> dict:
+    """
+    Return up to 5 signs the user should review before advancing past the
+    batch they just completed.
+
+    Response schema:
+        {
+          "recommendations": [
+            {"sign": str, "category": str, "reason": "weak_this_batch" | "decayed", "mastery": float | None},
+            ...
+          ],
+          "count": int
+        }
+    """
+    batch = db.query(Batch).filter(Batch.id == batch_id).first()
+    if batch is None:
+        return {"recommendations": [], "count": 0}
+
+    batch_sign_ids: list[str] = list(batch.sign_ids)
+    batch_sign_id_set = set(batch_sign_ids)
+
+    # ── weak-from-this-batch ────────────────────────────────────────────
+    progress_rows: list[Progress] = (
+        db.query(Progress)
+        .filter(Progress.user_id == user_id, Progress.sign_id.in_(batch_sign_ids))
+        .order_by(Progress.timestamp.desc())
+        .all()
+    )
+    latest_attempt: dict[str, Progress] = {}
+    for row in progress_rows:
+        latest_attempt.setdefault(row.sign_id, row)  # desc order -> first seen is most recent
+
+    weak_this_batch_ids = [
+        sid for sid in batch_sign_ids
+        if sid in latest_attempt and not latest_attempt[sid].correct
+    ]
+
+    # ── decayed-from-earlier ────────────────────────────────────────────
+    mastery_rows: list[MasteryScore] = (
+        db.query(MasteryScore).filter(MasteryScore.user_id == user_id).all()
+    )
+    mastery_by_sign: dict[str, MasteryScore] = {r.sign_id: r for r in mastery_rows}
+
+    now = datetime.utcnow()
+    weighted_decayed: list[tuple[str, float]] = []
+    for r in mastery_rows:
+        if r.sign_id in batch_sign_id_set or r.score >= TIER_SCORE_THRESHOLD:
+            continue
+        days_since = (now - r.last_seen).days if r.last_seen else 0
+        weight = (1.0 - r.score) * 2 + min(days_since, 7) * 0.3
+        weighted_decayed.append((r.sign_id, weight))
+    weighted_decayed.sort(key=lambda pair: pair[1], reverse=True)
+    decayed_ids = [sid for sid, _weight in weighted_decayed]
+
+    # ── merge + cap ──────────────────────────────────────────────────────
+    picks: list[tuple[str, str]] = (
+        [(sid, "weak_this_batch") for sid in weak_this_batch_ids]
+        + [(sid, "decayed") for sid in decayed_ids]
+    )[:5]
+
+    recommendations = []
+    for sign_id, reason in picks:
+        sign_meta = _SIGN_BY_NAME.get(sign_id)
+        mastery_row = mastery_by_sign.get(sign_id)
+        recommendations.append({
+            "sign": sign_id,
+            "category": sign_meta["category"] if sign_meta else "Uncategorized",
+            "reason": reason,
+            "mastery": round(mastery_row.score, 4) if mastery_row else None,
+        })
+
+    return {"recommendations": recommendations, "count": len(recommendations)}
