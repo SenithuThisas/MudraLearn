@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { MouseEvent } from 'react'
-import Navigation from '../components/Navigation'
+import DashboardShell from '../components/dashboard/DashboardShell'
 import SignCard from '../components/SignCard'
 import SignDetailModal from '../components/dictionary/SignDetailModal'
 import type { TieredSign } from '../utils/signTiers'
@@ -42,8 +42,7 @@ export default function DictionaryPage() {
   }
 
   return (
-    <div className='min-h-screen bg-paper'>
-      <Navigation />
+    <DashboardShell>
       <div className='mx-auto max-w-5xl px-6 py-8'>
         <h1 className='mb-6 font-pixel text-lg leading-8 text-ink'>Sign Dictionary</h1>
 
@@ -124,6 +123,6 @@ export default function DictionaryPage() {
       </div>
 
       <SignDetailModal sign={detailSign} onClose={() => setDetailSign(null)} triggerRef={triggerRef} />
-    </div>
+    </DashboardShell>
   )
 }
