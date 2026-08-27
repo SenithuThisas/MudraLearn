@@ -1,0 +1,465 @@
+@startuml class_diagram
+'' MudraLearn — full UML class diagram (domain entities + FastAPI routers +
+'' services + key DTOs). Complements er_diagram.puml (crow's-foot data model)
+'' and architecture_component.puml (C4 boxes). Verified against the live
+'' backend: models/*.py, routers/*.py, services/*.py.
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 0
+skinparam defaultFontName Helvetica
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+skinparam class {
+  BackgroundColor white
+  BorderColor #333333
+  FontColor #111111
+  ArrowColor #333333
+}
+skinparam package {
+  BackgroundColor white
+  BorderColor #333333
+  FontColor #111111
+}
+skinparam note {
+  BackgroundColor white
+  BorderColor #333333
+  FontColor #111111
+}
+
+skinparam class<<orphaned>> {
+  BackgroundColor white
+  BorderColor #333333
+  BorderStyle dashed
+  FontColor #111111
+}
+skinparam class<<unimplemented>> {
+  BackgroundColor white
+  BorderColor #B23A3A
+  BorderStyle dashed
+  FontColor #111111
+}
+
+hide empty members
+hide circle
+
+package "Domain Model (SQLAlchemy)" {
+
+  class User <<entity>> {
+    +id : UUID {PK}
+    +email : str {UQ}
+    +firstName : str?
+    +lastName : str?
+    +username : str? {UQ}
+    +role : str = "user"
+    +authProvider : str = "email"
+    +googleId : str? {UQ}
+    +emailVerifiedAt : datetime?
+    +passwordHash : str?
+    +signupStep : str
+    +failedLoginAttempts : int
+    +lockedUntil : datetime?
+    +createdAt : datetime
+    +updatedAt : datetime
+  }
+
+  class EmailOTP <<entity>> {
+    +id : UUID {PK}
+    +email : str
+    +otpHash : str
+    +expiresAt : datetime
+    +attempts : int
+    +createdAt : datetime
+  }
+
+  class AuthSession <<entity>> {
+    +id : UUID {PK}
+    +userId : UUID? {FK}
+    +email : str?
+    +tokenHash : str
+    +purpose : str
+    +consumed : bool
+    +expiresAt : datetime
+    +createdAt : datetime
+  }
+
+  class Progress <<entity>> {
+    +id : int {PK}
+    +userId : UUID {FK}
+    +signId : str
+    +category : str
+    +confidence : float
+    +correct : bool
+    +responseMs : int
+    +timestamp : datetime
+  }
+
+  class MasteryScore <<entity>> {
+    +id : int {PK}
+    +userId : UUID {FK}
+    +signId : str
+    +score : float
+    +attempts : int
+    +lastSeen : datetime
+    +tierUnlocked : int
+  }
+
+  class SignDifficulty <<entity>> {
+    +signId : str {PK}
+    +f1 : float
+    +accuracy : float
+    +support : float
+    +difficultyRank : int
+    +gatePassed : bool
+    +category : str
+    +batchId : int? {FK}
+  }
+
+  class Batch <<entity>> {
+    +id : int {PK}
+    +tier : int
+    +tierLabel : str
+    +levelNumber : int {UQ}
+    +difficultyRank : int
+    +signIds : str[]
+  }
+
+  class UserBatchProgress <<entity>> {
+    +id : int {PK}
+    +userId : UUID {FK}
+    +batchId : int {FK}
+    +status : str
+    +bestScore : int
+    +attempts : int
+    +practicedSignIds : JSONB
+    +challengeState : JSONB
+  }
+
+  class XpLedger <<entity>> {
+    +id : int {PK}
+    +userId : UUID {FK}
+    +amount : int
+    +reason : str
+    +batchId : int? {FK}
+    +signId : str?
+    +createdAt : datetime
+  }
+
+  class UserStreak <<entity>> {
+    +userId : UUID {PK, FK}
+    +lastActiveDate : date?
+    +currentStreak : int
+    +longestStreak : int
+  }
+
+  class Base <<orm>> {
+    {static} metadata
+  }
+}
+
+package "Infrastructure" {
+  class Database <<module>> {
+    {static} engine
+    {static} SessionLocal
+    +getDb() : Session
+    +createTables()
+  }
+
+  class MudraLearnAPI <<application>> {
+    +startup() : loadModel()
+    +root() : status
+  }
+}
+
+package "Routers" {
+
+  class AuthRouter <<router>> {
+    +checkEmail(email)
+    +requestOtp(email)
+    +verifyOtp(email, otp)
+    +completeSignup(signupToken, password, firstName, lastName, username)
+    +login(email, password)
+    +usernameAvailable(u)
+    +onboardingUsername(username)
+    +googleCallback(idToken)
+    +logout()
+    +me() : User
+    +updateMe(firstName, lastName)
+    +deleteMe(password?, confirmation?)
+    --
+    +hashPassword() / verifyPassword()
+    +makeAccessToken() / verifyAccessToken()
+    +getCurrentUser() : User
+  }
+
+  class PredictRouter <<router>> {
+    +predictSign(sequence, targetSign, category, responseMs) : PredictResponse
+  }
+
+  class SessionRouter <<router>> {
+    +nextSign() : dict
+    +masterySummary() : list
+  }
+
+  class ProgressRouter <<router>> {
+    +attemptHistory(limit=50) : dict
+  }
+
+  class DashboardRouter <<router>> {
+    +dashboardSummary() : DashboardSummaryResponse
+    +dashboardSigns(search, category, page, pageSize) : SignsPageResponse
+  }
+
+  class PracticeRouter <<router>> {
+    +practiceMap()
+    +practiceContinue()
+    +practiceOverview(batchId)
+    +practiceRecommendations(batchId)
+    +practiceMark(batchId, signId)
+    +practiceRestart(batchId)
+    +practiceChallengeStart(batchId)
+    +practiceChallengeGet(batchId)
+    +practiceChallengeHint(batchId)
+    +practiceChallengeSkip(batchId)
+    +practiceChallengeAttempt(batchId, signId, sequence, responseMs)
+  }
+}
+
+package "Services" {
+
+  class InferenceService <<service>> {
+    {field} model : Keras Sequential
+    {field} labels : list[str]
+    +loadModel()
+    +predict(sequence) : list[top3]
+  }
+
+  class MasteryEngine <<service>> {
+    {field} ALPHA = 0.3
+    {field} TIER_SCORE_THRESHOLD = 0.80
+    {field} TIER_ATTEMPT_THRESHOLD = 5
+    +updateMastery(db, userId, signId, confidence, correct) : MasteryScore
+    +getMasterySummary(db, userId) : list
+    +getSignMastery(db, userId, signId) : dict?
+  }
+
+  class AdaptiveEngine <<service>> {
+    {field} COLD_START_THRESHOLD = 10
+    {field} STARTER_SIGN_COUNT = 15
+    {field} NEW_SIGN_INJECTION = 0.20
+    +getNextSign(db, userId) : dict
+    +getBatchRecommendations(db, userId, batchId) : dict
+  }
+
+  class DashboardService <<service>> {
+    +tierForScore(score) : str
+    +isMastered(score, attempts) : bool
+    +computeDayStreak(db, userId) : dict
+    +buildSummary(db, userId) : dict
+    +buildSignsPage(db, userId, search, category, page, pageSize) : dict
+  }
+
+  class PracticeFlow <<service>> {
+    +continueTarget(db, userId) : int?
+    +serializeMap(db, userId) : dict
+    +serializeOverview(db, userId, batchId) : dict
+    +markPracticed(db, userId, batchId, signId) : dict
+    +restartBatch(db, userId, batchId) : dict
+    +startChallenge(db, userId, batchId) : dict
+    +useHint(db, userId, batchId) : dict
+    +challengeAttempt(db, userId, batchId, signId, sequence, responseMs) : dict
+    +advanceAfterRetry(db, userId, batchId) : dict
+    +getChallenge(db, userId, batchId) : dict
+  }
+
+  class CurriculumService <<service>> {
+    +applySeed(db, payload?) : dict
+    +ensureUserCurriculum(db, userId)
+    +ensureAllUsers(db) : int
+    +totalXp(db, userId) : int
+    +currentLevelTitle(db, userId) : (int, str)
+    +challengeAllowed(db, signId) : bool
+    +userStreakSnapshot(db, userId, computed) : dict
+  }
+
+  class CurriculumBuilder <<service>> {
+    +loadRankedGatePassed(csv, labelMap, signs) : list
+    +splitUnbatched(ranked, signsPerBatch) : (list, list)
+    +formBatches(eligible, signsPerBatch, maxSameCategory) : list
+    +buildSeedPayload(ranked) : dict
+    +writeSeedJson() / loadSeedJson()
+  }
+
+  class XpRules <<service>> {
+    +baseXp(levelNumber) : int
+    +signXp(verdict, hintUsed, levelNumber) : int
+    +batchCompleted(correctCount) : bool
+    +batchBonusEntries(correctCount, hintsUsed, isNeedsReviewPass) : list
+    +scoreChallengeResults(results) : (int, int)
+    +verdictFor(confidence, correct) : "great"|"okay"|"retry"
+    +canChallengeSign(gatePassed, assignedToBatch) : bool
+  }
+
+  class ProgressFilters <<service>> {
+    +isFreeForm(targetSign, category) : bool
+    +computeStreakStats(days, today) : dict
+  }
+
+  class CurriculumConfig <<service>> {
+    {field} SEQUENCE_LEN = 60
+    {field} FEATURES_PER_FRAME = 126
+    {field} GREAT_CONFIDENCE = 0.85
+    {field} OKAY_CONFIDENCE = 0.60
+    {field} SIGNS_PER_BATCH = 5
+    {field} CHALLENGE_PASS_CORRECT = 3
+    +tierForLevel(levelNumber) : (int, str)
+  }
+
+  class HintRules <<orphaned>> {
+    +classifyPracticeAttempt(targetSign, top3, confidence, okayConfidence)
+    +shouldAutoHint(history, streak=2) : bool
+  }
+
+  class LlmService <<unimplemented>> {
+  }
+}
+
+package "DTOs (Pydantic)" {
+  class PredictRequest <<dto>> {
+    +sequence : list[list[float]]
+    +targetSign : str?
+    +category : str?
+    +responseMs : int?
+  }
+  class PredictResponse <<dto>> {
+    +predicted : str
+    +confidence : float
+    +top3 : SignResult[]
+    +correct : bool?
+    +mastery : MasteryInfo?
+  }
+  class SignResult <<dto>> {
+    +sign : str
+    +confidence : float
+  }
+  class DashboardSummaryResponse <<dto>> {
+    +stats
+    +xp
+    +level
+    +categories
+    +needsReview
+    +recentActivity
+    +difficultyTiers
+  }
+  class SignsPageResponse <<dto>> {
+    +items : SignMasteryRow[]
+    +total : int
+    +page : int
+    +pageSize : int
+  }
+}
+
+Base <|-- User
+Base <|-- EmailOTP
+Base <|-- AuthSession
+Base <|-- Progress
+Base <|-- MasteryScore
+Base <|-- SignDifficulty
+Base <|-- Batch
+Base <|-- UserBatchProgress
+Base <|-- XpLedger
+Base <|-- UserStreak
+
+User "1" o-- "0..*" AuthSession : userId (SET NULL)
+User "1" --> "0..*" Progress : userId (CASCADE)
+User "1" --> "0..*" MasteryScore : userId (CASCADE)
+User "1" --> "0..*" UserBatchProgress : userId (CASCADE)
+User "1" --> "0..*" XpLedger : userId (CASCADE)
+User "1" --> "0..1" UserStreak : userId (CASCADE, PK)
+
+Batch "1" o-- "0..*" SignDifficulty : batchId (nullable)
+Batch "1" --> "0..*" UserBatchProgress : batchId
+Batch "1" o-- "0..*" XpLedger : batchId (nullable)
+
+Progress ..> SignDifficulty : signId (logical)
+MasteryScore ..> SignDifficulty : signId (logical)
+XpLedger ..> SignDifficulty : signId (logical)
+Batch ..> SignDifficulty : signIds[] (logical)
+EmailOTP ..> User : email (logical, pre-account)
+
+MudraLearnAPI --> AuthRouter
+MudraLearnAPI --> PredictRouter
+MudraLearnAPI --> SessionRouter
+MudraLearnAPI --> ProgressRouter
+MudraLearnAPI --> DashboardRouter
+MudraLearnAPI --> PracticeRouter
+MudraLearnAPI --> InferenceService : startup loadModel()
+MudraLearnAPI --> Database
+
+AuthRouter --> User
+AuthRouter --> EmailOTP
+AuthRouter --> AuthSession
+AuthRouter --> Database
+
+PredictRouter --> InferenceService : predict()
+PredictRouter --> MasteryEngine : updateMastery(), getSignMastery()
+PredictRouter --> Progress
+PredictRouter --> PredictRequest
+PredictRouter --> PredictResponse
+
+SessionRouter --> AdaptiveEngine : getNextSign()
+SessionRouter --> MasteryEngine : getMasterySummary()
+
+ProgressRouter --> Progress
+
+DashboardRouter --> DashboardService : buildSummary(), buildSignsPage()
+DashboardRouter --> DashboardSummaryResponse
+DashboardRouter --> SignsPageResponse
+
+PracticeRouter --> PracticeFlow
+PracticeRouter --> AdaptiveEngine : getBatchRecommendations()
+
+PracticeFlow --> InferenceService : predict() (challenge)
+PracticeFlow --> MasteryEngine : updateMastery()
+PracticeFlow --> CurriculumService : ensureUserCurriculum()
+PracticeFlow --> XpRules
+PracticeFlow --> Progress
+PracticeFlow --> Batch
+PracticeFlow --> UserBatchProgress
+PracticeFlow --> SignDifficulty
+PracticeFlow --> XpLedger
+
+DashboardService --> MasteryEngine : getMasterySummary()
+DashboardService --> ProgressFilters
+DashboardService --> CurriculumService
+DashboardService --> Progress
+DashboardService --> UserStreak
+
+CurriculumService --> CurriculumBuilder : loadSeedJson()
+CurriculumService --> XpRules : canChallengeSign()
+CurriculumService --> Batch
+CurriculumService --> SignDifficulty
+CurriculumService --> UserBatchProgress
+CurriculumService --> XpLedger
+CurriculumService --> UserStreak
+CurriculumService --> User
+
+AdaptiveEngine --> MasteryScore
+AdaptiveEngine --> SignDifficulty
+AdaptiveEngine ..> MasteryEngine : TIER_* constants only
+
+MasteryEngine --> MasteryScore
+
+CurriculumBuilder ..> CurriculumConfig : SIGNS_PER_BATCH
+XpRules ..> CurriculumConfig
+PracticeFlow ..> CurriculumConfig
+DashboardService ..> CurriculumConfig
+
+note as ScopeNote
+  Scope: backend OOP + domain. Frontend React pages/hooks are presentation
+  (see architecture_diagram.puml). HintRules is unused on any request path.
+  LlmService is an empty stub (FR9 not implemented).
+end note
+
+@enduml

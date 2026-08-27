@@ -1,0 +1,197 @@
+digraph MudraLearnER {
+  rankdir=TB;
+  fontname="Helvetica";
+  fontsize=13;
+  bgcolor="white";
+  splines=spline;
+  concentrate=false;
+  nodesep=0.55;
+  ranksep=0.6;
+  labeljust=l;
+  node [fontname="Helvetica", fontsize=10, shape=plain, margin=0];
+  edge [fontname="Helvetica", fontsize=9, color="#39506B", fontcolor="#233240", penwidth=1.1, arrowsize=0.7, dir=none, constraint=false];
+
+  title [shape=plain, label=<
+    <TABLE BORDER="0" CELLBORDER="0">
+    <TR><TD ALIGN="CENTER"><FONT POINT-SIZE="16" FACE="Helvetica-Bold">MudraLearn — Database Entity-Relationship Diagram</FONT></TD></TR>
+    <TR><TD ALIGN="CENTER"><FONT POINT-SIZE="10" COLOR="#55606B">PostgreSQL via SQLAlchemy Core (backend/app/models/) — no relationship() used anywhere; all cross-table access is manual query/join. Verified on branch docs/dissertation-audit (feature/adaptive-engine-integration merged here, not yet in main) — 2026-08-25</FONT></TD></TR>
+    </TABLE>>];
+  m0 [shape=point, width=0.01, style=invis];
+  { rank=same; m0; title; }
+
+  /* ================= ENTITY: users ================= */
+  users [label=<
+    <TABLE BORDER="1.5" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#1F3B57">
+    <TR><TD COLSPAN="3" BGCOLOR="#1F3B57"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="11">users</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">PK</FONT></TD><TD><FONT POINT-SIZE="9">uuid</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">id</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">UQ</FONT></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">email  (not null)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">first_name  (null)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">last_name  (null)</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">UQ</FONT></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">username  (null)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">role  (default 'user')</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">auth_provider  (default 'email')</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">UQ</FONT></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">google_id  (null)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">datetime</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">email_verified_at  (null)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">password_hash  (null)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">signup_step  (default 'email')</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">failed_login_attempts  (default 0)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">datetime</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">locked_until  (null)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">datetime</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">created_at</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">datetime</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">updated_at</FONT></TD></TR>
+    </TABLE>>];
+  m1 [shape=point, width=0.01, style=invis];
+  { rank=same; m1; users; }
+
+  /* ================= ROW: email_otps, auth_sessions, user_streak ================= */
+  email_otps [label=<
+    <TABLE BORDER="1.5" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#1F3B57">
+    <TR><TD COLSPAN="3" BGCOLOR="#3E6B96"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="11">email_otps</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">PK</FONT></TD><TD><FONT POINT-SIZE="9">uuid</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">id</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" COLOR="#B23B3B">~</FONT></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#B23B3B">email — no FK, pre-account</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">otp_hash</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">datetime</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">expires_at</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">attempts  (default 0)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">datetime</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">created_at</FONT></TD></TR>
+    </TABLE>>];
+
+  auth_sessions [label=<
+    <TABLE BORDER="1.5" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#1F3B57">
+    <TR><TD COLSPAN="3" BGCOLOR="#3E6B96"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="11">auth_sessions</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">PK</FONT></TD><TD><FONT POINT-SIZE="9">uuid</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">id</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">FK</FONT></TD><TD><FONT POINT-SIZE="9">uuid</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">user_id  (null, SET NULL)</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" COLOR="#B23B3B">~</FONT></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#B23B3B">email — no FK, pre-account</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">token_hash</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">purpose</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">bool</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">consumed  (default false)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">datetime</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">expires_at</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">datetime</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">created_at</FONT></TD></TR>
+    </TABLE>>];
+
+  user_streak [label=<
+    <TABLE BORDER="1.5" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#1F3B57">
+    <TR><TD COLSPAN="3" BGCOLOR="#3E6B96"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="11">user_streak</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">PK,FK</FONT></TD><TD><FONT POINT-SIZE="9">uuid</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">user_id  (also FK -&gt; users.id, CASCADE)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">date</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">last_active_date  (null)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">current_streak  (default 0)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">longest_streak  (default 0)</FONT></TD></TR>
+    </TABLE>>];
+  m2 [shape=point, width=0.01, style=invis];
+  { rank=same; m2; email_otps; auth_sessions; user_streak; }
+
+  /* ================= ROW: progress, mastery_scores ================= */
+  progress [label=<
+    <TABLE BORDER="1.5" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#1F3B57">
+    <TR><TD COLSPAN="3" BGCOLOR="#3E6B96"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="11">progress</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">PK</FONT></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">id</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">FK</FONT></TD><TD><FONT POINT-SIZE="9">uuid</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">user_id  (CASCADE)</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" COLOR="#B23B3B">~</FONT></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#B23B3B">sign_id — no FK</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">category</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">float</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">confidence</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">bool</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">correct</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">response_ms  (default 0)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">datetime</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">timestamp</FONT></TD></TR>
+    </TABLE>>];
+
+  mastery_scores [label=<
+    <TABLE BORDER="1.5" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#1F3B57">
+    <TR><TD COLSPAN="3" BGCOLOR="#3E6B96"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="11">mastery_scores</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">PK</FONT></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">id</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">FK</FONT></TD><TD><FONT POINT-SIZE="9">uuid</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">user_id  (CASCADE)</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" COLOR="#B23B3B">~</FONT></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#B23B3B">sign_id — no FK, not UQ w/ user_id</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">float</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">score  (default 0.0)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">attempts  (default 0)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">datetime</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">last_seen</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">tier_unlocked  (default 1)</FONT></TD></TR>
+    </TABLE>>];
+  m3 [shape=point, width=0.01, style=invis];
+  { rank=same; m3; progress; mastery_scores; }
+
+  /* ================= ROW: sign_difficulty, batches ================= */
+  sign_difficulty [label=<
+    <TABLE BORDER="1.5" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#1F3B57">
+    <TR><TD COLSPAN="3" BGCOLOR="#3E6B96"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="11">sign_difficulty</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">PK</FONT></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">sign_id</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">float</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">f1</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">float</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">accuracy</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">float</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">support  (default 0)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">difficulty_rank</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">bool</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">gate_passed  (default false)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">category  (default 'Uncategorized')</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">FK</FONT></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">batch_id  (null)</FONT></TD></TR>
+    </TABLE>>];
+
+  batches [label=<
+    <TABLE BORDER="1.5" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#1F3B57">
+    <TR><TD COLSPAN="3" BGCOLOR="#3E6B96"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="11">batches</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">PK</FONT></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">id  (= level_number by app convention, not a DB rule)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">tier</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">tier_label</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">UQ</FONT></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">level_number</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">difficulty_rank</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" COLOR="#B23B3B">~</FONT></TD><TD><FONT POINT-SIZE="9">array</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#B23B3B">sign_ids — no FK, denormalized</FONT></TD></TR>
+    </TABLE>>];
+  m4 [shape=point, width=0.01, style=invis];
+  { rank=same; m4; sign_difficulty; batches; }
+
+  /* ================= ROW: user_batch_progress, xp_ledger ================= */
+  user_batch_progress [label=<
+    <TABLE BORDER="1.5" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#1F3B57">
+    <TR><TD COLSPAN="3" BGCOLOR="#3E6B96"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="11">user_batch_progress</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">PK</FONT></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">id</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">FK,UQ*</FONT></TD><TD><FONT POINT-SIZE="9">uuid</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">user_id  (CASCADE)</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">FK,UQ*</FONT></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">batch_id  (no ON DELETE rule)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">status  (default 'locked')</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">best_score  (default 0)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">attempts  (default 0)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">jsonb</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">practiced_sign_ids  (default [])</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">jsonb</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">challenge_state  (default {})</FONT></TD></TR>
+    <TR><TD COLSPAN="3" ALIGN="LEFT"><FONT POINT-SIZE="7.5" COLOR="#55606B">*UQ(user_id, batch_id) — one row per user per batch</FONT></TD></TR>
+    </TABLE>>];
+
+  xp_ledger [label=<
+    <TABLE BORDER="1.5" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#1F3B57">
+    <TR><TD COLSPAN="3" BGCOLOR="#3E6B96"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="11">xp_ledger</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">PK</FONT></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">id</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">FK</FONT></TD><TD><FONT POINT-SIZE="9">uuid</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">user_id  (CASCADE, indexed)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">amount</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">reason</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" FACE="Helvetica-Bold">FK</FONT></TD><TD><FONT POINT-SIZE="9">int</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">batch_id  (null)</FONT></TD></TR>
+    <TR><TD><FONT POINT-SIZE="9" COLOR="#B23B3B">~</FONT></TD><TD><FONT POINT-SIZE="9">string</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9" COLOR="#B23B3B">sign_id — no FK (null)</FONT></TD></TR>
+    <TR><TD></TD><TD><FONT POINT-SIZE="9">datetime</FONT></TD><TD ALIGN="LEFT"><FONT POINT-SIZE="9">created_at</FONT></TD></TR>
+    </TABLE>>];
+  m5 [shape=point, width=0.01, style=invis];
+  { rank=same; m5; user_batch_progress; xp_ledger; }
+
+  /* ================= LEGEND ================= */
+  legend [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#333333">
+    <TR><TD BGCOLOR="#333333"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">LEGEND</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">PK = primary key . FK = real ForeignKey() column, DB-enforced . UQ = unique=True / UniqueConstraint</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">Solid line = real FK relationship. Cardinality shown at each end (1, 0..1, N=0..*), read as "how many of this entity per one of the other"</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5" COLOR="#B23B3B">~ marker / dashed line = looks like a reference by name but has NO ForeignKey() constraint — a plain string/array column, not DB-enforced</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">No relationship() is used anywhere in the codebase — every association here is a plain FK column accessed via manual db.query()/.join(), not ORM navigation</FONT></TD></TR>
+    </TABLE>>];
+  m6 [shape=point, width=0.01, style=invis];
+  { rank=same; m6; legend; }
+
+  /* ================= RANK CHAIN ================= */
+  m0 -> m1 -> m2 -> m3 -> m4 -> m5 -> m6 [style=invis, constraint=true, weight=100];
+
+  /* ================= REAL FK RELATIONSHIPS (solid) ================= */
+  users -> progress          [taillabel="1", headlabel="0..*", style=solid];
+  users -> mastery_scores    [taillabel="1", headlabel="0..*", style=solid];
+  users -> user_batch_progress [taillabel="1", headlabel="0..*", style=solid];
+  users -> xp_ledger         [taillabel="1", headlabel="0..*", style=solid];
+  users -> auth_sessions     [taillabel="0..1", headlabel="0..*", style=solid, label="user_id (nullable FK)"];
+  users -> user_streak       [taillabel="1", headlabel="0..1", style=solid, label="user_id (PK+FK)"];
+  batches -> sign_difficulty [taillabel="0..1", headlabel="0..*", style=solid, label="batch_id (nullable FK)"];
+  batches -> user_batch_progress [taillabel="1", headlabel="0..*", style=solid];
+  batches -> xp_ledger       [taillabel="0..1", headlabel="0..*", style=solid, label="batch_id (nullable FK)"];
+
+  /* ================= INFORMAL / NOT DB-ENFORCED (dashed) ================= */
+  users -> email_otps        [taillabel="0..1", headlabel="0..*", style=dashed, color="#B23B3B", fontcolor="#B23B3B", label="email string, no FK"];
+  sign_difficulty -> progress [taillabel="0..1", headlabel="0..*", style=dashed, color="#B23B3B", fontcolor="#B23B3B", label="sign_id, logical only"];
+  sign_difficulty -> mastery_scores [taillabel="0..1", headlabel="0..*", style=dashed, color="#B23B3B", fontcolor="#B23B3B", label="sign_id, logical only"];
+  sign_difficulty -> xp_ledger [taillabel="0..1", headlabel="0..*", style=dashed, color="#B23B3B", fontcolor="#B23B3B", label="sign_id, logical, nullable"];
+  batches -> sign_difficulty [taillabel="1", headlabel="0..*", style=dashed, color="#B23B3B", fontcolor="#B23B3B", label="sign_ids ARRAY, reverse & informal"];
+}

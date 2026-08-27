@@ -1,0 +1,91 @@
+@startuml activity_diagram
+'' MudraLearn — Activity diagram for the core Practice Attempt flow:
+'' client-side capture -> POST /api/predict -> inference -> EWMA mastery
+'' update -> tier-unlock check. This is the app's signature recognition +
+'' adaptive-mastery loop (routers/predict.py + services/mastery_engine.py),
+'' re-verified line-by-line against branch docs/dissertation-audit
+'' (feature/adaptive-engine-integration merged) — not reused from any
+'' earlier draft.
+''
+'' Batch/Challenge scoring (services/practice_flow.py) and the
+'' auth register/OTP/login/Google flow are separate, equally-verified
+'' flows not drawn here to keep this diagram to one cohesive process —
+'' available as follow-up diagrams on request.
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 0
+skinparam defaultFontName Helvetica
+
+skinparam activity {
+  BackgroundColor white
+  BorderColor #333333
+  FontColor #111111
+  DiamondBackgroundColor white
+  DiamondBorderColor #333333
+  StartColor #333333
+  EndColor #333333
+  ArrowColor #333333
+}
+skinparam partition { BackgroundColor white; BorderColor #333333; FontColor #111111 }
+skinparam note      { BackgroundColor white; BorderColor #333333; FontColor #111111 }
+skinparam swimlane  { BorderColor #333333; TitleBackgroundColor white }
+
+|Client (Browser)|
+start
+:Capture 60 frames via MediaPipe HandLandmarker\n(126-feature vector per frame, in-browser);
+note right
+  No hand-presence gating client-side — a frame with
+  zero detected hands still contributes an all-zero
+  126-vector like any other frame (verified NFR5 gap,
+  frontend/src/hooks/useHandLandmarker.ts).
+end note
+:POST /api/predict\n{sequence, target_sign, category, response_ms}\nAuth: HttpOnly cookie, falls back to Bearer header;
+
+|FastAPI Backend|
+if (len(sequence) == 60\nand every frame has 126 features?) then (no)
+  :raise HTTPException 400;
+  stop
+else (yes)
+endif
+
+:inference.predict(sequence)\nreshape (1, 60, 126), model.predict();
+:top = results[0]\nconfidence = top.confidence;
+:correct = (top.sign == target_sign)\nand (confidence >= OKAY_CONFIDENCE 0.60);
+
+if (is_free_form(target_sign, category)?\ntarget == "unknown" or category == "free") then (yes)
+  :log via loguru;
+  :skip Progress + MasteryScore writes;
+  :return PredictResponse\ncorrect forced False, mastery: null;
+  stop
+else (no)
+endif
+
+:db.add(Progress(user_id, sign_id=target_sign,\ncategory, confidence, correct, response_ms));
+
+partition "mastery_engine.update_mastery()" {
+  if (existing MasteryScore row\nfor (user_id, sign_id)?) then (no — first attempt)
+    :attempt_score = confidence if correct\nelse confidence * 0.3;
+    :score = attempt_score\nattempts = 1;
+  else (yes — subsequent attempt)
+    :attempt_score = confidence if correct\nelse confidence * 0.3;
+    :score = ALPHA*attempt_score + (1-ALPHA)*old_score\n(ALPHA = 0.3)\nattempts += 1;
+    if (score >= 0.80\nand attempts >= 5?) then (yes)
+      :tier_unlocked = min(tier_unlocked + 1, 5);
+    else (no)
+    endif
+  endif
+  :db.flush() + db.refresh(row)\n(no commit yet — caller controls the transaction);
+}
+
+:db.commit()\nProgress + MasteryScore in one transaction;
+note right
+  On any exception in this block:
+  db.rollback(), logger.exception(...), re-raise (→ 500).
+end note
+
+:mastery_engine.get_sign_mastery()\npost-update read for the response;
+:return PredictResponse\n{top_sign, confidence, correct,\nfeedback: verdict_for(confidence, correct),\ntop3, mastery};
+stop
+
+@enduml

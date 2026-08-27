@@ -1,0 +1,167 @@
+@startuml architecture_component
+'' MudraLearn — C4 Component-level diagram, zooming into the single
+'' "FastAPI Backend" box from architecture_container.puml. Plain PlantUML
+'' component-diagram primitives only (no C4-PlantUML stdlib include).
+'' Verified against branch docs/dissertation-audit
+'' (feature/adaptive-engine-integration merged).
+''
+'' NOTE on AdaptiveEngine: re-verified this session (again, matching the
+'' finding already recorded in architecture_diagram.puml for this same
+'' dissertation) — adaptive_engine.py IS reachable end-to-end:
+'' /api/session/next + /api/session/mastery are registered routers, called
+'' from frontend/src/services/api.ts (getNextSign/getMastery), consumed by
+'' AdaptiveReviewPage.tsx, which IS routed at /practice/review in main.tsx.
+'' get_batch_recommendations() is additionally called from
+'' /api/practice/batches/{id}/recommendations. Drawn LIVE (solid), not
+'' orphaned — do not mark it dashed in any future revision without a fresh
+'' grep showing the callers have actually been removed.
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 0
+skinparam defaultFontName Helvetica
+
+skinparam component { BackgroundColor white; BorderColor #333333; FontColor #111111 }
+skinparam database  { BackgroundColor white; BorderColor #333333; FontColor #111111 }
+skinparam cloud     { BackgroundColor white; BorderColor #333333; FontColor #111111 }
+skinparam folder    { BackgroundColor white; BorderColor #333333; FontColor #111111 }
+skinparam note      { BackgroundColor white; BorderColor #333333; FontColor #111111 }
+skinparam package   { BackgroundColor white; BorderColor #333333; FontColor #111111 }
+
+' Dead code / never-called: dashed border, still white fill.
+skinparam component<<orphaned>> { BackgroundColor white; BorderColor #333333; BorderStyle dashed; FontColor #111111 }
+' Empty stub / requirement not implemented: dashed + red-tinted border only, still no fill.
+skinparam component<<unimplemented>> { BackgroundColor white; BorderColor #B23A3A; BorderStyle dashed; FontColor #111111 }
+
+package "FastAPI Backend Container" as fastapi_container {
+
+  package "Routers" as routers_pkg {
+    package "Auth" {
+      component "auth.py\n[Router: 12 endpoints,\n9 rate-limited via slowapi]" as r_auth
+    }
+    package "Prediction" {
+      component "predict.py\n[Router: 1 endpoint,\nnot rate-limited]" as r_predict
+    }
+    package "Session" {
+      component "session.py\n[Router: 2 endpoints,\nnot rate-limited]" as r_session
+    }
+    package "Progress" {
+      component "progress.py\n[Router: 1 endpoint,\nnot rate-limited]" as r_progress
+    }
+    package "Dashboard" {
+      component "dashboard.py\n[Router: 2 endpoints,\nnot rate-limited]" as r_dashboard
+    }
+    package "Practice" {
+      component "practice.py\n[Router: 11 endpoints,\nnot rate-limited]" as r_practice
+    }
+  }
+
+  package "Services" as services_pkg {
+    package "Core ML and Mastery" {
+      component "inference.py\n[Service: loads Keras model at\nstartup; predict() returns top-3 signs]" as s_inference
+      component "mastery_engine.py\n[Service: EWMA mastery score\nupsert per (user, sign)]" as s_mastery
+      component "adaptive_engine.py\n[Service: cold-start / adaptive /\ncomplete sign-selection algorithm]" as s_adaptive
+    }
+    package "Dashboard and Practice Flow" {
+      component "dashboard_service.py\n[Service: aggregates dashboard\nstats, XP, streak, mastery]" as s_dashboard
+      component "practice_flow.py\n[Service: batch map, practice\nprogression, Challenge scoring]" as s_practice_flow
+      component "curriculum_service.py\n[Service: seeds curriculum, inits\nper-user batch/streak rows]" as s_curriculum
+    }
+    package "Curriculum and Rules Support" {
+      component "curriculum_builder.py\n[Service: builds seed JSON from\ngate-eval CSV + labels, offline]" as s_builder
+      component "xp_rules.py\n[Service: pure XP and Challenge-\neligibility rule functions]" as s_xp
+      component "progress_filters.py\n[Service: free-form-attempt filter\nplus streak-stats pure functions]" as s_filters
+      component "curriculum_config.py\n[Service: named tuning constants,\nno logic]" as s_config
+    }
+    package "Unimplemented and Orphaned" {
+      component "hint_rules.py\n[Service: auto-hint classification\nrules — defined, never imported]" as s_hint <<orphaned>>
+      component "llm_service.py\n[Service: empty stub file, 0 bytes —\nFR9 not implemented]" as s_llm <<unimplemented>>
+    }
+  }
+
+  note bottom of fastapi_container
+    Cross-cutting concerns (apply across all routers, not
+    repeated per arrow below): CORS restricts origins to
+    localhost:5173 / 127.0.0.1:5173 with allow_credentials=True,
+    methods and headers "*". get_current_user() dependency reads
+    the access_token HttpOnly cookie first, falls back to an
+    Authorization: Bearer header, else 401. slowapi rate limiting
+    is scoped ONLY to auth.py (9 of its 12 endpoints); every other
+    router is unlimited.
+  end note
+}
+
+folder "ML Model Artifact\n[Filesystem — see Container diagram]" as model_artifact
+database "PostgreSQL\n[see Container diagram for full schema\nand the separate ER diagram]" as db_ref
+
+' ───────────────────────── Router -> Service ─────────────────────────
+
+note right of r_auth
+  No dedicated service file — password hashing
+  (bcrypt), OTP generation/hashing, JWT issuance,
+  and Google id_token verification are all
+  implemented inline in this router.
+end note
+
+note right of r_progress
+  No dedicated service file — queries the
+  Progress table directly via SQLAlchemy,
+  no service-layer indirection.
+end note
+
+r_predict --> s_inference : "predict(sequence)"
+r_predict --> s_mastery : "update_mastery(confidence, correct)"
+
+r_session --> s_adaptive : "get_next_sign(),\nget_mastery_summary()"
+
+r_dashboard --> s_dashboard : "build_summary(),\nbuild_signs_page()"
+
+r_practice --> s_practice_flow : "serialize_map(), mark_practiced(),\nchallenge_attempt(), ..."
+r_practice --> s_adaptive : "get_batch_recommendations(batch_id)"
+
+' ───────────────────────── Service -> Service ─────────────────────────
+
+s_practice_flow --> s_inference : "predict(sequence) for Challenge"
+s_practice_flow --> s_mastery : "update_mastery() via\n_persist_attempt()"
+s_practice_flow --> s_curriculum : "ensure_user_curriculum()"
+s_practice_flow --> s_xp : "sign_xp(), batch_completed(),\ncan_challenge_sign(), verdict_for()"
+
+s_dashboard --> s_mastery : "get_mastery_summary()"
+s_dashboard --> s_filters : "is_free_form(),\ncompute_streak_stats()"
+s_dashboard --> s_curriculum : "ensure_user_curriculum(), total_xp(),\ncurrent_level_title()"
+
+s_curriculum --> s_builder : "load_seed_json(DEFAULT_SEED_JSON)"
+s_curriculum --> s_xp : "can_challenge_sign()"
+
+s_adaptive --> s_mastery : "imports TIER_SCORE_THRESHOLD /\nTIER_ATTEMPT_THRESHOLD constants only"
+s_adaptive --> db_ref : "direct SELECT MasteryScore rows\n(bypasses MasteryEngine)"
+
+note right of s_adaptive
+  Re-verified this session: fully reachable via
+  /api/session/next and /api/session/mastery, called
+  from frontend/src/services/api.ts, consumed by
+  AdaptiveReviewPage.tsx which is routed at
+  /practice/review in main.tsx. NOT orphaned.
+end note
+
+' ───────────────────────── Service -> Data (single summary arrow) ─────────────────────────
+
+services_pkg --> db_ref : "SQL via SQLAlchemy ORM\n(all services collectively)"
+
+s_inference --> model_artifact : "loads mudralearn_model.keras +\nlabel_map.json at startup"
+
+' ───────────────────────── Orphaned / unimplemented notes ─────────────────────────
+
+note right of s_hint
+  classify_practice_attempt() / should_auto_hint()
+  are defined but never imported by practice_flow.py
+  or any router — dead code, not on any request path.
+end note
+
+note right of s_llm
+  File exists but is completely empty (0 bytes).
+  FR9 (assumed LLM-assisted feedback requirement)
+  is not implemented.
+end note
+
+@enduml

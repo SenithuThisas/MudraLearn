@@ -1,0 +1,75 @@
+@startuml architecture_container
+'' MudraLearn — C4 Container-level diagram, hand-drawn with plain PlantUML
+'' component-diagram primitives (no C4-PlantUML stdlib include — that requires
+'' a network fetch at render time). Verified against branch
+'' docs/dissertation-audit (feature/adaptive-engine-integration merged).
+'' Detail inside "FastAPI Backend" is deferred to architecture_component.puml.
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam roundcorner 0
+skinparam defaultFontName Helvetica
+
+skinparam component { BackgroundColor white; BorderColor #333333; FontColor #111111 }
+skinparam database  { BackgroundColor white; BorderColor #333333; FontColor #111111 }
+skinparam cloud     { BackgroundColor white; BorderColor #333333; FontColor #111111 }
+skinparam folder    { BackgroundColor white; BorderColor #333333; FontColor #111111 }
+skinparam note      { BackgroundColor white; BorderColor #333333; FontColor #111111 }
+
+' Orphaned / unwired: dashed border, still no fill colour (honesty convention
+' shared with er_diagram.puml and architecture_diagram.puml already finalised
+' for this dissertation).
+skinparam component<<orphaned>> { BackgroundColor white; BorderColor #333333; BorderStyle dashed; FontColor #111111 }
+skinparam database<<orphaned>>  { BackgroundColor white; BorderColor #333333; BorderStyle dashed; FontColor #111111 }
+
+' ───────────────────────── Client ─────────────────────────
+component "React SPA\n[Container: React 19 + TypeScript, Vite]\n\nreact-router-dom, @tanstack/react-query,\naxios, framer-motion, Tailwind CSS,\n@mediapipe/tasks-vision (HandLandmarker), zustand" as web
+
+' ───────────────────────── Backend ─────────────────────────
+component "FastAPI Backend\n[Container: Python 3.11, FastAPI + Uvicorn]\n\n(6 routers, 12 services — see\narchitecture_component.puml for detail)" as fastapi
+
+' ───────────────────────── Data / Cache ─────────────────────────
+database "PostgreSQL\n[Container: Database]\n\nSQLAlchemy ORM via psycopg2-binary —\nno relationship() mappings anywhere;\njoins are explicit db.query().join() calls" as db
+database "Redis\n[Container: Cache — NOT WIRED]\n\nredis==4.6.0 and fastapi-cache2==0.2.2\nare in requirements.txt but never\nimported anywhere in backend/app" as redis <<orphaned>>
+cloud "Google Identity Services\n[External System]\n\nID-token verification only" as google
+
+' ───────────────────────── Offline tooling ─────────────────────────
+folder "Offline ML / CLI Tooling\n[Not on the live request path]\n\ncurriculum_builder.py, seed_curriculum.py,\nml/ training pipeline" as offline
+folder "ML Model Artifact\n[Filesystem]\n\nml/saved_models/mudralearn_model.keras\n+ label_map.json" as model_artifact
+
+' ───────────────────────── Layout (max 3 per row, kept tall not wide) ─────────────────────────
+web -[hidden]-> fastapi
+fastapi -[hidden]-> db
+db -[hidden]-> offline
+
+' ───────────────────────── Verified data flows ─────────────────────────
+
+web --> fastapi : "HTTPS, JSON body.\nAuth: HttpOnly access_token cookie,\nfalls back to Authorization: Bearer header.\nNo WebSocket or SSE anywhere (verified: zero\nhits for websocket / EventSource in backend or frontend)."
+
+fastapi --> db : "SQL via SQLAlchemy ORM (psycopg2)"
+
+fastapi --> google : "verify_oauth2_token(id_token) via the\ngoogle-auth client library — ID-token flow only.\nNo authorization-code exchange; frontend never\nsends a code, so no client secret is used here."
+
+fastapi ..> redis : "not called from any code path\n(verified: no \"import redis\" /\n\"fastapi_cache\" anywhere in backend/app)"
+
+offline --> db : "apply_seed() upserts Batch + SignDifficulty\nrows via SQLAlchemy ORM\n(PYTHONPATH=. python -m app.scripts.seed_curriculum)"
+
+offline --> model_artifact : "ml/ training pipeline writes the trained\nmodel + label map (offline, build-time only)"
+
+fastapi --> model_artifact : "loads model + label map once at FastAPI\nstartup — inference.load_model()"
+
+note bottom of web
+  Cookie session set by the backend on
+  login/signup/Google callback; the SPA
+  never handles raw credentials after that.
+end note
+
+note bottom of fastapi
+  CORS restricts allow_origins to
+  http://localhost:5173 and http://127.0.0.1:5173,
+  allow_credentials=True. Single deployable unit —
+  see architecture_component.puml for its internal
+  router/service structure.
+end note
+
+@enduml

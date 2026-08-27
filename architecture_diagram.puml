@@ -1,0 +1,190 @@
+@startuml architecture_diagram
+'' MudraLearn — system architecture (component diagram, plain PlantUML primitives,
+'' no external stdlib fetch). Verified against branch docs/dissertation-audit
+'' (feature/adaptive-engine-integration merged). Every arrow is labeled with what
+'' actually crosses it. Orphaned/unused components use <<orphaned>>/<<unused>>
+'' stereotypes with a distinct color so they never look identical to live ones.
+''
+'' NOTE on AdaptiveEngine: a prior pass flagged "AdaptiveEngine's caller gap" as
+'' orphaned. Re-verified this session: adaptive_engine.get_next_sign() IS wired
+'' end-to-end — session.router (/api/session/next, /api/session/mastery) is
+'' registered in main.py, called by frontend/src/services/api.ts
+'' (getNextSign/getMastery), consumed by AdaptiveReviewPage.tsx, which IS routed
+'' at /practice/review in main.tsx. get_batch_recommendations() is likewise called
+'' from /api/practice/batches/{id}/recommendations, used by both
+'' AdaptiveReviewPage.tsx and practiceScreens.tsx. AdaptiveEngine is drawn LIVE,
+'' not orphaned, on the strength of this re-check.
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam componentStyle rectangle
+skinparam roundcorner 8
+skinparam linetype ortho
+
+skinparam component {
+  BackgroundColor #F4F6FF
+  BorderColor #37436B
+  FontColor #1A2036
+}
+skinparam package {
+  BackgroundColor #FBFBFD
+  BorderColor #888888
+  FontColor #333333
+}
+skinparam database {
+  BackgroundColor #FFF6E5
+  BorderColor #8A6D1F
+}
+skinparam cloud {
+  BackgroundColor #EAF7EC
+  BorderColor #2F6B3A
+}
+skinparam node {
+  BackgroundColor #F1F1F1
+  BorderColor #666666
+}
+
+' Distinct look for dead/unwired code so it never reads as "live"
+skinparam component<<orphaned>> {
+  BackgroundColor #FBE7E7
+  BorderColor #A33B3B
+  FontColor #6E1F1F
+}
+
+' ───────────────────────── Client Tier ─────────────────────────
+package "Client Tier" {
+  package "React SPA (Vite)" {
+    component "Auth/Onboarding Pages\n(SignIn, VerifyEmail, Onboarding*)" as c_auth_pages
+    component "Practice Flow Pages\n(PracticeLayout, BatchOverview,\nChallenge, PreviewPage)" as c_practice_pages
+    component "AdaptiveReviewPage\n(/practice/review)" as c_review_page
+    component "Dashboard / Profile / Dictionary" as c_dash_pages
+  }
+  package "Client Services" {
+    component "api.ts / practiceApi.ts\n(axios client)" as c_api_client
+    component "AuthContext\n(cookie session state)" as c_auth_ctx
+    component "Camera capture\n(60x126 landmark sequence)" as c_capture
+  }
+}
+
+' ───────────────────────── FastAPI App ─────────────────────────
+package "FastAPI App (backend/app/main.py)" {
+
+  package "Routers" {
+    component "/api/auth" as r_auth
+    component "/api/predict" as r_predict
+    component "/api/session" as r_session
+    component "/api/progress" as r_progress
+    component "/api/dashboard" as r_dashboard
+    component "/api/practice" as r_practice
+  }
+
+  package "Services (row 1)" {
+    component "InferenceService\n(inference.py)" as s_inference
+    component "AdaptiveEngine\n(adaptive_engine.py)" as s_adaptive
+    component "PracticeFlowService\n(practice_flow.py)" as s_practice_flow
+  }
+  package "Services (row 2)" {
+    component "MasteryEngine\n(mastery_engine.py, EWMA)" as s_mastery
+    component "DashboardService\n(dashboard_service.py)" as s_dashboard
+    component "CurriculumService\n(curriculum_service.py)" as s_curriculum
+  }
+  package "Services (row 3)" {
+    component "xp_rules.py /\nprogress_filters.py\n(pure rule fns)" as s_rules
+    component "hint_rules.py" as s_hint_rules <<orphaned>>
+    component "llm_service.py\n(empty stub file)" as s_llm <<orphaned>>
+  }
+}
+
+' ───────────────────────── Data / External ─────────────────────────
+database "PostgreSQL\n(SQLAlchemy ORM, Alembic 0001-0006)" as db {
+  component "users, email_otps,\nauth_sessions" as db_auth
+  component "progress, mastery_scores" as db_progress
+  component "sign_difficulty, batches,\nuser_batch_progress,\nxp_ledger, user_streak" as db_curriculum
+}
+
+cloud "Google Identity Services" as google
+
+package "Offline / CLI Tooling" {
+  component "ml/ training pipeline\n(notebooks + scripts)" as ml_train
+  component "seed_curriculum.py\n(app/scripts)" as cli_seed
+  component "curriculum_builder.py\n(build_and_write_from_disk)" as cli_builder
+}
+
+node "Unused dependency" as dep_unused <<unused>> {
+  component "redis==4.6.0\n(requirements.txt, never imported)" as s_redis <<orphaned>>
+}
+
+' ───────────────────────── Client -> Backend ─────────────────────────
+c_auth_pages --> c_api_client : "form data"
+c_practice_pages --> c_api_client : "batch/challenge actions"
+c_review_page --> c_api_client : "review actions"
+c_dash_pages --> c_api_client : "GET summary/signs"
+c_capture --> c_api_client : "60x126 float sequence"
+c_api_client --> c_auth_ctx : "sets user/session state"
+
+c_api_client --> r_auth : "POST /api/auth/* (signup, login,\ngoogle/callback, me, delete)"
+c_api_client --> r_predict : "POST /api/predict\n{sequence, target_sign, category}"
+c_api_client --> r_session : "GET /api/session/next,\nGET /api/session/mastery"
+c_api_client --> r_progress : "GET /api/progress/history"
+c_api_client --> r_dashboard : "GET /api/dashboard/summary,\nGET /api/dashboard/signs"
+c_api_client --> r_practice : "GET/POST /api/practice/*\n(map, batches, challenge)"
+
+' ───────────────────────── Routers -> Services ─────────────────────────
+r_auth --> db_auth : "SQL via SQLAlchemy ORM\n(User, EmailOTP, AuthSession)"
+r_auth --> google : "verify_oauth2_token(id_token)"
+
+r_predict --> s_inference : "predict(sequence) -> top3"
+r_predict --> s_mastery : "update_mastery(confidence, correct)"
+r_predict --> db_progress : "INSERT Progress row"
+
+r_session --> s_adaptive : "get_next_sign() / get_mastery_summary()"
+s_adaptive --> db_progress : "SELECT MasteryScore rows"
+s_adaptive --> s_mastery : "reuses TIER_SCORE_THRESHOLD /\nTIER_ATTEMPT_THRESHOLD constants"
+
+r_progress --> db_progress : "SELECT Progress history"
+
+r_dashboard --> s_dashboard : "build_summary() / build_signs_page()"
+s_dashboard --> s_mastery : "get_mastery_summary()"
+s_dashboard --> s_curriculum : "ensure_user_curriculum(),\ntotal_xp(), current_level_title()"
+s_dashboard --> db_progress : "SELECT Progress"
+s_dashboard --> db_curriculum : "SELECT Batch"
+
+r_practice --> s_practice_flow : "serialize_map(), mark_practiced(),\nchallenge_attempt(), ..."
+r_practice --> s_adaptive : "get_batch_recommendations(batch_id)"
+s_practice_flow --> s_inference : "predict(sequence) for Challenge"
+s_practice_flow --> s_mastery : "update_mastery() (via _persist_attempt)"
+s_practice_flow --> s_curriculum : "ensure_user_curriculum()"
+s_practice_flow --> s_rules : "sign_xp(), batch_completed(),\ncan_challenge_sign(), verdict_for()"
+s_practice_flow --> db_curriculum : "SQL via SQLAlchemy ORM\n(Batch, UserBatchProgress, XpLedger,\nSignDifficulty)"
+s_practice_flow --> db_progress : "INSERT Progress row"
+
+s_mastery --> db_progress : "UPSERT MasteryScore"
+s_curriculum --> db_curriculum : "SQL via SQLAlchemy ORM\n(Batch, SignDifficulty,\nUserBatchProgress, UserStreak, XpLedger)"
+
+s_inference --> ml_train : "reads at startup:\nmudralearn_model.keras, label_map.json"
+
+' ───────────────────────── Offline / CLI tooling ─────────────────────────
+ml_train --> cli_builder : "per_class_report_v2.csv,\nlabel_map.json"
+cli_builder --> cli_seed : "writes curriculum_seed.json"
+cli_seed --> db_curriculum : "apply_seed() upserts\nBatch + SignDifficulty rows\n(PYTHONPATH=. python -m\napp.scripts.seed_curriculum)"
+
+' ───────────────────────── Orphaned / unused (kept visible, not wired) ─────────────────────────
+note right of s_hint_rules
+  classify_practice_attempt() / should_auto_hint()
+  defined but never imported by practice_flow.py
+  or any router — dead code, not on any request path.
+end note
+
+note right of s_llm
+  File exists but is completely empty (0 bytes).
+  No import of app.services.llm_service found
+  anywhere in backend/app.
+end note
+
+note bottom of s_redis
+  Listed in backend/requirements.txt but
+  "import redis" / "fastapi_cache" appears
+  nowhere in backend/app — installed, never used.
+end note
+
+@enduml

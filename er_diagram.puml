@@ -1,0 +1,185 @@
+@startuml er_diagram
+'' MudraLearn — ER diagram (PostgreSQL, SQLAlchemy models + Alembic 0001-0006)
+'' Verified against branch docs/dissertation-audit (feature/adaptive-engine-integration merged).
+'' Crow's-foot cardinality reflects ACTUAL nullability/ondelete on each FK, not defaults:
+''   ||  exactly one (mandatory: FK column is NOT NULL)
+''   o|  zero or one (optional: FK column is nullable, or 1:1 child side)
+''   }o  many, optional participation
+''   }|  many, mandatory participation
+'' Dotted ..> lines mark string columns that LOOK like references (sign_id / sign_ids)
+'' but carry no real ForeignKey() constraint in the ORM — never rendered as solid FK lines.
+
+skinparam linetype ortho
+skinparam roundcorner 8
+skinparam shadowing false
+skinparam backgroundColor white
+hide circle
+
+skinparam entity {
+  BackgroundColor white
+  BorderColor #444444
+  FontColor #222222
+}
+
+' ───────────────────────── Auth & Identity ─────────────────────────
+package "Auth & Identity" {
+
+  entity "users" as users {
+    * id : UUID <<PK>>
+    --
+    email : string <<UQ, not null>>
+    first_name : string <<null>>
+    last_name : string <<null>>
+    username : string <<UQ, null>>
+    role : string <<not null, default 'user'>>
+    auth_provider : string <<not null, default 'email'>>
+    google_id : string <<UQ, null>>
+    email_verified_at : datetime <<null>>
+    password_hash : string <<null>>
+    signup_step : string <<not null, default 'email'>>
+    failed_login_attempts : integer <<not null, default 0>>
+    locked_until : datetime <<null>>
+    created_at : datetime <<not null>>
+    updated_at : datetime <<not null>>
+  }
+
+  entity "email_otps" as email_otps {
+    * id : UUID <<PK>>
+    --
+    email : string <<not null>>
+    otp_hash : string <<not null>>
+    expires_at : datetime <<not null>>
+    attempts : integer <<not null, default 0>>
+    created_at : datetime <<not null>>
+  }
+
+  entity "auth_sessions" as auth_sessions {
+    * id : UUID <<PK>>
+    --
+    user_id : UUID <<FK -> users.id, null>>
+    email : string <<null>>
+    token_hash : string <<not null>>
+    purpose : string <<not null>>
+    consumed : boolean <<not null, default false>>
+    expires_at : datetime <<not null>>
+    created_at : datetime <<not null>>
+  }
+}
+
+' ───────────────────────── Practice & Mastery ─────────────────────────
+package "Practice & Mastery" {
+
+  entity "progress" as progress {
+    * id : integer <<PK>>
+    --
+    user_id : UUID <<FK -> users.id, not null>>
+    sign_id : string <<not null>>
+    category : string <<not null>>
+    confidence : float <<not null>>
+    correct : boolean <<not null>>
+    response_ms : integer <<default 0>>
+    "timestamp" : datetime
+  }
+
+  entity "mastery_scores" as mastery_scores {
+    * id : integer <<PK>>
+    --
+    user_id : UUID <<FK -> users.id, not null>>
+    sign_id : string <<not null>>
+    score : float <<default 0.0>>
+    attempts : integer <<default 0>>
+    last_seen : datetime
+    tier_unlocked : integer <<default 1>>
+  }
+}
+
+' ───────────────────────── Curriculum & Batches ─────────────────────────
+package "Curriculum & Batches" {
+
+  entity "sign_difficulty" as sign_difficulty {
+    * sign_id : string <<PK>>
+    --
+    f1 : float <<not null>>
+    accuracy : float <<not null>>
+    support : float <<not null, default 0>>
+    difficulty_rank : integer <<not null>>
+    gate_passed : boolean <<not null, default false>>
+    category : string <<not null, default 'Uncategorized'>>
+    batch_id : integer <<FK -> batches.id, null>>
+  }
+
+  entity "batches" as batches {
+    * id : integer <<PK, = level_number>>
+    --
+    tier : integer <<not null>>
+    tier_label : string <<not null>>
+    level_number : integer <<UQ, not null>>
+    difficulty_rank : integer <<not null>>
+    sign_ids : ARRAY(string) <<not null>>
+  }
+
+  entity "user_batch_progress" as user_batch_progress {
+    * id : integer <<PK>>
+    --
+    user_id : UUID <<FK -> users.id, not null>>
+    batch_id : integer <<FK -> batches.id, not null>>
+    status : string <<not null, default 'locked'>>
+    best_score : integer <<not null, default 0>>
+    attempts : integer <<not null, default 0>>
+    practiced_sign_ids : JSONB <<not null, default []>>
+    challenge_state : JSONB <<not null, default {}>>
+    ..
+    UNIQUE (user_id, batch_id)
+  }
+
+  entity "xp_ledger" as xp_ledger {
+    * id : integer <<PK>>
+    --
+    user_id : UUID <<FK -> users.id, not null>>
+    amount : integer <<not null>>
+    reason : string <<not null>>
+    batch_id : integer <<FK -> batches.id, null>>
+    sign_id : string <<null>>
+    created_at : datetime <<not null>>
+    ..
+    INDEX (user_id)
+  }
+
+  entity "user_streak" as user_streak {
+    * user_id : UUID <<PK, FK -> users.id>>
+    --
+    last_active_date : date <<null>>
+    current_streak : integer <<not null, default 0>>
+    longest_streak : integer <<not null, default 0>>
+  }
+}
+
+' ───────────────────────── Real FK relationships (crow's foot) ─────────────────────────
+
+users o|--o{ auth_sessions      : "user_id (nullable, ON DELETE SET NULL)"
+users ||--o{ progress           : "user_id (ON DELETE CASCADE)"
+users ||--o{ mastery_scores     : "user_id (ON DELETE CASCADE)"
+users ||--o{ user_batch_progress: "user_id (ON DELETE CASCADE)"
+users ||--o{ xp_ledger          : "user_id (ON DELETE CASCADE)"
+users ||--o| user_streak        : "user_id (PK+FK, ON DELETE CASCADE)"
+
+batches o|--o{ sign_difficulty      : "batch_id (nullable, unbatched signs)"
+batches ||--o{ user_batch_progress  : "batch_id"
+batches o|--o{ xp_ledger            : "batch_id (nullable, non-sign XP rows)"
+
+' ───────────────────────── Logical-only references — NOT FK-enforced ─────────────────────────
+' sign_id / sign_ids / practiced_sign_ids are plain strings matched against
+' sign_difficulty.sign_id (and ultimately frontend/public/signs_data.json) at
+' the application layer only. No ForeignKey() exists for any of these.
+
+progress ..> sign_difficulty             : "sign_id (logical only, not FK-enforced)"
+mastery_scores ..> sign_difficulty       : "sign_id (logical only, not FK-enforced)"
+xp_ledger ..> sign_difficulty            : "sign_id (logical only, not FK-enforced)"
+batches ..> sign_difficulty              : "sign_ids[] (logical only, not FK-enforced)"
+user_batch_progress ..> sign_difficulty  : "practiced_sign_ids[] (logical only, not FK-enforced)"
+
+' email_otps carries no user_id column at all — it precedes account creation.
+' The only relationship to users is a same-value string match at query time.
+email_otps ..> users : "email (logical correlation only — no FK, OTP predates any user row)"
+
+@enduml

@@ -1,0 +1,391 @@
+@startuml class_diagram
+'' MudraLearn — Word-ready class diagram (black & white).
+'' Layout: three ranks — API/routers, services, domain.
+'' Entity FKs are shown on the domain rank; router→service and
+'' service→service dependencies on the upper ranks. Per-table
+'' ORM access is omitted to keep the figure readable at page width.
+'' All entities extend SQLAlchemy Base (not drawn).
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam roundcorner 0
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 11
+skinparam classFontSize 12
+skinparam classAttributeFontSize 10
+skinparam classAttributeIconSize 0
+skinparam ArrowThickness 1
+skinparam nodesep 30
+skinparam ranksep 55
+skinparam Padding 4
+skinparam linetype ortho
+left to right direction
+
+hide circle
+hide empty members
+
+skinparam class {
+  BackgroundColor white
+  BorderColor black
+  FontColor black
+  ArrowColor black
+}
+skinparam package {
+  BackgroundColor white
+  BorderColor black
+  FontColor black
+  FontStyle plain
+}
+skinparam note {
+  BackgroundColor white
+  BorderColor black
+  FontColor black
+}
+
+skinparam class<<orphaned>> {
+  BackgroundColor white
+  BorderColor black
+  BorderStyle dashed
+  FontColor black
+}
+skinparam class<<unimplemented>> {
+  BackgroundColor white
+  BorderColor black
+  BorderStyle dashed
+  FontColor black
+}
+
+' ───────────────────────── Rank 1: API ─────────────────────────
+
+package "API" {
+  class MudraLearnAPI <<application>> {
+    +startup()
+    +root()
+  }
+  class Database <<module>> {
+    {static} engine
+    {static} SessionLocal
+    +getDb()
+  }
+}
+
+package "Routers" {
+  together {
+    class AuthRouter <<router>> {
+      +checkEmail()
+      +requestOtp() / verifyOtp()
+      +completeSignup()
+      +login() / googleCallback()
+      +usernameAvailable()
+      +me() / updateMe() / deleteMe()
+      +getCurrentUser()
+    }
+    class PredictRouter <<router>> {
+      +predictSign(sequence, targetSign) : PredictResponse
+    }
+    class SessionRouter <<router>> {
+      +nextSign()
+      +masterySummary()
+    }
+  }
+  together {
+    class ProgressRouter <<router>> {
+      +attemptHistory(limit)
+    }
+    class DashboardRouter <<router>> {
+      +dashboardSummary()
+      +dashboardSigns(search, page)
+    }
+    class PracticeRouter <<router>> {
+      +practiceMap() / practiceContinue()
+      +practiceOverview(batchId)
+      +practiceRecommendations(batchId)
+      +practiceMark() / practiceRestart()
+      +practiceChallengeStart/Get/Hint/Skip()
+      +practiceChallengeAttempt()
+    }
+  }
+}
+
+' ───────────────────────── Rank 2: services + DTOs ─────────────────────────
+
+package "Services" {
+  class InferenceService <<service>> {
+    +loadModel()
+    +predict(sequence) : top3
+  }
+  class MasteryEngine <<service>> {
+    {field} ALPHA = 0.3
+    {field} TIER_SCORE = 0.80
+    {field} TIER_ATTEMPTS = 5
+    +updateMastery()
+    +getMasterySummary()
+    +getSignMastery()
+  }
+  class AdaptiveEngine <<service>> {
+    {field} COLD_START = 10
+    +getNextSign()
+    +getBatchRecommendations()
+  }
+  class DashboardService <<service>> {
+    +buildSummary()
+    +buildSignsPage()
+    +computeDayStreak()
+  }
+  class PracticeFlow <<service>> {
+    +serializeMap() / serializeOverview()
+    +markPracticed() / restartBatch()
+    +startChallenge() / useHint()
+    +challengeAttempt()
+  }
+  class CurriculumService <<service>> {
+    +applySeed()
+    +ensureUserCurriculum()
+    +totalXp() / currentLevelTitle()
+  }
+  class CurriculumBuilder <<service>> {
+    +loadRankedGatePassed()
+    +formBatches()
+    +loadSeedJson()
+  }
+  class XpRules <<service>> {
+    +signXp() / baseXp()
+    +verdictFor()
+    +canChallengeSign()
+  }
+  class ProgressFilters <<service>> {
+    +isFreeForm()
+    +computeStreakStats()
+  }
+  class CurriculumConfig <<service>> {
+    {field} SEQUENCE_LEN = 60
+    {field} FEATURES = 126
+    {field} GREAT = 0.85 / OKAY = 0.60
+    {field} SIGNS_PER_BATCH = 5
+    +tierForLevel()
+  }
+  class HintRules <<orphaned>> {
+    +classifyPracticeAttempt()
+    +shouldAutoHint()
+  }
+  class LlmService <<unimplemented>> {
+  }
+}
+
+package "DTOs" {
+  class PredictRequest <<dto>> {
+    +sequence
+    +targetSign
+    +category
+    +responseMs
+  }
+  class PredictResponse <<dto>> {
+    +predicted
+    +confidence
+    +top3
+    +correct
+    +mastery
+  }
+  class DashboardSummaryResponse <<dto>> {
+    +stats / xp / level
+    +categories
+    +needsReview
+    +recentActivity
+  }
+  class SignsPageResponse <<dto>> {
+    +items
+    +total / page / pageSize
+  }
+}
+
+' ───────────────────────── Rank 3: domain ─────────────────────────
+
+package "Domain model" {
+  class User <<entity>> {
+    +id : UUID
+    +email : str
+    +firstName / lastName : str
+    +username : str
+    +authProvider : str
+    +googleId : str
+    +passwordHash : str
+    +signupStep : str
+    +createdAt / updatedAt
+  }
+  class EmailOTP <<entity>> {
+    +id : UUID
+    +email : str
+    +otpHash : str
+    +expiresAt
+    +attempts : int
+  }
+  class AuthSession <<entity>> {
+    +id : UUID
+    +userId : UUID
+    +email : str
+    +tokenHash : str
+    +purpose : str
+    +consumed : bool
+    +expiresAt
+  }
+  class Progress <<entity>> {
+    +id : int
+    +userId : UUID
+    +signId : str
+    +category : str
+    +confidence : float
+    +correct : bool
+    +responseMs : int
+    +timestamp
+  }
+  class MasteryScore <<entity>> {
+    +id : int
+    +userId : UUID
+    +signId : str
+    +score : float
+    +attempts : int
+    +lastSeen
+    +tierUnlocked : int
+  }
+  class SignDifficulty <<entity>> {
+    +signId : str
+    +f1 / accuracy / support
+    +difficultyRank : int
+    +gatePassed : bool
+    +category : str
+    +batchId : int
+  }
+  class Batch <<entity>> {
+    +id : int
+    +tier : int
+    +tierLabel : str
+    +levelNumber : int
+    +signIds : str[]
+  }
+  class UserBatchProgress <<entity>> {
+    +id : int
+    +userId : UUID
+    +batchId : int
+    +status : str
+    +bestScore : int
+    +practicedSignIds
+    +challengeState
+  }
+  class XpLedger <<entity>> {
+    +id : int
+    +userId : UUID
+    +amount : int
+    +reason : str
+    +batchId : int
+    +signId : str
+  }
+  class UserStreak <<entity>> {
+    +userId : UUID
+    +lastActiveDate
+    +currentStreak : int
+    +longestStreak : int
+  }
+}
+
+' ── Rank constraints (hidden) so Word layout reads left-to-right, top bands ──
+MudraLearnAPI -[hidden]right- AuthRouter
+AuthRouter -[hidden]right- PredictRouter
+PredictRouter -[hidden]right- SessionRouter
+ProgressRouter -[hidden]right- DashboardRouter
+DashboardRouter -[hidden]right- PracticeRouter
+
+InferenceService -[hidden]right- MasteryEngine
+MasteryEngine -[hidden]right- AdaptiveEngine
+AdaptiveEngine -[hidden]right- DashboardService
+DashboardService -[hidden]right- PracticeFlow
+PracticeFlow -[hidden]right- CurriculumService
+
+User -[hidden]right- EmailOTP
+EmailOTP -[hidden]right- AuthSession
+AuthSession -[hidden]right- Progress
+Progress -[hidden]right- MasteryScore
+Batch -[hidden]right- SignDifficulty
+SignDifficulty -[hidden]right- UserBatchProgress
+UserBatchProgress -[hidden]right- XpLedger
+XpLedger -[hidden]right- UserStreak
+
+MudraLearnAPI -[hidden]down- InferenceService
+AuthRouter -[hidden]down- MasteryEngine
+PracticeRouter -[hidden]down- PracticeFlow
+PracticeFlow -[hidden]down- User
+CurriculumService -[hidden]down- Batch
+
+' ── API composition ──
+MudraLearnAPI --> AuthRouter
+MudraLearnAPI --> PredictRouter
+MudraLearnAPI --> SessionRouter
+MudraLearnAPI --> ProgressRouter
+MudraLearnAPI --> DashboardRouter
+MudraLearnAPI --> PracticeRouter
+MudraLearnAPI --> Database
+MudraLearnAPI --> InferenceService : loadModel()
+
+' ── Router → service / DTO ──
+AuthRouter --> User
+AuthRouter --> EmailOTP
+AuthRouter --> AuthSession
+AuthRouter --> Database
+
+PredictRouter --> InferenceService
+PredictRouter --> MasteryEngine
+PredictRouter --> PredictRequest
+PredictRouter --> PredictResponse
+
+SessionRouter --> AdaptiveEngine
+SessionRouter --> MasteryEngine
+
+ProgressRouter --> Progress
+
+DashboardRouter --> DashboardService
+DashboardRouter --> DashboardSummaryResponse
+DashboardRouter --> SignsPageResponse
+
+PracticeRouter --> PracticeFlow
+PracticeRouter --> AdaptiveEngine
+
+' ── Service collaborators (not every ORM table) ──
+PracticeFlow --> InferenceService
+PracticeFlow --> MasteryEngine
+PracticeFlow --> CurriculumService
+PracticeFlow --> XpRules
+
+DashboardService --> MasteryEngine
+DashboardService --> ProgressFilters
+DashboardService --> CurriculumService
+
+CurriculumService --> CurriculumBuilder
+CurriculumService --> XpRules
+
+AdaptiveEngine ..> MasteryEngine : TIER_* constants
+CurriculumBuilder ..> CurriculumConfig
+XpRules ..> CurriculumConfig
+PracticeFlow ..> CurriculumConfig
+DashboardService ..> CurriculumConfig
+
+' ── Domain associations (FK solid, logical dotted) ──
+User "1" o-- "0..*" AuthSession
+User "1" --> "0..*" Progress
+User "1" --> "0..*" MasteryScore
+User "1" --> "0..*" UserBatchProgress
+User "1" --> "0..*" XpLedger
+User "1" --> "0..1" UserStreak
+
+Batch "1" o-- "0..*" SignDifficulty
+Batch "1" --> "0..*" UserBatchProgress
+Batch "1" o-- "0..*" XpLedger
+
+Progress ..> SignDifficulty : signId
+MasteryScore ..> SignDifficulty : signId
+EmailOTP ..> User : email
+
+note bottom of HintRules
+  Dashed = unused (HintRules) or empty stub (LlmService).
+  Dotted domain links are string matches, not FK constraints.
+end note
+
+@enduml

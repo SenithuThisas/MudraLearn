@@ -1,0 +1,334 @@
+digraph MudraLearnArchitecture {
+  rankdir=TB;
+  fontname="Helvetica";
+  fontsize=13;
+  bgcolor="white";
+  splines=spline;
+  concentrate=false;
+  nodesep=0.25;
+  ranksep=0.5;
+  compound=true;
+  labeljust=l;
+  node [fontname="Helvetica", fontsize=10, shape=plain, margin=0];
+  edge [fontname="Helvetica", fontsize=8.5, color="#5A6B7A", fontcolor="#33414D", penwidth=1.1, arrowsize=0.7, constraint=false];
+
+  title [shape=plain, label=<
+    <TABLE BORDER="0" CELLBORDER="0">
+    <TR><TD ALIGN="CENTER"><FONT POINT-SIZE="16" FACE="Helvetica-Bold">MudraLearn — Backend/Frontend System Architecture</FONT></TD></TR>
+    <TR><TD ALIGN="CENTER"><FONT POINT-SIZE="10" COLOR="#55606B">Verified against source on branch docs/dissertation-audit (includes feature/adaptive-engine-integration — merged here, NOT yet merged to main) — 2026-08-25</FONT></TD></TR>
+    </TABLE>>];
+  m00 [shape=point, width=0.01, style=invis];
+  subgraph rankgrp_1 { rank=same; m00; title; }
+
+  /* ============================== CLIENT TIER ============================== */
+  subgraph cluster_client {
+    label="CLIENT TIER";
+    style="rounded,filled"; color="#8DA9C4"; fillcolor="#EAF2FB"; fontname="Helvetica-Bold"; fontsize=12;
+
+    client_app [label=<
+      <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#2B4C7E">
+      <TR><TD BGCOLOR="#2B4C7E" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="11">React 19 SPA (Vite + TypeScript)</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">react-router-dom 7 (BrowserRouter), @tanstack/react-query 5, axios 1.16, framer-motion, Tailwind CSS, zustand</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9" FACE="Helvetica-Bold">Live route tree (main.tsx):</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">/practice -&gt; PracticePage (map) -&gt; batches/:id (overview) -&gt; preview/:id -&gt; practice/:id -&gt; challenge -&gt; result</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">/practice/review -&gt; AdaptiveReviewPage (global mode + ?mode=batch)</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">/dashboard, /dictionary, /translate, /profile, auth screens (/signin, /login, /onboarding/*)</FONT></TD></TR>
+      </TABLE>>];
+
+    mediapipe [label=<
+      <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#2B4C7E">
+      <TR><TD BGCOLOR="#5B7FB5" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="11">MediaPipe HandLandmarker (on-device)</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">@mediapipe/tasks-vision, WASM, runs in-browser only</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">useHandLandmarker hook — captures SEQUENCE_LEN=60 frames x 126 features (21 landmarks x 3 axes x 2 hands)</FONT></TD></TR>
+      </TABLE>>];
+
+    mediapipe -> client_app [label="60x126 float sequence", style=solid];
+
+    m01 [shape=point, width=0.01, style=invis];
+    subgraph rankgrp_2 { rank=same; m01; client_app; mediapipe; }
+  }
+
+  /* ============================== API GATEWAY ============================== */
+  gateway [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#7A3B8C">
+    <TR><TD BGCOLOR="#7A3B8C" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="11">FastAPI App — backend/app/main.py</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9" FACE="Helvetica-Bold">Middleware stack (registration order):</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">1. SlowAPIMiddleware — Limiter(key_func=get_remote_address); 429 on RateLimitExceeded</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">2. Custom @app.middleware('http') — catches unhandled exceptions -&gt; JSON 500 (detail hidden unless ENV != production)</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">3. CORSMiddleware (added last, so it is outermost and wraps the 500-handler above)</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">   allow_origins=[http://localhost:5173, http://127.0.0.1:5173] . allow_credentials=True . methods=* . headers=* . expose_headers=*</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9" FACE="Helvetica-Bold">@app.on_event('startup'):</FONT> <FONT POINT-SIZE="9">inference.load_model() — loads Keras model into memory once</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="9">No WebSocket / SSE / streaming anywhere — every route is plain request/response JSON over HTTP</FONT></TD></TR>
+    </TABLE>>];
+  m02 [shape=point, width=0.01, style=invis];
+  subgraph rankgrp_3 { rank=same; m02; gateway; }
+  m02u [shape=point, width=0.01, style=invis];
+  subgraph rankgrp_3u { rank=same; m02u; unused_deps; }
+
+  client_app -> gateway [label="axios `api` (baseURL :8000/api)\lJSON, withCredentials (access_token cookie)\l+ Bearer fallback; 401 -> redirect /signin\l", style=solid, penwidth=1.4];
+  client_app -> gateway [label="axios `authApi` (baseURL :8000/api/auth)\lJSON, withCredentials\l", style=solid, penwidth=1.4];
+
+  /* ============================== ROUTERS ============================== */
+  subgraph cluster_routers {
+    label="ROUTERS  (backend/app/routers/ — mounted in main.py, all prefixed /api)";
+    style="rounded,filled"; color="#C7862B"; fillcolor="#FDF3E6"; fontname="Helvetica-Bold"; fontsize=12;
+
+    auth_router [label=<
+      <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#C7862B">
+      <TR><TD COLSPAN="3" BGCOLOR="#C7862B" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">auth.py — prefix /api/auth — 12 endpoints</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">POST /check-email</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD><TD><FONT POINT-SIZE="8.5">20/min</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">POST /email/request-otp</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD><TD><FONT POINT-SIZE="8.5">10/min</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">POST /email/verify-otp</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD><TD><FONT POINT-SIZE="8.5">20/min</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">POST /complete-signup</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD><TD><FONT POINT-SIZE="8.5">10/min</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">POST /login</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD><TD><FONT POINT-SIZE="8.5">10/min</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">GET /username-available</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD><TD><FONT POINT-SIZE="8.5">30/min</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">POST /onboarding/username</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">POST /google/callback</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD><TD><FONT POINT-SIZE="8.5">20/min</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">POST /logout</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">GET /me</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">PATCH /me</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">20/min</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">DELETE /me</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">5/min</FONT></TD></TR>
+      <TR><TD COLSPAN="3" ALIGN="LEFT"><FONT POINT-SIZE="8" COLOR="#55606B">get_current_user(): reads Cookie[access_token], falls back to Authorization: Bearer header; verifies HS256 JWT via jose (SECRET_KEY); per-endpoint Depends(), not global middleware</FONT></TD></TR>
+      </TABLE>>];
+
+    predict_router [label=<
+      <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#C7862B">
+      <TR><TD COLSPAN="3" BGCOLOR="#C7862B" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">predict.py — prefix /api — 1 endpoint</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">POST /predict</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD COLSPAN="3" ALIGN="LEFT"><FONT POINT-SIZE="8" COLOR="#55606B">Free-form (Translate) predictions skip Progress/mastery writes — see is_free_form()</FONT></TD></TR>
+      </TABLE>>];
+
+    session_router [label=<
+      <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#C7862B">
+      <TR><TD COLSPAN="3" BGCOLOR="#C7862B" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">session.py — prefix /api — 2 endpoints</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">GET /session/next</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD BGCOLOR="#F6E7D0" ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5" COLOR="#8A5A20">GET /session/mastery</FONT></TD><TD BGCOLOR="#F6E7D0"><FONT POINT-SIZE="8.5" COLOR="#8A5A20">AUTH</FONT></TD><TD BGCOLOR="#F6E7D0"><FONT POINT-SIZE="8.5" COLOR="#8A5A20">—</FONT></TD></TR>
+      <TR><TD COLSPAN="3" ALIGN="LEFT"><FONT POINT-SIZE="8" COLOR="#8A5A20">/session/mastery has zero callers anywhere in frontend/src — wired but unreachable from the live app</FONT></TD></TR>
+      </TABLE>>];
+
+    progress_router [label=<
+      <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#C7862B">
+      <TR><TD COLSPAN="3" BGCOLOR="#C7862B" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">progress.py — prefix /api — 1 endpoint</FONT></TD></TR>
+      <TR><TD BGCOLOR="#F6E7D0" ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5" COLOR="#8A5A20">GET /progress/history</FONT></TD><TD BGCOLOR="#F6E7D0"><FONT POINT-SIZE="8.5" COLOR="#8A5A20">AUTH</FONT></TD><TD BGCOLOR="#F6E7D0"><FONT POINT-SIZE="8.5" COLOR="#8A5A20">—</FONT></TD></TR>
+      <TR><TD COLSPAN="3" ALIGN="LEFT"><FONT POINT-SIZE="8" COLOR="#8A5A20">zero callers in frontend/src — wired but unreachable from the live app. Queries progress table directly: SELECT ... ORDER BY timestamp DESC LIMIT n</FONT></TD></TR>
+      </TABLE>>];
+
+    dashboard_router [label=<
+      <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#C7862B">
+      <TR><TD COLSPAN="3" BGCOLOR="#C7862B" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">dashboard.py — prefix /api — 2 endpoints</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">GET /dashboard/summary</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">GET /dashboard/signs</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD COLSPAN="3" ALIGN="LEFT"><FONT POINT-SIZE="8" COLOR="#55606B">Responses camelCased via Pydantic alias_generator=to_camel</FONT></TD></TR>
+      </TABLE>>];
+
+    practice_router [label=<
+      <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#C7862B">
+      <TR><TD COLSPAN="3" BGCOLOR="#C7862B" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">practice.py — prefix /api — 11 endpoints</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">GET /practice/map</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">GET /practice/continue</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">GET /practice/batches/{id}</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">GET .../recommendations</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">POST .../practiced</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">POST .../restart</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">POST .../challenge/start</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">GET .../challenge</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">POST .../challenge/hint</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">POST .../challenge/skip</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD ALIGN="LEFT"><FONT FACE="Courier" POINT-SIZE="8.5">POST .../challenge/attempt</FONT></TD><TD><FONT POINT-SIZE="8.5">AUTH</FONT></TD><TD><FONT POINT-SIZE="8.5">—</FONT></TD></TR>
+      <TR><TD COLSPAN="3" ALIGN="LEFT"><FONT POINT-SIZE="8" COLOR="#55606B">No @limiter.limit on any route in this file (nor session.py, progress.py, dashboard.py, predict.py) — rate limiting exists only on auth.py</FONT></TD></TR>
+      </TABLE>>];
+
+    m03 [shape=point, width=0.01, style=invis];
+    m04 [shape=point, width=0.01, style=invis];
+    subgraph rankgrp_4 { rank=same; m03; auth_router; predict_router; session_router; }
+    subgraph rankgrp_5 { rank=same; m04; progress_router; dashboard_router; practice_router; }
+  }
+
+  gateway -> auth_router [label="/api/auth", style=solid];
+  gateway -> predict_router [label="/api", style=solid];
+  gateway -> session_router [label="/api", style=solid];
+  gateway -> progress_router [label="/api", style=solid];
+  gateway -> dashboard_router [label="/api", style=solid];
+  gateway -> practice_router [label="/api", style=solid];
+
+  /* ============================== SERVICES ============================== */
+  subgraph cluster_services {
+    label="SERVICES  (backend/app/services/)";
+    style="rounded,filled"; color="#2E8B57"; fillcolor="#E9F7EF"; fontname="Helvetica-Bold"; fontsize=12;
+
+    svc_inference [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#2E8B57"><TR><TD BGCOLOR="#2E8B57" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">inference.py</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">TensorFlow/Keras LSTM classifier.<BR/>load_model() at startup; predict(seq) -&gt; top-3 {sign, confidence} from 204-class label_map</FONT></TD></TR></TABLE>>];
+
+    svc_mastery [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#2E8B57"><TR><TD BGCOLOR="#2E8B57" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">mastery_engine.py</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">EWMA mastery scoring (alpha=0.3). update_mastery(), get_mastery_summary(), get_sign_mastery(). Defines TIER_SCORE_THRESHOLD=0.80 / TIER_ATTEMPT_THRESHOLD=5, the single "mastered" definition reused everywhere</FONT></TD></TR></TABLE>>];
+
+    svc_adaptive [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#2E8B57"><TR><TD BGCOLOR="#2E8B57" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">adaptive_engine.py</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">get_next_sign(): cold-start -&gt; weighted-adaptive (SM-2/Ebbinghaus-style) -&gt; complete. get_batch_recommendations(): weak-this-batch + decayed-mastery snapshot. Loads signs_data.json + reference/*.mp4 at import</FONT></TD></TR></TABLE>>];
+
+    svc_practice_flow [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#2E8B57"><TR><TD BGCOLOR="#2E8B57" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">practice_flow.py</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">Batch Map/Overview/Challenge state machine: serialize_map/overview, mark_practiced, start/get_challenge, use_hint, challenge_attempt, finalize + XP/streak award</FONT></TD></TR></TABLE>>];
+
+    svc_curriculum_service [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#2E8B57"><TR><TD BGCOLOR="#2E8B57" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">curriculum_service.py</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">ensure_user_curriculum(), total_xp(), current_level_title(), user_streak_snapshot(), challenge_allowed(). apply_seed()/ensure_all_users() are offline-only (see dashed link below)</FONT></TD></TR></TABLE>>];
+
+    svc_dashboard_service [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#2E8B57"><TR><TD BGCOLOR="#2E8B57" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">dashboard_service.py</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">build_summary(), build_signs_page(). Aggregates mastery/streak/XP/category stats — computes no mastery score of its own, reads mastery_engine's rows only</FONT></TD></TR></TABLE>>];
+
+    svc_xp_rules [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#2E8B57"><TR><TD BGCOLOR="#2E8B57" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">xp_rules.py</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">Pure functions, no I/O. sign_xp(), verdict_for(), batch_bonus_entries(), score_challenge_results(), can_challenge_sign()</FONT></TD></TR></TABLE>>];
+
+    svc_progress_filters [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#2E8B57"><TR><TD BGCOLOR="#2E8B57" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">progress_filters.py</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">Pure functions, no I/O. is_free_form() excludes Translate attempts from progress; compute_streak_stats()</FONT></TD></TR></TABLE>>];
+
+    svc_curriculum_config [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#2E8B57"><TR><TD BGCOLOR="#2E8B57" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">curriculum_config.py</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">Pure constants module, no I/O. SEQUENCE_LEN=60, FEATURES_PER_FRAME=126, SIGNS_PER_BATCH=5, XP amounts, TIER_BANDS, status strings</FONT></TD></TR></TABLE>>];
+
+    svc_hint_rules [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="#FBEAEA" COLOR="#B23B3B" STYLE="DASHED"><TR><TD BGCOLOR="#B23B3B" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">hint_rules.py — ORPHANED</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5" COLOR="#7A2727">Fully implemented (classify_practice_attempt, should_auto_hint) but grep finds ZERO callers in any router or service — dead code, not wired to any request path</FONT></TD></TR></TABLE>>];
+
+    svc_llm [label=<<TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="#FBEAEA" COLOR="#B23B3B" STYLE="DASHED"><TR><TD BGCOLOR="#B23B3B" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">llm_service.py — EMPTY STUB</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5" COLOR="#7A2727">File exists but is 0 bytes — no code, no callers. Placeholder for a feature that was never built</FONT></TD></TR></TABLE>>];
+
+    m05 [shape=point, width=0.01, style=invis];
+    m06 [shape=point, width=0.01, style=invis];
+    m07 [shape=point, width=0.01, style=invis];
+    m08 [shape=point, width=0.01, style=invis];
+    subgraph rankgrp_6 { rank=same; m05; svc_inference; svc_mastery; svc_adaptive; }
+    subgraph rankgrp_7 { rank=same; m06; svc_practice_flow; svc_curriculum_service; svc_dashboard_service; }
+    subgraph rankgrp_8 { rank=same; m07; svc_xp_rules; svc_progress_filters; svc_curriculum_config; }
+    subgraph rankgrp_9 { rank=same; m08; svc_hint_rules; svc_llm; }
+  }
+
+  predict_router -> svc_inference [label="predict(sequence) -> top-3", style=solid];
+  predict_router -> svc_mastery [label="update_mastery(user_id,sign_id,confidence,correct)", style=solid];
+  predict_router -> svc_progress_filters [label="is_free_form(target_sign,category)", style=solid];
+  predict_router -> svc_xp_rules [label="verdict_for(confidence,correct)", style=solid];
+  session_router -> svc_adaptive [label="get_next_sign(db,user_id)", style=solid];
+  session_router -> svc_mastery [label="get_mastery_summary(db,user_id)  [dead path]", style=solid, color="#8A5A20", fontcolor="#8A5A20"];
+  dashboard_router -> svc_dashboard_service [label="build_summary / build_signs_page", style=solid];
+  practice_router -> svc_practice_flow [label="serialize_map/overview, mark_practiced,\lrestart, challenge lifecycle\l", style=solid];
+  practice_router -> svc_adaptive [label="get_batch_recommendations(db,user_id,batch_id)", style=solid];
+
+  /* service -> service */
+  svc_adaptive -> svc_mastery [label="imports TIER_SCORE_THRESHOLD / TIER_ATTEMPT_THRESHOLD", style=dashed];
+  svc_dashboard_service -> svc_mastery [label="get_mastery_summary()", style=solid];
+  svc_dashboard_service -> svc_progress_filters [label="is_free_form(), compute_streak_stats()", style=solid];
+  svc_dashboard_service -> svc_curriculum_service [label="ensure_user_curriculum, total_xp,\lcurrent_level_title, user_streak_snapshot\l", style=solid];
+  svc_practice_flow -> svc_curriculum_service [label="ensure_user_curriculum()", style=solid];
+  svc_practice_flow -> svc_inference [label="predict(sequence) — Challenge scoring", style=solid];
+  svc_practice_flow -> svc_mastery [label="update_mastery / get_sign_mastery", style=solid];
+  svc_practice_flow -> svc_xp_rules [label="sign_xp, verdict_for, score_challenge_results,\lbatch_bonus_entries, can_challenge_sign\l", style=solid];
+  svc_practice_flow -> svc_curriculum_config [label="status + XP constants", style=solid];
+  svc_curriculum_service -> svc_curriculum_config [label="STATUS_*, tier_for_level()", style=solid];
+  svc_curriculum_service -> svc_xp_rules [label="can_challenge_sign()", style=solid];
+  svc_xp_rules -> svc_curriculum_config [label="XP amounts, thresholds", style=solid];
+  svc_hint_rules -> svc_curriculum_config [label="AUTO_HINT_STREAK, OKAY_CONFIDENCE\l(constants only — module itself unused)\l", style=dashed, color="#B23B3B", fontcolor="#B23B3B"];
+
+  /* ============================== OFFLINE TOOLING ============================== */
+  subgraph cluster_offline {
+    label="OFFLINE / CLI TOOLING — not part of any HTTP request path";
+    style="rounded,dashed"; color="#8A6D3B"; fillcolor="#FBF3E3"; fontname="Helvetica-Bold"; fontsize=11;
+    svc_curriculum_builder [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#8A6D3B"><TR><TD BGCOLOR="#8A6D3B" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">curriculum_builder.py</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">Builds curriculum_seed.json from ml/saved_models/v2/per_class_report_v2.csv intersect label_map.json intersect signs_data.json. No DB access — pure file I/O</FONT></TD></TR></TABLE>>];
+    cli_script [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#8A6D3B"><TR><TD BGCOLOR="#8A6D3B" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">seed_curriculum.py (CLI)</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">python -m app.scripts.seed_curriculum -&gt; ensure_all_users(): apply_seed() then ensure_user_curriculum() per user</FONT></TD></TR></TABLE>>];
+    cli_script -> svc_curriculum_builder [label="load_seed_json(), DEFAULT_SEED_JSON", style=solid];
+    m09 [shape=point, width=0.01, style=invis];
+    subgraph rankgrp_10 { rank=same; m09; svc_curriculum_builder; cli_script; }
+  }
+  svc_curriculum_service -> cli_script [label="ensure_all_users() / apply_seed()\l— invoked manually, never by a router\l", style=dashed, color="#8A6D3B", fontcolor="#8A6D3B"];
+
+  /* ============================== DATA & STORAGE ============================== */
+  subgraph cluster_storage {
+    label="DATA & STORAGE LAYER";
+    style="rounded,filled"; color="#4A4A4A"; fillcolor="#F2F2F2"; fontname="Helvetica-Bold"; fontsize=12;
+
+    subgraph cluster_db {
+      label="PostgreSQL (SQLAlchemy ORM via psycopg2 — no relationship() used anywhere: every association below is a plain FK column, not an ORM aggregation)";
+      style="rounded,filled"; color="#336699"; fillcolor="#E8F0F8"; fontname="Helvetica-Bold"; fontsize=10;
+
+      t_users [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#336699"><TR><TD BGCOLOR="#336699" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="9">users</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8">PK id (UUID) . UQ email . UQ username . UQ google_id</FONT></TD></TR></TABLE>>];
+      t_otp [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#336699"><TR><TD BGCOLOR="#336699" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="9">email_otps</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8">PK id (UUID) . no FK to users (pre-account)</FONT></TD></TR></TABLE>>];
+      t_authsess [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#336699"><TR><TD BGCOLOR="#336699" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="9">auth_sessions</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8">PK id (UUID) . FK user_id-&gt;users (SET NULL, nullable) . purpose='signup_temp'</FONT></TD></TR></TABLE>>];
+
+      t_progress [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#336699"><TR><TD BGCOLOR="#336699" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="9">progress</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8">PK id (int) . FK user_id-&gt;users (CASCADE) . raw attempt log, grows indefinitely</FONT></TD></TR></TABLE>>];
+      t_mastery [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#336699"><TR><TD BGCOLOR="#336699" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="9">mastery_scores</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8">PK id (int) . FK user_id-&gt;users (CASCADE) . (user_id,sign_id) unique only in app logic — NOT a DB constraint</FONT></TD></TR></TABLE>>];
+
+      t_signdiff [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#336699"><TR><TD BGCOLOR="#336699" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="9">sign_difficulty</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8">PK sign_id (string) . FK batch_id-&gt;batches (nullable)</FONT></TD></TR></TABLE>>];
+      t_batches [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#336699"><TR><TD BGCOLOR="#336699" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="9">batches</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8">PK id (int, = level_number) . UQ level_number . sign_ids ARRAY(String)</FONT></TD></TR></TABLE>>];
+      t_ubp [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#336699"><TR><TD BGCOLOR="#336699" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="9">user_batch_progress</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8">PK id . FK user_id-&gt;users (CASCADE), FK batch_id-&gt;batches . UQ(user_id,batch_id) . JSONB practiced_sign_ids/challenge_state</FONT></TD></TR></TABLE>>];
+
+      t_xp [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#336699"><TR><TD BGCOLOR="#336699" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="9">xp_ledger</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8">PK id . FK user_id-&gt;users (CASCADE, indexed) . FK batch_id-&gt;batches (nullable) . append-only</FONT></TD></TR></TABLE>>];
+      t_streak [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#336699"><TR><TD BGCOLOR="#336699" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="9">user_streak</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8">PK user_id (FK-&gt;users, CASCADE) — 1:1 with user</FONT></TD></TR></TABLE>>];
+
+      m10 [shape=point, width=0.01, style=invis];
+      m11 [shape=point, width=0.01, style=invis];
+      m12 [shape=point, width=0.01, style=invis];
+      m13 [shape=point, width=0.01, style=invis];
+      subgraph rankgrp_11 { rank=same; m10; t_users; t_otp; t_authsess; }
+      subgraph rankgrp_12 { rank=same; m11; t_progress; t_mastery; t_signdiff; }
+      subgraph rankgrp_13 { rank=same; m12; t_batches; t_ubp; t_xp; }
+      subgraph rankgrp_14 { rank=same; m13; t_streak; }
+    }
+
+    subgraph cluster_assets {
+      label="Filesystem assets (not the database — read at import/startup)";
+      style="rounded,filled"; color="#5C5C5C"; fillcolor="#EAEAEA"; fontname="Helvetica-Bold"; fontsize=10;
+      a_model [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#5C5C5C"><TR><TD BGCOLOR="#5C5C5C" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="9">ML model artifacts</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8">mudralearn_model.keras + label_map.json (204 classes) . loaded once at FastAPI startup</FONT></TD></TR></TABLE>>];
+      a_signs [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="white" COLOR="#5C5C5C"><TR><TD BGCOLOR="#5C5C5C" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="9">Sign catalogue + clips</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8">frontend/public/signs_data.json + reference/*.mp4 . loaded once at Python import time</FONT></TD></TR></TABLE>>];
+      m14 [shape=point, width=0.01, style=invis];
+      subgraph rankgrp_15 { rank=same; m14; a_model; a_signs; }
+    }
+  }
+
+  svc_inference -> a_model [label="tf.keras.models.load_model()", style=solid];
+  svc_adaptive -> a_signs [label="json.load() at import", style=solid];
+  svc_adaptive -> t_mastery [label="SELECT MasteryScore WHERE user_id", style=solid];
+  svc_adaptive -> t_progress [label="SELECT Progress (batch recs)", style=solid];
+  svc_adaptive -> t_batches [label="SELECT Batch WHERE id", style=solid];
+  svc_mastery -> t_mastery [label="upsert(user_id,sign_id)", style=solid];
+  predict_router -> t_progress [label="INSERT Progress row", style=solid];
+  auth_router -> t_users [label="bcrypt hash/verify . JWT HS256 sign/verify\lSELECT/INSERT/UPDATE/DELETE User\l", style=solid];
+  auth_router -> t_otp [label="INSERT/SELECT/DELETE EmailOTP", style=solid];
+  auth_router -> t_authsess [label="INSERT/SELECT AuthSession (signup_token)", style=solid];
+  svc_dashboard_service -> t_progress [label="SELECT Progress (scored rows)", style=solid];
+  svc_dashboard_service -> t_batches [label="SELECT Batch.id (curriculum present?)", style=solid];
+  svc_practice_flow -> t_batches [label="reads Batch.sign_ids", style=solid];
+  svc_practice_flow -> t_ubp [label="read/write status, practiced_sign_ids,\lchallenge_state\l", style=solid];
+  svc_practice_flow -> t_signdiff [label="reads gate_passed/category (Challenge eligibility)", style=solid];
+  svc_practice_flow -> t_xp [label="INSERT XpLedger (sign/bonus/streak)", style=solid];
+  svc_practice_flow -> t_progress [label="INSERT Progress (Challenge attempt)", style=solid];
+  svc_curriculum_service -> t_batches [label="ensure batch rows exist", style=solid];
+  svc_curriculum_service -> t_ubp [label="create locked/in_progress rows", style=solid];
+  svc_curriculum_service -> t_streak [label="upsert streak snapshot", style=solid];
+  svc_curriculum_service -> t_xp [label="SUM(amount) -> total_xp", style=solid];
+  svc_curriculum_service -> t_signdiff [label="challenge_allowed() lookup", style=solid];
+  svc_curriculum_builder -> t_signdiff [label="apply_seed(): upsert (offline only)", style=dashed, color="#8A6D3B", fontcolor="#8A6D3B"];
+  svc_curriculum_builder -> t_batches [label="apply_seed(): upsert (offline only)", style=dashed, color="#8A6D3B", fontcolor="#8A6D3B"];
+
+  /* ============================== EXTERNAL ============================== */
+  subgraph cluster_external {
+    label="EXTERNAL SERVICE";
+    style="rounded,filled"; color="#4285F4"; fillcolor="#EAF1FE"; fontname="Helvetica-Bold"; fontsize=11;
+    google [label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#4285F4"><TR><TD BGCOLOR="#4285F4" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">Google Identity Services</FONT></TD></TR><TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">google-auth Python lib: id_token.verify_oauth2_token(token, Request(), GOOGLE_CLIENT_ID) — checks signature, issuer, audience, expiry. Optional: absence handled per-request, not fail-fast</FONT></TD></TR></TABLE>>];
+    m04g [shape=point, width=0.01, style=invis];
+    subgraph rankgrp_16 { rank=same; m04g; google; }
+  }
+  auth_router -> google [label="POST /google/callback only\lID-token flow (no auth-code exchange,\lno client secret in this app)\l", style=solid, color="#4285F4", fontcolor="#2A56C6"];
+
+  /* ============================== UNUSED DEPENDENCY ============================== */
+  unused_deps [label=<
+    <TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0" CELLPADDING="6" BGCOLOR="#F0F0F0" COLOR="#8A8A8A" STYLE="DASHED">
+    <TR><TD BGCOLOR="#8A8A8A" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">Redis 4.6.0 + fastapi-cache2 0.2.2 — LISTED, NOT WIRED</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5" COLOR="#4A4A4A">Both present in backend/requirements.txt. grep -r "redis|fastapi_cache" backend/app/ -&gt; 0 matches. No caching layer exists in any request path — every response is computed fresh from PostgreSQL on every call</FONT></TD></TR>
+    </TABLE>>];
+  gateway -> unused_deps [label="dependency present, never imported", style=dashed, color="#8A8A8A", fontcolor="#8A8A8A"];
+
+  /* ============================== LEGEND ============================== */
+  legend [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="5" BGCOLOR="white" COLOR="#333333">
+    <TR><TD BGCOLOR="#333333" ALIGN="CENTER"><FONT COLOR="white" FACE="Helvetica-Bold" POINT-SIZE="10">LEGEND</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">Solid border, full colour = live and reachable from the running app</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5" COLOR="#B23B3B">Dashed red border = orphaned module (zero callers) or empty stub</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5" COLOR="#8A5A20">Amber row/edge = endpoint exists and is wired, but has no live caller in frontend/src</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5" COLOR="#8A6D3B">Dashed brown = offline/CLI-only code path, never invoked by an HTTP request</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5" COLOR="#8A8A8A">Dashed grey = dependency listed in requirements.txt but never imported by app code</FONT></TD></TR>
+    <TR><TD ALIGN="LEFT"><FONT POINT-SIZE="8.5">AUTH = requires Depends(get_current_user)  .  "NN/min" = @limiter.limit("NN/minute") via slowapi, keyed by client IP</FONT></TD></TR>
+    </TABLE>>];
+  m14a [shape=point, width=0.01, style=invis];
+  subgraph rankgrp_17 { rank=same; m14a; legend; }
+
+  /* ============================== RANK-ONLY MARKER CHAIN ==============================
+     Every content edge above is constraint=false, so none of them influence rank
+     assignment. Row placement is controlled ONLY by this single invisible chain,
+     which guarantees each rank holds at most 4 real boxes regardless of how many
+     cross-tier arrows touch it. */
+  m00 -> m01 -> m02 -> m02u -> m03 -> m04 -> m04g -> m05 -> m06 -> m07 -> m08 -> m09 -> m10 -> m11 -> m12 -> m13 -> m14 -> m14a [style=invis, constraint=true, weight=100];
+}
