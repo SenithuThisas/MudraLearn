@@ -49,17 +49,20 @@ export default function PixelInput({
         style={{
           display: 'flex',
           alignItems: 'center',
-          background: '#ffffff',
-          border: `2px solid ${error ? '#DC2626' : '#14213D'}`,
-          boxShadow: `4px 4px 0px ${error ? '#DC2626' : '#14213D'}`,
+          background: props.disabled ? '#E5E7EB' : '#ffffff',
+          border: `2px solid ${error ? '#DC2626' : props.disabled ? '#9CA3AF' : '#14213D'}`,
+          boxShadow: props.disabled ? 'none' : `4px 4px 0px ${error ? '#DC2626' : '#14213D'}`,
           borderRadius: 0,
+          cursor: props.disabled ? 'not-allowed' : undefined,
           transition: 'box-shadow 150ms ease, transform 150ms ease, border-color 150ms ease',
         }}
         onFocusCapture={(e) => {
+          if (props.disabled) return
           e.currentTarget.style.boxShadow = `2px 2px 0px ${error ? '#DC2626' : '#14213D'}`
           e.currentTarget.style.transform = 'translate(2px, 2px)'
         }}
         onBlurCapture={(e) => {
+          if (props.disabled) return
           e.currentTarget.style.boxShadow = `4px 4px 0px ${error ? '#DC2626' : '#14213D'}`
           e.currentTarget.style.transform = 'translate(0, 0)'
         }}
@@ -93,8 +96,9 @@ export default function PixelInput({
             borderRadius: 0,
             fontFamily: "'Inter', sans-serif",
             fontSize: 15,
-            color: '#14213D',
+            color: props.disabled ? '#6B7280' : '#14213D',
             outline: 'none',
+            cursor: props.disabled ? 'not-allowed' : undefined,
             ...style,
           }}
         />

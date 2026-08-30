@@ -17,6 +17,8 @@ if config.config_file_name is not None:
 import os
 from dotenv import load_dotenv
 from app.models.user import Base
+from app.models import progress as _progress  # noqa: F401
+from app.models import curriculum as _curriculum  # noqa: F401
 
 load_dotenv()
 

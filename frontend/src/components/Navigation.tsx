@@ -14,6 +14,7 @@ export default function Navigation() {
     <nav className='bg-white dark:bg-[#1f2028] shadow-sm border-b border-gray-200 dark:border-gray-800 px-6 py-4 flex gap-4 items-center'>
       <span className='font-bold text-blue-700 dark:text-blue-400 text-xl mr-4'>MudraLearn</span>
       <Link to='/' className={linkClass('/')}>Home</Link>
+      <Link to='/dashboard' className={linkClass('/dashboard')}>Dashboard</Link>
       <Link to='/translate' className={linkClass('/translate')}>Translate</Link>
       <Link to='/dictionary' className={linkClass('/dictionary')}>Dictionary</Link>
       <Link to='/practice' className={linkClass('/practice')}>Practice</Link>

@@ -10,6 +10,14 @@ import DictionaryPage from './pages/DictionaryPage'
 import TranslatePage from './pages/TranslatePage'
 import './index.css'
 import PracticePage from './pages/PracticePage'
+import PracticeLayout from './pages/PracticeLayout'
+import {
+  BatchOverviewPage,
+  BatchResultPage,
+  ChallengePage,
+  PracticeSignPage,
+  PreviewPage,
+} from './pages/practiceScreens'
 import SplashPage from './pages/SplashPage'
 import SignInPage from './pages/SignInPage'
 import SignInPasswordPage from './pages/SignInPasswordPage'
@@ -20,7 +28,9 @@ import OnboardingLastNamePage from './pages/OnboardingLastNamePage'
 import OnboardingUsernamePage from './pages/OnboardingUsernamePage'
 import WelcomePage from './pages/WelcomePage'
 import DashboardPage from './pages/DashboardPage'
+import ProfilePage from './pages/ProfilePage'
 import ProtectedRoute from './components/ProtectedRoute'
+import AdaptiveReviewPage from './pages/AdaptiveReviewPage'
 
 const queryClient = new QueryClient()
 
@@ -34,7 +44,15 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 <Route path='/about' element={<AboutPage />} />
 <Route path='/blog' element={<BlogPage />} />
 <Route path='/translate' element={<TranslatePage />} />
-<Route path='/practice' element={<ProtectedRoute><PracticePage /></ProtectedRoute>} />
+<Route path='/practice' element={<ProtectedRoute><PracticeLayout /></ProtectedRoute>}>
+<Route index element={<PracticePage />} />
+<Route path='batches/:batchId' element={<BatchOverviewPage />} />
+<Route path='batches/:batchId/preview/:signId' element={<PreviewPage />} />
+<Route path='batches/:batchId/practice/:signId' element={<PracticeSignPage />} />
+<Route path='batches/:batchId/challenge' element={<ChallengePage />} />
+<Route path='batches/:batchId/result' element={<BatchResultPage />} />
+<Route path='review' element={<AdaptiveReviewPage />} />
+</Route>
 <Route path='/dictionary' element={<DictionaryPage />} />
 <Route path='/splash' element={<SplashPage />} />
 <Route path='/signin' element={<SignInPage />} />
@@ -46,6 +64,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 <Route path='/onboarding/username' element={<OnboardingUsernamePage />} />
 <Route path='/welcome' element={<WelcomePage />} />
 <Route path='/dashboard' element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+<Route path='/profile' element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
 </Routes>
 </AuthProvider>
 </BrowserRouter>

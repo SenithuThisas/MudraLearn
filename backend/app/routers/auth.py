@@ -1,13 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
 from app.database import get_db
 from app.models.user import User, EmailOTP, AuthSession
 from app.rate_limit import limiter
+from google.oauth2 import id_token as google_id_token
+from google.auth.transport import requests as google_auth_requests
 import os
 import bcrypt
 import hashlib
@@ -17,11 +19,25 @@ import re
 
 router = APIRouter()
 
+# ─── Secrets (module load — fail fast if missing) ─────────────────────────────────
+SECRET_KEY = os.environ['SECRET_KEY']
+
+OTP_PEPPER = os.getenv('OTP_PEPPER')
+if not OTP_PEPPER:
+    raise ValueError('OTP_PEPPER env var not set')
+
+# Not fail-fast like the two secrets above: Google sign-in is an optional
+# feature (a dev/CI environment can run the rest of the app without a Cloud
+# Console client ID configured yet). Absence is handled per-request in
+# google_callback() instead of crashing the whole app at import time.
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
+
 # ─── Constants ────────────────────────────────────────────────────────────────────
 # Session-length access token. There is no /refresh route (no rotation or
 # revocation store by design), so this doubles as the whole session lifetime —
 # short enough to bound a stolen token, long enough to not log users out mid-use.
-ACCESS_TOKEN_EXPIRE = 8 * 60   # minutes (8 hours)
+# Not a secret, so a default is fine here (unlike SECRET_KEY/OTP_PEPPER above).
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES', 240))
 OTP_EXPIRE = 10             # minutes
 OTP_MAX_ATTEMPTS = 5
 OTP_RATE_LIMIT_PER_EMAIL = 5    # per hour
@@ -60,6 +76,22 @@ class OnboardingUsernameRequest(BaseModel):
 class GoogleCallbackRequest(BaseModel):
     id_token: str
 
+class UpdateProfileRequest(BaseModel):
+    """Name-only edit. extra='forbid' rejects an email/username field outright
+    (422) rather than silently ignoring it — those two fields are never
+    editable through this endpoint."""
+    model_config = ConfigDict(extra='forbid')
+    first_name: str
+    last_name: str
+
+class DeleteAccountRequest(BaseModel):
+    """Exactly one of these is meaningful, chosen server-side by whether
+    current_user has a password_hash — see delete_me(). Both optional so
+    either shape of client payload parses; the unused one is simply
+    ignored."""
+    password: str | None = None
+    confirmation: str | None = None
+
 # ─── Password + OTP + token helpers ──────────────────────────────────────────────
 
 # bcrypt is used directly (not via passlib): passlib 1.7.4 is unmaintained and
@@ -80,28 +112,26 @@ def verify_password(password: str, password_hash: str) -> bool:
         return False
 
 def hash_otp(code: str) -> str:
-    pepper = os.getenv('OTP_PEPPER', 'mudralearn-otp-pepper')
-    return hashlib.sha256(f'{code}{pepper}'.encode()).hexdigest()
+    return hashlib.sha256(f'{code}{OTP_PEPPER}'.encode()).hexdigest()
 
 def generate_otp() -> str:
     return f'{secrets.randbelow(1000000):06d}'
 
 def hash_token(raw: str) -> str:
     """SHA-256 with the app secret as pepper — used for signup-session tokens."""
-    pepper = os.getenv('SECRET_KEY', 'mudralearn-token-pepper')
-    return hashlib.sha256(f'{raw}{pepper}'.encode()).hexdigest()
+    return hashlib.sha256(f'{raw}{SECRET_KEY}'.encode()).hexdigest()
 
 def make_access_token(user_id: str) -> str:
     payload = {
         'sub': user_id,
-        'exp': datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE),
+        'exp': datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES),
         'type': 'access',
     }
-    return jwt.encode(payload, os.getenv('SECRET_KEY'), algorithm='HS256')
+    return jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
 def verify_access_token(token: str) -> str | None:
     try:
-        payload = jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=['HS256'])
+        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
         if payload.get('type') != 'access':
             return None
         return payload.get('sub')
@@ -112,7 +142,7 @@ def set_auth_cookies(response: JSONResponse, access_token: str):
     is_dev = os.getenv('ENV', 'development') != 'production'
     response.set_cookie(
         key='access_token', value=access_token, httponly=True,
-        secure=not is_dev, samesite='lax', max_age=ACCESS_TOKEN_EXPIRE * 60, path='/',
+        secure=not is_dev, samesite='lax', max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60, path='/',
     )
 
 def validate_username_format(u: str) -> str | None:
@@ -133,6 +163,13 @@ def user_public(user: User, **extra) -> dict:
         'last_name': user.last_name,
         'username': user.username,
         'auth_provider': user.auth_provider,
+        # Derived from password_hash, never the hash itself. This is the same
+        # fact delete_me() branches its re-auth method on — exposing it lets
+        # the frontend branch on that fact directly instead of a proxy for it
+        # (auth_provider, which only records how the account originated and
+        # can diverge from whether it actually has a password — e.g. a
+        # Google-linked account that already had one, see google_callback()).
+        'has_password': user.password_hash is not None,
         'email_verified': bool(user.email_verified_at),
         'onboarding_complete': bool(user.username and user.first_name),
     }
@@ -285,7 +322,8 @@ def verify_otp(request: Request, req: VerifyOTPRequest, db: Session = Depends(ge
 
 
 @router.post('/complete-signup')
-def complete_signup(req: CompleteSignupRequest, db: Session = Depends(get_db)):
+@limiter.limit('10/minute')
+def complete_signup(request: Request, req: CompleteSignupRequest, db: Session = Depends(get_db)):
     """Create the account from a verified signup_token + collected profile.
 
     This is the single point where a User row is written — with a verified
@@ -397,8 +435,12 @@ def onboarding_username(
     """Set a username for an already-authenticated but incomplete account.
 
     Used by the Google branch, where the user is created (verified email +
-    name) before choosing a username.
+    name) before choosing a username. One-time — once onboarding is complete
+    the username is locked; this is not a general username-change endpoint.
     """
+    if current_user.signup_step == 'completed':
+        raise HTTPException(409, 'Username has already been set and cannot be changed.')
+
     username = req.username.strip().lower()
     error = validate_username_format(username)
     if error:
@@ -417,12 +459,85 @@ def onboarding_username(
     return {'user': user_public(current_user)}
 
 
-# ─── Google (deferred stub) ──────────────────────────────────────────────────────
+# ─── Google (ID-token flow — Google Identity Services) ───────────────────────────
 
 @router.post('/google/callback')
-def google_callback(req: GoogleCallbackRequest):
-    """Deferred — the button is wired in the UI, live OAuth is not built yet."""
-    raise HTTPException(501, 'Google sign-in is coming soon. Please use email for now.')
+@limiter.limit('20/minute')
+def google_callback(request: Request, req: GoogleCallbackRequest, db: Session = Depends(get_db)):
+    """Verify a Google ID token and log in / link / create the account.
+
+    ID-token flow only (Google Identity Services) — the frontend never sends
+    an authorization code, so there is no exchange step and no client secret
+    here. Google's own client library does the signature/issuer/expiry/
+    audience verification; on any failure we return a generic 401 rather than
+    the library's raw error text, which can include internal detail.
+    """
+    if not GOOGLE_CLIENT_ID:
+        raise HTTPException(503, 'Google sign-in is not configured.')
+
+    try:
+        idinfo = google_id_token.verify_oauth2_token(
+            req.id_token, google_auth_requests.Request(), GOOGLE_CLIENT_ID,
+        )
+    except ValueError:
+        raise HTTPException(401, 'Invalid or expired Google sign-in. Please try again.')
+
+    sub = idinfo['sub']
+    email = (idinfo.get('email') or '').lower()
+    email_verified = bool(idinfo.get('email_verified'))
+    given_name = idinfo.get('given_name')
+    family_name = idinfo.get('family_name')
+
+    # 1) Returning Google user — google_id is the stable identifier.
+    user = db.query(User).filter(User.google_id == sub).first()
+    if user:
+        return auth_response(user)
+
+    # 2) No google_id match — check for an existing account by email (account
+    # linking, per the locked decision: auto-link rather than reject).
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        if user.google_id and user.google_id != sub:
+            # Shouldn't happen given the unique constraint on google_id (that
+            # would mean two different Google accounts sharing one email
+            # address), but handle gracefully rather than 500 if it ever does.
+            raise HTTPException(409, 'This email is already linked to a different Google account.')
+        if not user.google_id:
+            # Link: attach google_id to the existing row. auth_provider and
+            # password_hash are left untouched — auth_provider stays
+            # descriptive of how the account originated, it does not gate
+            # anything (see delete_me()'s password_hash-based re-auth check).
+            user.google_id = sub
+            if email_verified and not user.email_verified_at:
+                user.email_verified_at = datetime.utcnow()
+            db.commit()
+            db.refresh(user)
+        return auth_response(user)
+
+    # 3) No match by google_id or email — new Google-originated account.
+    # No username yet: signup_step is left at its default ('email'), which
+    # onboarding_username() checks to force the username step before the
+    # account is considered complete.
+    user = User(
+        email=email,
+        auth_provider='google',
+        google_id=sub,
+        email_verified_at=datetime.utcnow() if email_verified else None,
+        first_name=given_name,
+        last_name=family_name,
+        username=None,
+    )
+    db.add(user)
+    try:
+        db.commit()
+    except IntegrityError:
+        # Race: another request created a row for this email/google_id between
+        # our lookups above and this commit.
+        db.rollback()
+        raise HTTPException(409, 'An account with this email already exists. Please sign in.')
+    db.refresh(user)
+
+    return auth_response(user, is_new=True)
 
 
 # ─── Session lifecycle ───────────────────────────────────────────────────────────
@@ -438,3 +553,70 @@ def logout():
 @router.get('/me')
 def me(current_user: User = Depends(get_current_user)):
     return {'user': user_public(current_user)}
+
+
+@router.patch('/me')
+@limiter.limit('20/minute')
+def update_me(
+    request: Request,
+    req: UpdateProfileRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Edit first/last name only. email and username are immutable here by
+    construction — UpdateProfileRequest has no such fields, and extra='forbid'
+    turns an attempt to send either into a 422 rather than a silent no-op."""
+    first_name = req.first_name.strip()
+    last_name = req.last_name.strip()
+    if not first_name or not last_name:
+        raise HTTPException(400, 'First and last name are required')
+
+    current_user.first_name = first_name
+    current_user.last_name = last_name
+    current_user.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(current_user)
+
+    return {'user': user_public(current_user)}
+
+
+@router.delete('/me', status_code=204)
+@limiter.limit('5/minute')
+def delete_me(
+    request: Request,
+    req: DeleteAccountRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Hard-deletes the user row; the 6 user_id FKs (progress, mastery_scores,
+    user_batch_progress, xp_ledger, user_streak, auth_sessions) are cascaded
+    or nulled at the DB level by migration 0005_user_delete_cascade.
+
+    Re-auth branch is decided from whether current_user has a password_hash
+    (server state), never from which field the client happened to send, and
+    never from auth_provider — auth_provider only records how the account
+    originated and does not gate re-auth method. A Google sign-in auto-linked
+    to an existing password account keeps its password_hash (see
+    google_callback()), so it re-authenticates with that password like any
+    other account; only an account with no password at all (password_hash is
+    None — today, always a Google-created account that never set one) uses
+    the username-confirmation phrase. Branching on password_hash instead of
+    auth_provider means a Google-onboarded account with no password_hash
+    can't be deleted by anyone who guesses to send a `password` field instead
+    of `confirmation`, and stays correct if a "set a password" feature is
+    ever added for Google accounts.
+    """
+    if current_user.password_hash is None:
+        expected = (current_user.username or '').strip().lower()
+        if not req.confirmation or req.confirmation.strip().lower() != expected:
+            raise HTTPException(401, 'Confirmation does not match.')
+    else:
+        if not req.password or not verify_password(req.password, current_user.password_hash):
+            raise HTTPException(401, 'Incorrect password.')
+
+    db.delete(current_user)
+    db.commit()
+
+    response = Response(status_code=204)
+    response.delete_cookie('access_token', path='/')
+    return response
