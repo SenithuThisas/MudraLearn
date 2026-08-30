@@ -1,0 +1,75 @@
+
+digraph UseCaseDiagram {
+    rankdir=LR;
+    fontname="Helvetica";
+    fontsize=10;
+    bgcolor="#ffffff";
+    pad=0.3;
+    nodesep=0.35;
+    ranksep=0.7;
+    dpi=300;
+
+    node [fontname="Helvetica", fontsize=10];
+    edge [fontname="Helvetica", fontsize=9, color="#475569", penwidth=1.1, arrowsize=0.8];
+
+    // Actors
+    Guest [shape=box, style="filled,rounded", fillcolor="#f1f5f9", color="#475569", label="Guest User\n(Unauthenticated)"];
+    Learner [shape=box, style="filled,rounded", fillcolor="#dbeafe", color="#2563eb", label="Registered Learner\n(Authenticated)"];
+    SystemAI [shape=box, style="filled,rounded", fillcolor="#fef3c7", color="#d97706", label="ML & Vision Engine\n(MediaPipe + Keras)"];
+
+    // System Boundary
+    subgraph cluster_system {
+        label = "MudraLearn System";
+        fontname = "Helvetica-Bold";
+        fontsize = 12;
+        color = "#334155";
+        style = "rounded";
+        fillcolor = "#fafafa";
+        penwidth = 1.3;
+
+        node [shape=ellipse, style="filled", fillcolor="#ffffff", color="#0284c7", penwidth=1.2];
+        
+        UC_CheckEmail [label="Check Email Availability"];
+        UC_VerifyOTP [label="Verify Email with OTP"];
+        UC_Register [label="Register & Complete Profile"];
+        UC_Login [label="Login & Authentication"];
+        
+        UC_AdaptivePractice [label="Practice Signs (Adaptive Mode)"];
+        UC_BatchChallenge [label="Attempt Batch Challenge"];
+        UC_UseHint [label="Request Dynamic Hint"];
+        UC_Translate [label="Real-time Sign Translation"];
+        
+        UC_ViewMap [label="View Learning Journey Map"];
+        UC_TrackMastery [label="Track Mastery, XP & Streaks"];
+        UC_ReviewWeak [label="Review Difficult Signs"];
+
+        UC_ExtractLandmarks [fillcolor="#fef9c3", color="#d97706", label="Extract Hand Landmarks (MediaPipe)"];
+        UC_InferGesture [fillcolor="#fef9c3", color="#d97706", label="Classify Gesture Sequence (TensorFlow)"];
+    }
+
+    // Guest associations
+    Guest -> UC_CheckEmail;
+    Guest -> UC_Register;
+    Guest -> UC_Login;
+
+    // Learner associations
+    Learner -> UC_Login;
+    Learner -> UC_AdaptivePractice;
+    Learner -> UC_BatchChallenge;
+    Learner -> UC_Translate;
+    Learner -> UC_ViewMap;
+    Learner -> UC_TrackMastery;
+    Learner -> UC_ReviewWeak;
+
+    // AI Engine associations
+    UC_ExtractLandmarks -> SystemAI;
+    UC_InferGesture -> SystemAI;
+
+    // Include / Extend relationships
+    UC_Register -> UC_VerifyOTP [style="dashed", arrowhead="open", label="<<include>>"];
+    UC_AdaptivePractice -> UC_ExtractLandmarks [style="dashed", arrowhead="open", label="<<include>>"];
+    UC_AdaptivePractice -> UC_InferGesture [style="dashed", arrowhead="open", label="<<include>>"];
+    UC_BatchChallenge -> UC_InferGesture [style="dashed", arrowhead="open", label="<<include>>"];
+    UC_Translate -> UC_InferGesture [style="dashed", arrowhead="open", label="<<include>>"];
+    UC_UseHint -> UC_BatchChallenge [style="dashed", arrowhead="open", label="<<extend>>"];
+}

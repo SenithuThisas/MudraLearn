@@ -159,6 +159,7 @@ export function useHandLandmarker(submitSequence?: SequenceSubmitter) {
           if (frameBuffer.current.length >= SEQUENCE_LEN) {
             isRecording.current = false;
             setIsCapturing(false);
+            console.log('[TC-FR7 TEMP]', JSON.stringify(frameBuffer.current.slice(0, SEQUENCE_LEN)));
             sendPrediction(frameBuffer.current.slice(0, SEQUENCE_LEN));
             return;
           }

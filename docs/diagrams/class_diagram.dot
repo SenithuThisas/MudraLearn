@@ -1,0 +1,63 @@
+
+digraph ClassDiagram {
+    rankdir=TB;
+    bgcolor="#ffffff";
+    pad=0.2;
+    nodesep=0.6;
+    ranksep=0.8;
+    dpi=300;
+
+    node [fontname="Helvetica", fontsize=10, shape=record, style="filled", fillcolor="#ffffff", color="#334155", penwidth=1.2];
+    edge [fontname="Helvetica", fontsize=9, color="#334155", penwidth=1.2, arrowsize=0.85];
+
+    // ================= DOMAIN MODELS =================
+    User [fillcolor="#f8fafc", label="{User|+ id: UUID [PK]\l+ email: String [Unique]\l+ username: String [Unique]\l+ password_hash: String\l+ role: String\l+ signup_step: String\l+ failed_login_attempts: int\l+ locked_until: DateTime\l}"];
+
+    MasteryScore [fillcolor="#f8fafc", label="{MasteryScore|+ id: Integer [PK]\l+ user_id: UUID [FK]\l+ sign_id: String\l+ score: Float (EWMA)\l+ attempts: Integer\l+ tier_unlocked: Integer (1-5)\l+ last_seen: DateTime\l}"];
+
+    Progress [fillcolor="#f8fafc", label="{Progress|+ id: Integer [PK]\l+ user_id: UUID [FK]\l+ sign_id: String\l+ category: String\l+ confidence: Float\l+ correct: Boolean\l+ timestamp: DateTime\l}"];
+
+    UserStreak [fillcolor="#f8fafc", label="{UserStreak|+ user_id: UUID [PK, FK]\l+ current_streak: Integer\l+ longest_streak: Integer\l+ last_active_date: Date\l}"];
+
+    Batch [fillcolor="#f8fafc", label="{Batch|+ id: Integer [PK]\l+ tier: Integer\l+ tier_label: String\l+ level_number: Integer\l+ difficulty_rank: Integer\l+ sign_ids: List[String]\l}"];
+
+    SignDifficulty [fillcolor="#f8fafc", label="{SignDifficulty|+ sign_id: String [PK]\l+ batch_id: Integer [FK]\l+ difficulty_rank: Integer\l+ f1: Float\l+ accuracy: Float\l+ gate_passed: Boolean\l+ category: String\l}"];
+
+    UserBatchProgress [fillcolor="#f8fafc", label="{UserBatchProgress|+ id: Integer [PK]\l+ user_id: UUID [FK]\l+ batch_id: Integer [FK]\l+ status: String\l+ best_score: Integer\l+ attempts: Integer\l+ challenge_state: JSONB\l}"];
+
+    XpLedger [fillcolor="#f8fafc", label="{XpLedger|+ id: Integer [PK]\l+ user_id: UUID [FK]\l+ batch_id: Integer [FK]\l+ amount: Integer\l+ reason: String\l+ created_at: DateTime\l}"];
+
+    // ================= CORE SERVICES =================
+    subgraph cluster_services {
+        label = "Core Engine & Services";
+        fontname = "Helvetica-Bold";
+        fontsize = 11;
+        color = "#64748b";
+        style = "dashed,rounded";
+        fillcolor = "#f1f5f9";
+
+        InferenceService [fillcolor="#eff6ff", color="#2563eb", label="{InferenceService|+ load_model(): void\l+ predict(sequence: 60x126): List[Top3]\l}"];
+        MasteryEngine [fillcolor="#eff6ff", color="#2563eb", label="{MasteryEngine|+ update_mastery(user_id, sign_id, conf, correct): MasteryScore\l+ get_mastery_summary(user_id): List[Dict]\l}"];
+        AdaptiveEngine [fillcolor="#eff6ff", color="#2563eb", label="{AdaptiveEngine|+ get_next_sign(user_id): Dict\l- _cold_start(): Dict\l- _adaptive(): Dict\l}"];
+        PracticeFlowService [fillcolor="#eff6ff", color="#2563eb", label="{PracticeFlowService|+ start_challenge(user_id, batch_id): Dict\l+ challenge_attempt(user_id, sign_id, sequence): Dict\l+ use_hint(user_id, batch_id): Dict\l}"];
+    }
+
+    // ================= RELATIONSHIPS =================
+    // User Associations (pointing to User)
+    Progress -> User [label="0..* : 1", arrowhead="vee"];
+    MasteryScore -> User [label="0..* : 1", arrowhead="vee"];
+    UserStreak -> User [label="1 : 1", arrowhead="vee"];
+    UserBatchProgress -> User [label="0..* : 1", arrowhead="vee"];
+    XpLedger -> User [label="0..* : 1", arrowhead="vee"];
+
+    // Batch Associations (pointing to Batch)
+    SignDifficulty -> Batch [label="0..* : 1", arrowhead="vee"];
+    UserBatchProgress -> Batch [label="0..* : 1", arrowhead="vee"];
+    XpLedger -> Batch [label="0..* : 0..1", arrowhead="vee"];
+
+    // Service Dependencies
+    PracticeFlowService -> InferenceService [style="dashed", color="#2563eb", label="uses", arrowhead="vee"];
+    PracticeFlowService -> MasteryEngine [style="dashed", color="#2563eb", label="updates", arrowhead="vee"];
+    AdaptiveEngine -> MasteryScore [style="dashed", color="#2563eb", label="reads", arrowhead="vee"];
+    MasteryEngine -> MasteryScore [style="dashed", color="#2563eb", label="updates", arrowhead="vee"];
+}

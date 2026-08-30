@@ -1,0 +1,82 @@
+
+digraph ActivityDiagram {
+    fontname="Helvetica";
+    fontsize=10;
+    bgcolor="#ffffff";
+    pad=0.4;
+    nodesep=0.5;
+    ranksep=0.6;
+    dpi=300;
+
+    node [fontname="Helvetica", fontsize=10, shape=box, style="filled,rounded", fillcolor="#f8fafc", color="#334155", penwidth=1.2];
+    edge [fontname="Helvetica", fontsize=9, color="#334155", penwidth=1.2, arrowsize=0.8];
+
+    // Nodes
+    start [shape=circle, width=0.3, height=0.3, style=filled, fillcolor="#0f172a", label=""];
+    open_app [label="Learner initiates Practice or Challenge"];
+    get_sign [label="Select Target Sign\n(Adaptive Engine or Batch Sequence)"];
+    start_cam [label="Start Webcam & MediaPipe Hands Tracker"];
+    buffer_frames [label="Record 60 Frames &\nExtract 126 Normalized Landmarks"];
+    post_predict [label="POST /api/predict or /challenge/attempt\n(Send 60x126 Frame Sequence)"];
+    
+    validate [shape=diamond, style=filled, fillcolor="#fef3c7", color="#d97706", label="Payload Valid?\n(60x126 Shape)"];
+    err_resp [fillcolor="#fee2e2", color="#dc2626", label="Return 400 Bad Request"];
+    
+    run_ml [fillcolor="#eff6ff", color="#2563eb", label="TensorFlow ML Inference\n(Softmax Probabilities & Top-3 Signs)"];
+    
+    check_match [shape=diamond, style=filled, fillcolor="#fef3c7", color="#d97706", label="Top Sign == Target\nAND Conf >= 0.60?"];
+    
+    match_yes [label="Mark Attempt: Correct (True)\nDetermine Verdict: 'great' / 'okay'"];
+    match_no [label="Mark Attempt: Incorrect (False)\nDetermine Verdict: 'retry'"];
+    
+    is_freeform [shape=diamond, style=filled, fillcolor="#fef3c7", color="#d97706", label="Free-Form / Translate\nMode?"];
+    
+    skip_db [label="Skip Database Logging"];
+    
+    log_progress [label="Insert Row into Progress Table"];
+    calc_ewma [label="Update MasteryScore with EWMA:\nScore = 0.3*(Attempt) + 0.7*(OldScore)"];
+    
+    check_tier [shape=diamond, style=filled, fillcolor="#fef3c7", color="#d97706", label="Score >= 0.80 AND\nAttempts >= 5?"];
+    inc_tier [label="Promote Sign Mastery Tier\n(tier_unlocked = min(tier+1, 5))"];
+    
+    award_xp [label="Award XP & Update User Streak"];
+    commit_db [label="Commit Database Transaction"];
+    return_feedback [label="Display Real-Time Feedback &\nConfidence to User"];
+    
+    end_node [shape=doublecircle, width=0.3, height=0.3, style=filled, fillcolor="#0f172a", label=""];
+
+    // Flow
+    start -> open_app;
+    open_app -> get_sign;
+    get_sign -> start_cam;
+    start_cam -> buffer_frames;
+    buffer_frames -> post_predict;
+    post_predict -> validate;
+    
+    validate -> err_resp [label="[No]"];
+    validate -> run_ml [label="[Yes]"];
+    
+    run_ml -> check_match;
+    check_match -> match_yes [label="[Match >= 0.60]"];
+    check_match -> match_no [label="[Otherwise]"];
+    
+    match_yes -> is_freeform;
+    match_no -> is_freeform;
+    
+    is_freeform -> skip_db [label="[Yes]"];
+    is_freeform -> log_progress [label="[No]"];
+    
+    log_progress -> calc_ewma;
+    calc_ewma -> check_tier;
+    
+    check_tier -> inc_tier [label="[Yes]"];
+    check_tier -> award_xp [label="[No]"];
+    inc_tier -> award_xp;
+    
+    award_xp -> commit_db;
+    commit_db -> return_feedback;
+    skip_db -> return_feedback;
+    
+    err_resp -> end_node;
+    return_feedback -> end_node;
+}
