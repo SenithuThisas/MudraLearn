@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useHandLandmarker } from '../hooks/useHandLandmarker';
-import Navigation from '../components/Navigation';
+import DashboardShell from '../components/dashboard/DashboardShell';
+import PixelButton from '../components/auth/PixelButton';
+import { HardCard, StatusBanner } from '../components/practice/PracticeUi';
 
 export default function TranslatePage() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -35,113 +37,115 @@ export default function TranslatePage() {
   const progressPct = Math.min((frameCount / SEQUENCE_LEN) * 100, 100);
 
   return (
-    <div className="w-full flex-1 bg-gray-50 dark:bg-[#16171d] text-gray-800 dark:text-gray-200 font-sans text-left">
-      <Navigation />
-      
-      <main className="max-w-5xl mx-auto py-10 px-6">
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold text-blue-700 dark:text-blue-400 mb-2">Live Translation</h1>
-          <p className="text-gray-500 dark:text-gray-400">Sign to the camera to see the AI prediction in real-time.</p>
+    <DashboardShell>
+      <div className="mx-auto max-w-5xl space-y-6 px-6 py-8">
+        <div>
+          <h1 className="font-pixel text-lg leading-8 text-ink">Live Translation</h1>
+          <p className="mt-2 font-body text-sm text-muted">
+            Sign to the camera to see the AI prediction in real time.
+          </p>
         </div>
 
-        {error && (
-          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded shadow-sm">
-            <p className="font-bold">Error</p>
-            <p>{error}</p>
-          </div>
-        )}
+        {error && <StatusBanner tone="red">{error.toUpperCase()}</StatusBanner>}
 
-        <div className="flex flex-col md:flex-row gap-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-[1fr_320px]">
           {/* Camera View */}
-          <div className="flex-1 bg-white dark:bg-[#1f2028] p-4 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800">
-            <div className="relative aspect-video bg-black rounded-lg overflow-hidden mb-4 shadow-inner">
+          <HardCard className="space-y-4 p-4">
+            <div className="relative aspect-video w-full overflow-hidden border-2 border-ink bg-black shadow-hard">
               <video
                 ref={videoRef}
                 autoPlay
                 playsInline
                 muted
-                className="w-full h-full object-cover transform -scale-x-100"
+                className="h-full w-full -scale-x-100 transform object-cover"
               />
               {!cameraActive && (
-                <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75">
-                  <p className="text-gray-300 animate-pulse">Requesting camera access...</p>
+                <div className="absolute inset-0 flex items-center justify-center bg-navy/80">
+                  <p className="animate-pulse font-pixel text-[10px] leading-5 text-white">
+                    REQUESTING CAMERA ACCESS…
+                  </p>
                 </div>
               )}
               {isCapturing && (
-                <div className="absolute top-4 right-4 flex items-center gap-2 bg-red-600 text-white text-xs px-3 py-1.5 rounded-full font-medium shadow-md animate-pulse">
-                  <div className="w-2 h-2 bg-white rounded-full"></div> Recording
+                <div className="absolute right-3 top-3 flex items-center gap-2 border-2 border-ink bg-danger px-3 py-1 font-pixel text-[9px] leading-4 text-white shadow-hard-sm">
+                  <div className="h-2 w-2 animate-pulse rounded-full bg-white" /> RECORDING
                 </div>
               )}
             </div>
 
             {/* Controls */}
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => startCapture(videoRef.current!, { targetSign: 'unknown', category: 'free' })}
+            <div className="flex flex-wrap items-center gap-3">
+              <PixelButton
                 disabled={!isReady || !cameraActive || isCapturing}
-                className="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all shadow-md active:scale-[0.98]"
+                onClick={() => startCapture(videoRef.current!, { targetSign: 'unknown', category: 'free' })}
               >
-                {!isReady ? 'Loading AI Model...' : isCapturing ? 'Recording...' : 'Record Sign (2s)'}
-              </button>
+                {!isReady ? 'LOADING AI MODEL…' : isCapturing ? 'RECORDING…' : 'RECORD SIGN (2S)'}
+              </PixelButton>
               {isCapturing && (
-                <button 
-                  onClick={stopCapture}
-                  className="py-3 px-4 bg-red-100 text-red-600 hover:bg-red-200 rounded-lg font-medium transition-colors"
-                >
-                  Cancel
-                </button>
+                <PixelButton variant="secondary" onClick={stopCapture}>
+                  CANCEL
+                </PixelButton>
               )}
             </div>
 
             {/* Progress Bar */}
-            <div className="mt-4 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-blue-600 transition-all duration-75 ease-linear"
-                style={{ width: `${progressPct}%` }}
-              ></div>
+            <div>
+              <div className="h-2 w-full border-2 border-ink bg-white">
+                <div
+                  className="h-full bg-primary transition-all duration-75 ease-linear"
+                  style={{ width: `${progressPct}%` }}
+                />
+              </div>
+              <p className="mt-2 text-center font-body text-xs text-muted">
+                {frameCount} / {SEQUENCE_LEN} frames captured
+              </p>
             </div>
-            <p className="text-xs text-center mt-2 text-gray-500 dark:text-gray-400">
-              {frameCount} / {SEQUENCE_LEN} frames captured
-            </p>
-          </div>
+          </HardCard>
 
           {/* Results Panel */}
-          <div className="w-full md:w-80 flex flex-col gap-6">
-            <div className="bg-white dark:bg-[#1f2028] p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 flex-1">
-              <h2 className="text-lg font-semibold mb-4 border-b pb-2 border-gray-100 dark:border-gray-700">Prediction</h2>
-              
-              {prediction ? (
-                <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                  <div className="text-center mb-6">
-                    <span className="block text-sm text-gray-500 uppercase tracking-wider mb-1">Top Sign</span>
-                    <span className="text-4xl font-bold text-blue-700 dark:text-blue-400">{prediction.top_sign}</span>
-                    <span className="block text-sm font-medium mt-2 text-green-600 bg-green-50 dark:bg-green-900/30 rounded-full px-3 py-1 inline-block">
-                      {(prediction.confidence * 100).toFixed(1)}% confidence
-                    </span>
-                  </div>
+          <HardCard className="space-y-4 p-6">
+            <p className="border-b-2 border-ink pb-3 font-pixel text-[10px] leading-4 text-muted">
+              PREDICTION
+            </p>
 
-                  <div>
-                    <span className="text-xs font-semibold uppercase text-gray-400 mb-2 block">Alternatives</span>
-                    <ul className="space-y-2">
-                      {prediction.top3.slice(1).map((alt, i) => (
-                        <li key={i} className="flex justify-between items-center text-sm p-2 rounded bg-gray-50 dark:bg-gray-800/50">
-                          <span className="font-medium text-gray-700 dark:text-gray-300">{alt.sign}</span>
-                          <span className="text-gray-500">{(alt.confidence * 100).toFixed(1)}%</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+            {prediction ? (
+              <div className="space-y-5">
+                <div className="text-center">
+                  <p className="mb-2 font-pixel text-[9px] uppercase leading-4 text-muted">Top Sign</p>
+                  <p className="font-pixel text-2xl leading-tight text-primary">{prediction.top_sign}</p>
+                  <span className="mt-3 inline-block border-2 border-ink bg-sticker-mint px-3 py-1 font-pixel text-[9px] leading-4 text-ink">
+                    {(prediction.confidence * 100).toFixed(1)}% CONFIDENCE
+                  </span>
                 </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center h-48 text-gray-400 text-center">
-                  <svg className="w-12 h-12 mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                  <p>Click "Record Sign" and perform a gesture to see results</p>
+
+                <div>
+                  <p className="mb-2 font-pixel text-[9px] uppercase leading-4 text-muted">Alternatives</p>
+                  <ul className="space-y-2">
+                    {prediction.top3.slice(1).map((alt, i) => (
+                      <li
+                        key={i}
+                        className="flex items-center justify-between border-2 border-ink bg-white px-3 py-2 font-body text-sm"
+                      >
+                        <span className="font-semibold text-ink">{alt.sign}</span>
+                        <span className="text-muted">{(alt.confidence * 100).toFixed(1)}%</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              )}
-            </div>
-          </div>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+                <svg className="h-12 w-12 text-muted opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <p className="font-body text-sm text-muted">
+                  Click "Record Sign" and perform a gesture to see results.
+                </p>
+              </div>
+            )}
+          </HardCard>
         </div>
-      </main>
-    </div>
+      </div>
+    </DashboardShell>
   );
 }
