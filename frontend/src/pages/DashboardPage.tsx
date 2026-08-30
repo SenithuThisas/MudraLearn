@@ -10,7 +10,7 @@ import RecentActivityFeed from '../components/dashboard/RecentActivityFeed'
 import SignMasteryTable from '../components/dashboard/SignMasteryTable'
 import XPLevelCard from '../components/dashboard/XPLevelCard'
 import StreakCounter from '../components/dashboard/StreakCounter'
-import CategoryBadgeGrid from '../components/dashboard/CategoryBadgeGrid'
+import CategoryProgressList from '../components/dashboard/CategoryProgressList'
 import DifficultyTierList, { type DifficultyTierEntry } from '../components/dashboard/DifficultyTierList'
 import { TIERS, type DashboardStats, type TierProgress } from '../data/mockDashboard'
 import { DIFFICULTY_TIER_THRESHOLDS } from '../services/dashboardData'
@@ -165,9 +165,9 @@ export default function DashboardPage() {
           </div>
 
           {summary?.categories ? (
-            <CategoryBadgeGrid categories={summary.categories} />
+            <CategoryProgressList categories={summary.categories} />
           ) : (
-            <CardPlaceholder title="CATEGORY BADGES" accent="#6D28D9" state={summaryQuery.isError ? 'error' : 'loading'} />
+            <CardPlaceholder title="CATEGORY PROGRESS" accent="#6D28D9" state={summaryQuery.isError ? 'error' : 'loading'} />
           )}
 
           {difficultyTierEntries ? (
