@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import type { UserProfile } from '../../services/auth'
 import LogoutConfirmModal from './LogoutConfirmModal'
 
@@ -12,6 +13,13 @@ interface SidebarUserSectionProps {
 const LOGOUT_ICON = (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
     <path d="M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4M16 17l5-5-5-5M21 12H9" />
+  </svg>
+)
+
+const PROFILE_ICON = (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7" />
   </svg>
 )
 
@@ -92,6 +100,9 @@ export default function SidebarUserSection({ user, collapsed, onLogout }: Sideba
         <>
           <span className="sidebar-user-avatar">{initials}</span>
           <span className="sidebar-user-name">{displayLabel}</span>
+          <Link to="/profile" className="sidebar-user-logout-button" aria-label="Account settings">
+            {PROFILE_ICON}
+          </Link>
           <button
             ref={logoutButtonRef}
             type="button"
@@ -115,6 +126,15 @@ export default function SidebarUserSection({ user, collapsed, onLogout }: Sideba
             exit="hidden"
           >
             <span className="sidebar-user-popover-name">{fullName || displayLabel}</span>
+            <Link
+              to="/profile"
+              role="menuitem"
+              className="sidebar-user-popover-logout"
+              onClick={() => setPopoverOpen(false)}
+            >
+              {PROFILE_ICON}
+              Account settings
+            </Link>
             <button
               type="button"
               role="menuitem"

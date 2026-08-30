@@ -1,16 +1,31 @@
+import type { MouseEvent } from 'react'
+import { getSignTier, TIER_META } from '../utils/signTiers'
+
 interface SignCardProps {
-name: string
-category: string
+  name: string
+  category: string
+  has_clip: boolean
+  recognizable: boolean
+  onOpen: (e: MouseEvent<HTMLButtonElement>) => void
 }
-export default function SignCard({ name, category }: SignCardProps) {
-return (
-<div className='bg-white rounded-xl border border-gray-200 p-4
-hover:shadow-md transition-shadow cursor-pointer'>
-<div className='text-xs text-blue-600 font-medium mb-1 uppercase
-tracking-wide'>
-{category}
-</div>
-<div className='text-gray-900 font-semibold text-sm'>{name}</div>
-</div>
-)
+
+export default function SignCard({ name, category, has_clip, recognizable, onOpen }: SignCardProps) {
+  const tier = getSignTier({ has_clip, recognizable })
+  const { label, badgeClass } = TIER_META[tier]
+
+  return (
+    <button
+      type='button'
+      onClick={onOpen}
+      className='flex w-full flex-col items-start gap-2 border-2 border-ink bg-white p-3 text-left shadow-hard-sm transition-[transform,box-shadow] duration-100 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none'
+    >
+      <span className={`border border-ink px-1.5 py-0.5 font-pixel text-[8px] leading-4 ${badgeClass}`}>
+        {label}
+      </span>
+      <span className='font-pixel text-[9px] uppercase leading-4 tracking-wide text-muted'>
+        {category}
+      </span>
+      <span className='font-body text-sm font-semibold text-ink'>{name}</span>
+    </button>
+  )
 }

@@ -49,10 +49,12 @@ venv/
 ENV/
 .env
 .env.*
+!.env.example
 
 # Backend
 backend/.env
 backend/.env.*
+!backend/.env.example
 backend/logs/
 backend/instance/
 
@@ -61,6 +63,14 @@ ml/data/
 ml/saved_models/
 ml/notebooks/.ipynb_checkpoints/
 ml/scripts/__pycache__/
+
+# MediaPipe runtime assets (WASM + hand-landmarker model) — fetched by
+# frontend/scripts/setup-mediapipe-assets.mjs (runs on `npm install`), not committed.
+frontend/public/mediapipe/
+
+# Practice reference clips — copied out of the (also ignored) ml/data dataset by
+# frontend/scripts/setup-reference-clips.mjs (runs on `npm install`).
+frontend/public/reference/
 
 # Build artifacts
 build/
@@ -84,6 +94,9 @@ build/
 *.tar.gz
 *.tgz
 
+# Generated diagrams
+docs/architecture/
+
 # Local overrides
 *.local
 
@@ -92,3 +105,4 @@ build/
 *.md
 !README.md
 !**/README.md
+!PROJECT_DOCUMENTATION.md

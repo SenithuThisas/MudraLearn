@@ -64,7 +64,9 @@ def update_mastery(
         if row.score >= TIER_SCORE_THRESHOLD and row.attempts >= TIER_ATTEMPT_THRESHOLD:
             row.tier_unlocked = min(row.tier_unlocked + 1, 5)
 
-    db.commit()
+    # No commit here — caller (predict_sign) commits once after both the
+    # Progress row and this MasteryScore upsert succeed, so they land atomically.
+    db.flush()
     db.refresh(row)
     return row
 

@@ -26,7 +26,11 @@ export default {
           mint: '#A8F0CE',
         },
         // Feedback
-        danger: '#DC2626',
+        danger: {
+          DEFAULT: '#DC2626',
+          // Tinted fill for the "try again" verdict card, so ink text stays legible.
+          soft: '#FFD9D9',
+        },
         muted: '#6B7280',
         hairline: '#E5E7EB',
       },

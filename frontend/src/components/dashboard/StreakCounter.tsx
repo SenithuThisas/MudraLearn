@@ -34,12 +34,6 @@ export default function StreakCounter({ currentDays, active, longestDays }: Stre
         <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 11, fontWeight: 700, color: '#6B7280', textTransform: 'uppercase', letterSpacing: 0.5 }}>
           Longest: {longestDays} days
         </span>
-        <span
-          title="Estimated — not yet backed by real activity history"
-          style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 7, letterSpacing: 0.5, color: '#14213D', background: '#FBE24A', border: '1px solid #14213D', padding: '3px 5px' }}
-        >
-          EST.
-        </span>
       </div>
     </div>
   )

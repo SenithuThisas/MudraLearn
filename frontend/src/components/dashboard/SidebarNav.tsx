@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import type { JSX } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import NavItem from './NavItem'
@@ -123,7 +124,9 @@ export default function SidebarNav() {
               icon={ICONS[item.icon]}
               label={item.label}
               path={item.path}
-              active={item.path === pathname}
+              active={Boolean(
+                item.path && (pathname === item.path || pathname.startsWith(`${item.path}/`)),
+              )}
               collapsed={collapsed}
             />
           ))}

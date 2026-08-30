@@ -15,6 +15,8 @@ interface AuthContextValue {
     username: string,
   ) => Promise<UserProfile>
   completeUsername: (username: string) => Promise<void>
+  updateProfile: (firstName: string, lastName: string) => Promise<void>
+  deleteAccount: (payload: auth.DeleteAccountPayload) => Promise<void>
   signOut: () => Promise<void>
   refreshSession: () => Promise<void>
 }
@@ -69,6 +71,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(profile)
   }, [])
 
+  const updateProfile = useCallback(async (firstName: string, lastName: string) => {
+    const { user: profile } = await auth.updateProfile(firstName, lastName)
+    setUser(profile)
+  }, [])
+
+  // Throws on wrong password/confirmation (caller shows the error) — only
+  // clears the session once the server confirms the account is gone.
+  const deleteAccount = useCallback(async (payload: auth.DeleteAccountPayload) => {
+    await auth.deleteAccount(payload)
+    setUser(null)
+  }, [])
+
   const signOut = useCallback(async () => {
     try {
       await auth.logout()
@@ -87,6 +101,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signInWithPassword,
         completeSignup,
         completeUsername,
+        updateProfile,
+        deleteAccount,
         signOut,
         refreshSession,
       }}

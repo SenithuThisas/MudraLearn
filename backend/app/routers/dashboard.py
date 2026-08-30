@@ -26,13 +26,37 @@ router = APIRouter()
 
 
 class CamelModel(BaseModel):
-    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        populate_by_name=True,
+        serialize_by_alias=True,
+    )
 
 
 class DashboardStatsModel(CamelModel):
     signs_mastered: int
     day_streak: int
     minutes_practiced_estimate: int
+    longest_streak: int
+    practiced_today: bool
+
+
+class XpModel(CamelModel):
+    total: int
+    current_level_xp: int
+    xp_to_next_level: int
+
+
+class LevelModel(CamelModel):
+    current: int
+    title: str
+
+
+class CategoryProgressModel(CamelModel):
+    name: str
+    total_signs: int
+    completed_signs: int
+    badge_earned: bool
 
 
 class NeedsReviewItemModel(CamelModel):
@@ -50,6 +74,9 @@ class ActivityItemModel(CamelModel):
 
 class DashboardSummaryResponse(CamelModel):
     stats: DashboardStatsModel
+    xp: XpModel
+    level: LevelModel
+    categories: list[CategoryProgressModel]
     mastery_overall: int
     tier_breakdown: dict[str, int]
     needs_review: list[NeedsReviewItemModel]

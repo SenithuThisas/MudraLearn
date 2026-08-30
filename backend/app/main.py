@@ -7,12 +7,11 @@ from fastapi.responses import JSONResponse
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
-from app.routers import predict, auth, session, progress, dashboard
+from app.routers import predict, auth, session, progress, dashboard, practice
 from app.services import inference
-from app.database import create_tables
 from app.rate_limit import limiter
+from loguru import logger
 import os
-import traceback
 
 app = FastAPI(title='MudraLearn API')
 
@@ -31,7 +30,7 @@ async def unhandled_exception_middleware(request: Request, call_next):
     try:
         return await call_next(request)
     except Exception as exc:
-        traceback.print_exc()  # print full traceback to uvicorn terminal
+        logger.exception('Unhandled exception in request')  # full traceback, server-side only
         body = {'detail': 'Internal server error'}
         if os.getenv('ENV', 'development') != 'production':
             body['error'] = str(exc)  # dev convenience; never leaked in production
@@ -51,7 +50,7 @@ app.add_middleware(
 
 @app.on_event('startup')
 async def startup():
-    create_tables()        # create DB tables if they don't exist
+    # Schema changes go through `alembic upgrade head`, not create_all().
     inference.load_model() # load ML model into memory
 
 app.include_router(predict.router,  prefix='/api',      tags=['predict'])
@@ -59,6 +58,7 @@ app.include_router(auth.router,     prefix='/api/auth',  tags=['auth'])
 app.include_router(session.router,  prefix='/api',      tags=['session'])
 app.include_router(progress.router, prefix='/api',      tags=['progress'])
 app.include_router(dashboard.router, prefix='/api',     tags=['dashboard'])
+app.include_router(practice.router,  prefix='/api',     tags=['practice'])
 
 @app.get('/')
 def root():

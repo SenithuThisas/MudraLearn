@@ -1,0 +1,1311 @@
+{
+  "source": "v2/per_class_report_v2.csv \u2229 production label_map.json",
+  "signs": [
+    {
+      "sign_id": "1. one",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Numbers",
+      "difficulty_rank": 1,
+      "in_batch": false
+    },
+    {
+      "sign_id": "Children",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 2,
+      "in_batch": false
+    },
+    {
+      "sign_id": "Deaf",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Adjectives",
+      "difficulty_rank": 3,
+      "in_batch": false
+    },
+    {
+      "sign_id": "Deep",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Adjectives",
+      "difficulty_rank": 4,
+      "in_batch": false
+    },
+    {
+      "sign_id": "Different",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Adjectives",
+      "difficulty_rank": 5,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Door",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 6,
+      "in_batch": false
+    },
+    {
+      "sign_id": "Equal",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Numbers",
+      "difficulty_rank": 7,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Face",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 8,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Hour",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "Days",
+      "difficulty_rank": 9,
+      "in_batch": true
+    },
+    {
+      "sign_id": "House",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 12.0,
+      "gate_passed": true,
+      "category": "Places",
+      "difficulty_rank": 10,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Instead",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Adverb",
+      "difficulty_rank": 11,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Internet",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 12,
+      "in_batch": true
+    },
+    {
+      "sign_id": "List",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 13,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Money",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 14,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Movie",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 15,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Paint",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 16,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Past",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Adjectives",
+      "difficulty_rank": 17,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Play",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 18,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Problem",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 19,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Red",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 6.0,
+      "gate_passed": true,
+      "category": "Colors",
+      "difficulty_rank": 20,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Show",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 21,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Society",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 22,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Squirrel",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 23,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Team",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 24,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Today",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "Days",
+      "difficulty_rank": 25,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Vehicle",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Vehicles",
+      "difficulty_rank": 26,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Walk",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 27,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Weather",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 28,
+      "in_batch": true
+    },
+    {
+      "sign_id": "You",
+      "f1": 1.0,
+      "accuracy": 1.0,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 29,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Good",
+      "f1": 0.96,
+      "accuracy": 1.0,
+      "support": 12.0,
+      "gate_passed": true,
+      "category": "Adjectives",
+      "difficulty_rank": 30,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Look",
+      "f1": 0.9230769230769231,
+      "accuracy": 1.0,
+      "support": 6.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 31,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Sleep",
+      "f1": 0.9230769230769231,
+      "accuracy": 1.0,
+      "support": 6.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 32,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Cry",
+      "f1": 0.9090909090909091,
+      "accuracy": 1.0,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 33,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Green",
+      "f1": 0.9090909090909091,
+      "accuracy": 0.8333333333333334,
+      "support": 6.0,
+      "gate_passed": true,
+      "category": "Colors",
+      "difficulty_rank": 34,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Doctor",
+      "f1": 0.8888888888888888,
+      "accuracy": 1.0,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "People",
+      "difficulty_rank": 35,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Younger bro",
+      "f1": 0.8888888888888888,
+      "accuracy": 1.0,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "People",
+      "difficulty_rank": 36,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Elephant",
+      "f1": 0.8888888888888888,
+      "accuracy": 0.8,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 37,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Help",
+      "f1": 0.8888888888888888,
+      "accuracy": 0.8,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 38,
+      "in_batch": true
+    },
+    {
+      "sign_id": "January",
+      "f1": 0.8888888888888888,
+      "accuracy": 0.8,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Months",
+      "difficulty_rank": 39,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Elder sister",
+      "f1": 0.8571428571428571,
+      "accuracy": 0.75,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "People",
+      "difficulty_rank": 40,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Rich",
+      "f1": 0.8571428571428571,
+      "accuracy": 0.75,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "Adjectives",
+      "difficulty_rank": 41,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Us",
+      "f1": 0.8571428571428571,
+      "accuracy": 0.75,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "People",
+      "difficulty_rank": 42,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Teach",
+      "f1": 0.8333333333333334,
+      "accuracy": 1.0,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 43,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Cook",
+      "f1": 0.8333333333333334,
+      "accuracy": 0.8333333333333334,
+      "support": 6.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 44,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Thank you",
+      "f1": 0.8333333333333334,
+      "accuracy": 0.8333333333333334,
+      "support": 18.0,
+      "gate_passed": true,
+      "category": "Greetings",
+      "difficulty_rank": 45,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Book",
+      "f1": 0.8,
+      "accuracy": 1.0,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 46,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Cough",
+      "f1": 0.8,
+      "accuracy": 1.0,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 47,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Visit",
+      "f1": 0.8,
+      "accuracy": 1.0,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 48,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Cat",
+      "f1": 0.8,
+      "accuracy": 0.8,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 49,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Tell",
+      "f1": 0.8,
+      "accuracy": 0.75,
+      "support": 8.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 50,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Give",
+      "f1": 0.8,
+      "accuracy": 0.6666666666666666,
+      "support": 3.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 51,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Eat",
+      "f1": 0.7777777777777778,
+      "accuracy": 0.7777777777777778,
+      "support": 9.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 52,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Mother",
+      "f1": 0.75,
+      "accuracy": 0.75,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "People",
+      "difficulty_rank": 53,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Beautiful",
+      "f1": 0.75,
+      "accuracy": 0.6,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Adjectives",
+      "difficulty_rank": 54,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Fight",
+      "f1": 0.7272727272727273,
+      "accuracy": 0.8,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 55,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Meet",
+      "f1": 0.7272727272727273,
+      "accuracy": 0.6666666666666666,
+      "support": 6.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 56,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Come",
+      "f1": 0.7142857142857143,
+      "accuracy": 1.0,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 57,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Yellow",
+      "f1": 0.7142857142857143,
+      "accuracy": 0.8333333333333334,
+      "support": 6.0,
+      "gate_passed": true,
+      "category": "Colors",
+      "difficulty_rank": 58,
+      "in_batch": true
+    },
+    {
+      "sign_id": "2. two",
+      "f1": 0.6666666666666666,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Numbers",
+      "difficulty_rank": 59,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Card",
+      "f1": 0.6666666666666666,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 60,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Independent",
+      "f1": 0.6666666666666666,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Adjectives",
+      "difficulty_rank": 61,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Lead",
+      "f1": 0.6666666666666666,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 62,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Love",
+      "f1": 0.6666666666666666,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 63,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Network",
+      "f1": 0.6666666666666666,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 64,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Sign",
+      "f1": 0.6666666666666666,
+      "accuracy": 1.0,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 65,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Crocodile",
+      "f1": 0.6666666666666666,
+      "accuracy": 0.8,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 66,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Sell",
+      "f1": 0.6666666666666666,
+      "accuracy": 0.8,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 67,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Fever",
+      "f1": 0.6666666666666666,
+      "accuracy": 0.75,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 68,
+      "in_batch": true
+    },
+    {
+      "sign_id": "My",
+      "f1": 0.6666666666666666,
+      "accuracy": 0.6,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 69,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Write",
+      "f1": 0.6666666666666666,
+      "accuracy": 0.5714285714285714,
+      "support": 7.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 70,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Day",
+      "f1": 0.6666666666666666,
+      "accuracy": 0.5,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "Days",
+      "difficulty_rank": 71,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Follow",
+      "f1": 0.6666666666666666,
+      "accuracy": 0.5,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 72,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Hear",
+      "f1": 0.6666666666666666,
+      "accuracy": 0.5,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 73,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Order",
+      "f1": 0.6666666666666666,
+      "accuracy": 0.5,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 74,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Purple",
+      "f1": 0.6666666666666666,
+      "accuracy": 0.5,
+      "support": 6.0,
+      "gate_passed": true,
+      "category": "Colors",
+      "difficulty_rank": 75,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Hello",
+      "f1": 0.65,
+      "accuracy": 0.8125,
+      "support": 16.0,
+      "gate_passed": true,
+      "category": "Greetings",
+      "difficulty_rank": 76,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Drink",
+      "f1": 0.6153846153846154,
+      "accuracy": 0.5,
+      "support": 8.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 77,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Elder bro",
+      "f1": 0.6,
+      "accuracy": 0.75,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "People",
+      "difficulty_rank": 78,
+      "in_batch": true
+    },
+    {
+      "sign_id": "I",
+      "f1": 0.5714285714285714,
+      "accuracy": 0.5,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 79,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Wrong",
+      "f1": 0.5454545454545454,
+      "accuracy": 0.75,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "Adjectives",
+      "difficulty_rank": 80,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Run",
+      "f1": 0.5333333333333333,
+      "accuracy": 0.8,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 81,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Middle",
+      "f1": 0.5,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Nouns",
+      "difficulty_rank": 82,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Think",
+      "f1": 0.5,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 83,
+      "in_batch": true
+    },
+    {
+      "sign_id": "5. five",
+      "f1": 0.5,
+      "accuracy": 0.5,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Numbers",
+      "difficulty_rank": 84,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Black",
+      "f1": 0.5,
+      "accuracy": 0.5,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Colors",
+      "difficulty_rank": 85,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Feel",
+      "f1": 0.5,
+      "accuracy": 0.5,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 86,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Watch",
+      "f1": 0.5,
+      "accuracy": 0.5,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 87,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Change",
+      "f1": 0.5,
+      "accuracy": 0.3333333333333333,
+      "support": 3.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 88,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Full",
+      "f1": 0.5,
+      "accuracy": 0.3333333333333333,
+      "support": 3.0,
+      "gate_passed": true,
+      "category": "Adjectives",
+      "difficulty_rank": 89,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Monday",
+      "f1": 0.4444444444444444,
+      "accuracy": 0.5,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "Days",
+      "difficulty_rank": 90,
+      "in_batch": true
+    },
+    {
+      "sign_id": "See",
+      "f1": 0.4444444444444444,
+      "accuracy": 0.4,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 91,
+      "in_batch": true
+    },
+    {
+      "sign_id": "White",
+      "f1": 0.42857142857142855,
+      "accuracy": 0.5,
+      "support": 6.0,
+      "gate_passed": true,
+      "category": "Colors",
+      "difficulty_rank": 92,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Happy",
+      "f1": 0.4,
+      "accuracy": 1.0,
+      "support": 1.0,
+      "gate_passed": true,
+      "category": "Adjectives",
+      "difficulty_rank": 93,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Exchange",
+      "f1": 0.4,
+      "accuracy": 0.5,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 94,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Man",
+      "f1": 0.4,
+      "accuracy": 0.5,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "People",
+      "difficulty_rank": 95,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Again",
+      "f1": 0.4,
+      "accuracy": 0.3333333333333333,
+      "support": 6.0,
+      "gate_passed": true,
+      "category": "Adverb",
+      "difficulty_rank": 96,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Cold",
+      "f1": 0.4,
+      "accuracy": 0.3333333333333333,
+      "support": 3.0,
+      "gate_passed": true,
+      "category": "Adjectives",
+      "difficulty_rank": 97,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Cut",
+      "f1": 0.4,
+      "accuracy": 0.3333333333333333,
+      "support": 6.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 98,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Same",
+      "f1": 0.3333333333333333,
+      "accuracy": 0.5,
+      "support": 2.0,
+      "gate_passed": true,
+      "category": "Adjectives",
+      "difficulty_rank": 99,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Grand father",
+      "f1": 0.2857142857142857,
+      "accuracy": 0.25,
+      "support": 4.0,
+      "gate_passed": true,
+      "category": "People",
+      "difficulty_rank": 100,
+      "in_batch": true
+    },
+    {
+      "sign_id": "Want",
+      "f1": 0.2857142857142857,
+      "accuracy": 0.2,
+      "support": 5.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 101,
+      "in_batch": false
+    },
+    {
+      "sign_id": "Go",
+      "f1": 0.2857142857142857,
+      "accuracy": 0.16666666666666666,
+      "support": 6.0,
+      "gate_passed": true,
+      "category": "Verbs",
+      "difficulty_rank": 102,
+      "in_batch": false
+    }
+  ],
+  "batches": [
+    {
+      "batch_id": 1,
+      "level_number": 1,
+      "tier": 1,
+      "tier_label": "Novice",
+      "difficulty_rank": 1,
+      "sign_ids": [
+        "Thank you",
+        "House",
+        "Sleep",
+        "Visit",
+        "Walk"
+      ]
+    },
+    {
+      "batch_id": 2,
+      "level_number": 2,
+      "tier": 1,
+      "tier_label": "Novice",
+      "difficulty_rank": 2,
+      "sign_ids": [
+        "Different",
+        "Equal",
+        "Face",
+        "Hour",
+        "House"
+      ]
+    },
+    {
+      "batch_id": 3,
+      "level_number": 3,
+      "tier": 1,
+      "tier_label": "Novice",
+      "difficulty_rank": 3,
+      "sign_ids": [
+        "Instead",
+        "Internet",
+        "List",
+        "Past",
+        "Play"
+      ]
+    },
+    {
+      "batch_id": 4,
+      "level_number": 4,
+      "tier": 1,
+      "tier_label": "Novice",
+      "difficulty_rank": 4,
+      "sign_ids": [
+        "Money",
+        "Movie",
+        "Red",
+        "Show",
+        "Today"
+      ]
+    },
+    {
+      "batch_id": 5,
+      "level_number": 5,
+      "tier": 1,
+      "tier_label": "Novice",
+      "difficulty_rank": 5,
+      "sign_ids": [
+        "Paint",
+        "Problem",
+        "Vehicle",
+        "Walk",
+        "Good"
+      ]
+    },
+    {
+      "batch_id": 6,
+      "level_number": 6,
+      "tier": 1,
+      "tier_label": "Novice",
+      "difficulty_rank": 6,
+      "sign_ids": [
+        "Society",
+        "Squirrel",
+        "Look",
+        "Sleep",
+        "Green"
+      ]
+    },
+    {
+      "batch_id": 7,
+      "level_number": 7,
+      "tier": 1,
+      "tier_label": "Novice",
+      "difficulty_rank": 7,
+      "sign_ids": [
+        "Team",
+        "Weather",
+        "Cry",
+        "Doctor",
+        "Younger bro"
+      ]
+    },
+    {
+      "batch_id": 8,
+      "level_number": 8,
+      "tier": 1,
+      "tier_label": "Novice",
+      "difficulty_rank": 8,
+      "sign_ids": [
+        "You",
+        "Elephant",
+        "Help",
+        "January",
+        "Elder sister"
+      ]
+    },
+    {
+      "batch_id": 9,
+      "level_number": 9,
+      "tier": 1,
+      "tier_label": "Novice",
+      "difficulty_rank": 9,
+      "sign_ids": [
+        "Rich",
+        "Us",
+        "Teach",
+        "Cook",
+        "Thank you"
+      ]
+    },
+    {
+      "batch_id": 10,
+      "level_number": 10,
+      "tier": 1,
+      "tier_label": "Novice",
+      "difficulty_rank": 10,
+      "sign_ids": [
+        "Book",
+        "Cough",
+        "Visit",
+        "Cat",
+        "Mother"
+      ]
+    },
+    {
+      "batch_id": 11,
+      "level_number": 11,
+      "tier": 2,
+      "tier_label": "Learner",
+      "difficulty_rank": 11,
+      "sign_ids": [
+        "Tell",
+        "Give",
+        "Beautiful",
+        "Yellow",
+        "2. two"
+      ]
+    },
+    {
+      "batch_id": 12,
+      "level_number": 12,
+      "tier": 2,
+      "tier_label": "Learner",
+      "difficulty_rank": 12,
+      "sign_ids": [
+        "Eat",
+        "Fight",
+        "Card",
+        "Independent",
+        "Network"
+      ]
+    },
+    {
+      "batch_id": 13,
+      "level_number": 13,
+      "tier": 2,
+      "tier_label": "Learner",
+      "difficulty_rank": 13,
+      "sign_ids": [
+        "Meet",
+        "Come",
+        "Sign",
+        "Crocodile",
+        "Day"
+      ]
+    },
+    {
+      "batch_id": 14,
+      "level_number": 14,
+      "tier": 2,
+      "tier_label": "Learner",
+      "difficulty_rank": 14,
+      "sign_ids": [
+        "Lead",
+        "Love",
+        "Fever",
+        "My",
+        "Purple"
+      ]
+    },
+    {
+      "batch_id": 15,
+      "level_number": 15,
+      "tier": 2,
+      "tier_label": "Learner",
+      "difficulty_rank": 15,
+      "sign_ids": [
+        "Sell",
+        "Write",
+        "Hello",
+        "Elder bro",
+        "I"
+      ]
+    },
+    {
+      "batch_id": 16,
+      "level_number": 16,
+      "tier": 2,
+      "tier_label": "Learner",
+      "difficulty_rank": 16,
+      "sign_ids": [
+        "Follow",
+        "Hear",
+        "Wrong",
+        "Middle",
+        "5. five"
+      ]
+    },
+    {
+      "batch_id": 17,
+      "level_number": 17,
+      "tier": 2,
+      "tier_label": "Learner",
+      "difficulty_rank": 17,
+      "sign_ids": [
+        "Order",
+        "Drink",
+        "Black",
+        "Full",
+        "Monday"
+      ]
+    },
+    {
+      "batch_id": 18,
+      "level_number": 18,
+      "tier": 2,
+      "tier_label": "Learner",
+      "difficulty_rank": 18,
+      "sign_ids": [
+        "Run",
+        "Think",
+        "White",
+        "Happy",
+        "Man"
+      ]
+    },
+    {
+      "batch_id": 19,
+      "level_number": 19,
+      "tier": 2,
+      "tier_label": "Learner",
+      "difficulty_rank": 19,
+      "sign_ids": [
+        "Feel",
+        "Watch",
+        "Again",
+        "Cold",
+        "Same"
+      ]
+    },
+    {
+      "batch_id": 20,
+      "level_number": 20,
+      "tier": 2,
+      "tier_label": "Learner",
+      "difficulty_rank": 20,
+      "sign_ids": [
+        "Change",
+        "See",
+        "Grand father",
+        "Exchange",
+        "Cut"
+      ]
+    }
+  ],
+  "unbatched_gate_passed": [
+    "Want",
+    "Go"
+  ]
+}

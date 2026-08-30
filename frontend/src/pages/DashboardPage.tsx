@@ -1,7 +1,7 @@
 import { useAuth } from '../contexts/AuthContext'
 import { useDashboardSummary } from '../hooks/useDashboardSummary'
 import { useDashboardSigns } from '../hooks/useDashboardSigns'
-import SidebarNav from '../components/dashboard/SidebarNav'
+import DashboardShell from '../components/dashboard/DashboardShell'
 import StatsHeader from '../components/dashboard/StatsHeader'
 import MasteryDonut from '../components/dashboard/MasteryDonut'
 import TierBreakdown from '../components/dashboard/TierBreakdown'
@@ -10,10 +10,10 @@ import RecentActivityFeed from '../components/dashboard/RecentActivityFeed'
 import SignMasteryTable from '../components/dashboard/SignMasteryTable'
 import XPLevelCard from '../components/dashboard/XPLevelCard'
 import StreakCounter from '../components/dashboard/StreakCounter'
-import CategoryBadgeGrid from '../components/dashboard/CategoryBadgeGrid'
+import CategoryProgressList from '../components/dashboard/CategoryProgressList'
 import DifficultyTierList, { type DifficultyTierEntry } from '../components/dashboard/DifficultyTierList'
 import { TIERS, type DashboardStats, type TierProgress } from '../data/mockDashboard'
-import { getDashboardGamificationData } from '../services/dashboardData'
+import { DIFFICULTY_TIER_THRESHOLDS } from '../services/dashboardData'
 
 // ─── Loading / error placeholders ──────────────────────────────────────────
 // The six dashboard components are pure presentational (props only, no
@@ -106,25 +106,22 @@ export default function DashboardPage() {
   if (!user) return null
 
   const summary = summaryQuery.data
+  const level = summary?.level
+  const xp = summary?.xp
+  const summaryStats = summary?.stats
 
-  const stats: DashboardStats | undefined = summary && {
-    signsMastered: summary.stats.signsMastered,
-    dayStreak: summary.stats.dayStreak,
-    minutesPracticed: summary.stats.minutesPracticedEstimate,
+  const stats: DashboardStats | undefined = summaryStats && {
+    signsMastered: summaryStats.signsMastered,
+    dayStreak: summaryStats.dayStreak,
+    minutesPracticed: summaryStats.minutesPracticedEstimate,
   }
 
   const tierBreakdownData: TierProgress[] | undefined = summary
     ? TIERS.map((tier) => ({ tier, percent: summary.tierBreakdown[tier] ?? 0 }))
     : undefined
 
-  const gamification = getDashboardGamificationData()
-
-  // requiredMasteryPercent thresholds are mock (Adaptive Engine gating policy
-  // isn't built yet); currentMasteryPercent/unlocked are derived here from the
-  // same real tierBreakdownData TierBreakdown renders, so the two components
-  // never disagree on a tier's actual mastery %.
   const difficultyTierEntries: DifficultyTierEntry[] | undefined = tierBreakdownData
-    ? gamification.difficultyTiers.map((threshold, i) => {
+    ? DIFFICULTY_TIER_THRESHOLDS.map((threshold, i) => {
         const currentMasteryPercent = i === 0 ? 100 : tierBreakdownData[i - 1].percent
         return {
           name: threshold.name,
@@ -136,10 +133,7 @@ export default function DashboardPage() {
     : undefined
 
   return (
-    <div className="dashboard-shell">
-      <SidebarNav />
-
-      <div className="dashboard-main">
+    <DashboardShell>
         {stats ? (
           <StatsHeader firstName={user.first_name} username={user.username} stats={stats} />
         ) : (
@@ -148,25 +142,33 @@ export default function DashboardPage() {
 
         <div className="dashboard-content">
           <div className="dashboard-grid-2">
-            <XPLevelCard
-              level={gamification.level.current}
-              title={gamification.level.title}
-              currentLevelXp={gamification.xp.currentLevelXp}
-              xpToNextLevel={gamification.xp.xpToNextLevel}
-              totalXp={gamification.xp.total}
-            />
-            {stats ? (
+            {level && xp ? (
+              <XPLevelCard
+                level={level.current}
+                title={level.title}
+                currentLevelXp={xp.currentLevelXp}
+                xpToNextLevel={xp.xpToNextLevel}
+                totalXp={xp.total}
+              />
+            ) : (
+              <CardPlaceholder title="LEVEL" accent="#6D28D9" state={summaryQuery.isError ? 'error' : 'loading'} />
+            )}
+            {summaryStats ? (
               <StreakCounter
-                currentDays={stats.dayStreak}
-                active={gamification.streakExtras.active}
-                longestDays={gamification.streakExtras.longestDays}
+                currentDays={summaryStats.dayStreak}
+                active={summaryStats.practicedToday}
+                longestDays={summaryStats.longestStreak}
               />
             ) : (
               <CardPlaceholder title="STREAK" accent="#6D28D9" state={summaryQuery.isError ? 'error' : 'loading'} />
             )}
           </div>
 
-          <CategoryBadgeGrid categories={gamification.categories} />
+          {summary?.categories ? (
+            <CategoryProgressList categories={summary.categories} />
+          ) : (
+            <CardPlaceholder title="CATEGORY PROGRESS" accent="#6D28D9" state={summaryQuery.isError ? 'error' : 'loading'} />
+          )}
 
           {difficultyTierEntries ? (
             <DifficultyTierList tiers={difficultyTierEntries} />
@@ -175,7 +177,7 @@ export default function DashboardPage() {
           )}
 
           <div className="dashboard-grid-2">
-            {summary ? (
+          {summary ? (
               <div style={{ background: '#ffffff', border: '2px solid #14213D', boxShadow: '4px 4px 0px #14213D', padding: 24 }}>
                 <h2 style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 14, color: '#14213D', margin: '0 0 8px' }}>
                   OVERALL PROGRESS
@@ -202,14 +204,14 @@ export default function DashboardPage() {
           </div>
 
           <div className="dashboard-grid-2">
-            {summary ? (
-              <NeedsReviewList items={summary.needsReview} />
-            ) : (
-              <CardPlaceholder title="NEEDS REVIEW" accent="#DC2626" state={summaryQuery.isError ? 'error' : 'loading'} />
-            )}
+          {summary?.needsReview ? (
+            <NeedsReviewList items={summary.needsReview} />
+          ) : (
+            <CardPlaceholder title="NEEDS REVIEW" accent="#DC2626" state={summaryQuery.isError ? 'error' : 'loading'} />
+          )}
 
-            {summary ? (
-              <RecentActivityFeed items={summary.recentActivity} />
+            {summary?.recentActivity ? (
+            <RecentActivityFeed items={summary.recentActivity} />
             ) : (
               <CardPlaceholder title="RECENT ACTIVITY" accent="#6D28D9" state={summaryQuery.isError ? 'error' : 'loading'} />
             )}
@@ -221,64 +223,6 @@ export default function DashboardPage() {
             <CardPlaceholder title="SIGN MASTERY" accent="#6D28D9" state={signsQuery.isError ? 'error' : 'loading'} />
           )}
         </div>
-      </div>
-
-      <style>{`
-        .dashboard-shell {
-          display: flex;
-          min-height: 100vh;
-          background: #F7F6F3;
-          font-family: 'Inter', sans-serif;
-        }
-        .dashboard-main {
-          flex: 1;
-          min-width: 0;
-        }
-        .dashboard-content {
-          max-width: 1440px;
-          width: 100%;
-          margin: 0 auto;
-          padding: 32px 40px 60px;
-          display: flex;
-          flex-direction: column;
-          gap: 24px;
-        }
-        .dashboard-grid-2 {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 24px;
-          align-items: stretch;
-        }
-        @media (min-width: 1280px) {
-          .dashboard-content {
-            padding: 40px 56px 72px;
-            gap: 28px;
-          }
-          .dashboard-grid-2 {
-            gap: 28px;
-          }
-        }
-        @media (min-width: 1536px) {
-          .dashboard-content {
-            padding: 48px 64px 80px;
-            gap: 32px;
-          }
-          .dashboard-grid-2 {
-            gap: 32px;
-          }
-        }
-        @media (max-width: 900px) {
-          .dashboard-shell {
-            flex-direction: column;
-          }
-          .dashboard-content {
-            padding: 24px 20px 40px;
-          }
-          .dashboard-grid-2 {
-            grid-template-columns: 1fr;
-          }
-        }
-      `}</style>
-    </div>
+    </DashboardShell>
   )
 }

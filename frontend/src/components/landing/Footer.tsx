@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 export default function Footer() {
   const platformLinks = [
     { label: 'Lessons', href: '#how-it-works' },
-    { label: 'Dictionary', href: '/dictionary' },
     { label: 'Community', href: '#community' },
   ];
 

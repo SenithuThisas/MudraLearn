@@ -12,17 +12,26 @@ const FEATURES_PER_HAND = NUM_LANDMARKS * NUM_COORDS; // 63
 
 export const SEQUENCE_LEN = 60;
 
-const MODEL_URL =
-  'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task';
+// Served locally from public/mediapipe (see frontend/public/mediapipe) instead of
+// fetched from a CDN at runtime — the CDN fetch was stalling on slow/restricted
+// networks, leaving the UI stuck on "Loading AI Model..." forever.
+const MODEL_URL = '/mediapipe/hand_landmarker.task';
+const WASM_URL  = '/mediapipe/wasm';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 /** Context passed into startCapture so every predict call carries full metadata. */
 export interface PredictContext {
-  userId:     number | string
   targetSign: string
   category:   string
 }
+
+/** Optional override — Challenge posts to /practice/.../challenge/attempt instead of /predict. */
+export type SequenceSubmitter = (
+  frames: number[][],
+  ctx: PredictContext,
+  responseMs: number,
+) => Promise<void>
 
 // ── Normalisation (must match extract_hand_landmarks.py) ─────────────────────
 
@@ -68,19 +77,22 @@ function extractFrameFeatures(result: ReturnType<HandLandmarker['detect']>): num
 
 // ── Hook ──────────────────────────────────────────────────────────────────────
 
-export function useHandLandmarker() {
+export function useHandLandmarker(submitSequence?: SequenceSubmitter) {
   const detectorRef     = useRef<HandLandmarker | null>(null);
   const frameBuffer     = useRef<number[][]>([]);
   const isRecording     = useRef(false);
   const animFrameRef    = useRef<number>(0);
   const captureStartRef = useRef<number>(0);           // for response_ms tracking
   const predictCtxRef   = useRef<PredictContext | null>(null); // set on startCapture
+  const submitRef       = useRef<SequenceSubmitter | undefined>(submitSequence);
+  submitRef.current     = submitSequence;
 
-  const [isReady,     setIsReady]     = useState(false);
-  const [isCapturing, setIsCapturing] = useState(false);
-  const [prediction,  setPrediction]  = useState<PredictResponse | null>(null);
-  const [error,       setError]       = useState<string | null>(null);
-  const [frameCount,  setFrameCount]  = useState(0);
+  const [isReady,       setIsReady]       = useState(false);
+  const [isCapturing,   setIsCapturing]   = useState(false);
+  const [isSubmitting,  setIsSubmitting]  = useState(false);
+  const [prediction,    setPrediction]    = useState<PredictResponse | null>(null);
+  const [error,         setError]         = useState<string | null>(null);
+  const [frameCount,    setFrameCount]    = useState(0);
 
   // Initialise HandLandmarker
   useEffect(() => {
@@ -88,9 +100,7 @@ export function useHandLandmarker() {
 
     async function init() {
       try {
-        const vision = await FilesetResolver.forVisionTasks(
-          'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm',
-        );
+        const vision = await FilesetResolver.forVisionTasks(WASM_URL);
         const detector = await HandLandmarker.createFromOptions(vision, {
           baseOptions:                 { modelAssetPath: MODEL_URL },
           runningMode:                 'VIDEO',
@@ -115,7 +125,7 @@ export function useHandLandmarker() {
   /**
    * Start recording frames from a video element.
    * @param videoEl  — the <video> element to detect from
-   * @param ctx      — adaptive learning context (userId, targetSign, category)
+   * @param ctx      — adaptive learning context (targetSign, category)
    */
   const startCapture = useCallback(
     (videoEl: HTMLVideoElement, ctx: PredictContext) => {
@@ -171,7 +181,7 @@ export function useHandLandmarker() {
     cancelAnimationFrame(animFrameRef.current);
   }, []);
 
-  // Send the 60-frame sequence to the backend
+  // Send the 60-frame sequence to the backend (or a caller-provided submitter)
   async function sendPrediction(frames: number[][]) {
     const ctx         = predictCtxRef.current;
     const responseMs  = Math.round(performance.now() - captureStartRef.current);
@@ -181,10 +191,15 @@ export function useHandLandmarker() {
       return;
     }
 
+    setIsSubmitting(true);
     try {
+      const custom = submitRef.current;
+      if (custom) {
+        await custom(frames, ctx, responseMs);
+        return;
+      }
       const data = await predictSign(
         frames,
-        ctx.userId,
         ctx.targetSign,
         ctx.category,
         responseMs,
@@ -192,6 +207,8 @@ export function useHandLandmarker() {
       setPrediction(data);
     } catch (err) {
       setError(`Prediction failed: ${err}`);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -203,14 +220,21 @@ export function useHandLandmarker() {
     };
   }, []);
 
+  const clearPrediction = useCallback(() => {
+    setPrediction(null);
+    setError(null);
+  }, []);
+
   return {
     isReady,
     isCapturing,
+    isSubmitting,
     prediction,   // full PredictResponse including correct, mastery, feedback
     error,
     frameCount,
     startCapture,
     stopCapture,
+    clearPrediction,
     SEQUENCE_LEN,
   };
 }
