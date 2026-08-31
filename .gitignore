@@ -90,6 +90,25 @@ build/
 *.tar.gz
 *.tgz
 
+# Video files
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.flv
+*.wmv
+*.m4v
+*.mpg
+*.mpeg
+*.3gp
+*.ogv
+*.ts
+*.m2ts
+*.mts
+*.mxf
+*.f4v
+
 # Generated diagrams
 docs/architecture/
 
