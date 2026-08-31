@@ -21,7 +21,9 @@
 - 🎥 **Live Translation** — Sign to your webcam and get instant AI predictions
 - 🧠 **BiGRU + Attention Model** — State-of-the-art sequence model trained on 2,477 sign language videos
 - 📖 **Dictionary** — Browse and learn all 204 supported signs
-- 🏋️ **Practice Mode** — Guided practice sessions with feedback
+- 🏋️ **Adaptive Practice** — Guided practice sessions with a mastery-driven adaptive engine and spaced review
+- 📊 **Dashboard** — Track XP, streaks, mastery, and per-category progress
+- 🔐 **Accounts** — Email/password auth with a guided onboarding flow
 - ⚡ **Real-time Processing** — 60 frames captured in ~2 seconds via MediaPipe HandLandmarker
 - 🌙 **Dark Mode** — Full dark mode support out of the box
 
@@ -45,23 +47,35 @@
 
 ```
 MudraLearn/
-├── frontend/               # React + Vite + TypeScript + Tailwind CSS
+├── frontend/               # React 19 + Vite + TypeScript + Tailwind CSS
 │   └── src/
 │       ├── hooks/
-│       │   └── useHandLandmarker.ts   # MediaPipe hook with normalisation
+│       │   ├── useHandLandmarker.ts   # MediaPipe hook with normalisation
+│       │   ├── useDashboardSummary.ts
+│       │   └── useDashboardSigns.ts
 │       ├── pages/
 │       │   ├── TranslatePage.tsx      # Live webcam translation
 │       │   ├── DictionaryPage.tsx     # Sign dictionary browser
-│       │   └── PracticePage.tsx       # Guided practice mode
+│       │   ├── PracticePage.tsx / AdaptiveReviewPage.tsx  # Practice & spaced review
+│       │   ├── DashboardPage.tsx      # XP, streaks, mastery, progress
+│       │   ├── Onboarding*Page.tsx    # Signup flow
+│       │   └── SignInPage.tsx / ProfilePage.tsx
 │       └── components/
-│           └── Navigation.tsx
+│           ├── dashboard/             # DashboardShell, MasteryDonut, StreakCounter, ...
+│           ├── practice/              # PracticeUi, PracticeTopBar
+│           ├── auth/                  # PixelButton, PixelInput, SplitLayout, ...
+│           └── dictionary/            # SignDetailModal
 │
 ├── backend/                # Python + FastAPI + PostgreSQL
 │   └── app/
 │       ├── routers/
-│       │   └── predict.py             # POST /api/predict endpoint
+│       │   ├── predict.py             # POST /api/predict
+│       │   ├── auth.py                # /api/auth — signup/login/session
+│       │   ├── session.py, progress.py, dashboard.py, practice.py
 │       ├── services/
-│       │   └── inference.py           # Model loading & prediction
+│       │   ├── inference.py           # Model loading & prediction
+│       │   ├── adaptive_engine.py, mastery_engine.py, curriculum_service.py
+│       │   └── dashboard_service.py, xp_rules.py, hint_rules.py
 │       └── models/                    # SQLAlchemy DB models
 │
 └── ml/                     # Machine Learning pipeline
@@ -212,6 +226,16 @@ Accepts a 60-frame hand landmark sequence and returns sign predictions.
   "feedback": "good"
 }
 ```
+
+### Other Routers
+
+| Prefix | Router | Purpose |
+|--------|--------|---------|
+| `/api/auth` | `auth.py` | Signup, login, session management |
+| `/api/session` | `session.py` | Session lifecycle |
+| `/api/progress` | `progress.py` | User progress tracking |
+| `/api/dashboard` | `dashboard.py` | XP, streaks, mastery summaries |
+| `/api/practice` | `practice.py` | Adaptive practice & review sessions |
 
 ---
 
