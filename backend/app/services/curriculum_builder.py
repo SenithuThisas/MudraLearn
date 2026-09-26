@@ -16,7 +16,7 @@ from app.services.curriculum_config import (
 )
 
 _PROJECT_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_CSV = _PROJECT_ROOT / "ml" / "saved_models" / "v2" / "per_class_report_v2.csv"
+DEFAULT_CSV = _PROJECT_ROOT / "ml" / "saved_models" / "experiment_170" / "per_class_report_170.csv"
 DEFAULT_LABEL_MAP = _PROJECT_ROOT / "ml" / "saved_models" / "label_map.json"
 DEFAULT_SIGNS = _PROJECT_ROOT / "frontend" / "public" / "signs_data.json"
 DEFAULT_SEED_JSON = Path(__file__).resolve().parents[1] / "data" / "curriculum_seed.json"
@@ -49,7 +49,10 @@ def load_ranked_gate_passed(
                 continue
             if name not in production:
                 continue
-            f1 = float(row["f1-score"])
+            f1_raw = row.get("f1_score") if "f1_score" in row else row.get("f1-score")
+            if f1_raw is None:
+                continue
+            f1 = float(f1_raw)
             if f1 <= 0:
                 continue
             passed.append({
@@ -132,7 +135,7 @@ def build_seed_payload(ranked: list[dict]) -> dict:
         row["in_batch"] = sign["sign_id"] in assigned
         signs.append(row)
     return {
-        "source": "v2/per_class_report_v2.csv ∩ production label_map.json",
+        "source": "experiment_170/per_class_report_170.csv ∩ production label_map.json",
         "signs": signs,
         "batches": batches,
         "unbatched_gate_passed": [s["sign_id"] for s in unbatched],

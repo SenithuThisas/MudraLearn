@@ -21,6 +21,7 @@ import {
 } from '../services/practiceApi'
 import { classifyPracticeAttempt, shouldAutoHint, type HintClass } from '../services/hintRules'
 import type { PredictResponse } from '../services/api'
+import { isRecognitionSupported } from '../utils/signTiers'
 
 function useBatchId(): number {
   const { batchId } = useParams()
@@ -126,11 +127,17 @@ export function BatchOverviewPage() {
               <p className="mt-2 font-pixel text-[10px] leading-4 text-ink">{sign.signId}</p>
               <p className="mt-2 font-body text-[11px] text-muted">{sign.category}</p>
               <p className="mt-3 font-body text-[11px] font-semibold text-ink">
-                {sign.practiced ? 'PRACTICED' : sign.unlocked ? 'UNLOCKED' : 'LOCKED'}
+                {!isRecognitionSupported(sign.signId)
+                  ? 'COMING SOON'
+                  : sign.practiced
+                    ? 'PRACTICED'
+                    : sign.unlocked
+                      ? 'UNLOCKED'
+                      : 'LOCKED'}
               </p>
             </HardCard>
           )
-          if (!sign.unlocked) return <div key={sign.signId}>{tile}</div>
+          if (!sign.unlocked || !isRecognitionSupported(sign.signId)) return <div key={sign.signId}>{tile}</div>
           return (
             <Link
               key={sign.signId}
@@ -196,9 +203,20 @@ export function PreviewPage() {
       <h1 className="font-pixel text-xl leading-8 text-ink">{sign.signId}</h1>
       <p className="font-body text-sm text-muted">{sign.category}</p>
       <ReferenceVideo signId={sign.signId} label="WATCH, THEN TRY IT YOURSELF" />
-      <PixelButton fullWidth onClick={() => navigate(`/practice/batches/${batchId}/practice/${signPath(sign.signId)}`)}>
-        START PRACTICE
-      </PixelButton>
+      {isRecognitionSupported(sign.signId) ? (
+        <PixelButton fullWidth onClick={() => navigate(`/practice/batches/${batchId}/practice/${signPath(sign.signId)}`)}>
+          START PRACTICE
+        </PixelButton>
+      ) : (
+        <div className="space-y-2">
+          <div className="border-2 border-ink bg-sticker-yellow/30 p-3 text-center font-pixel text-[9px] text-ink">
+            PRACTICE MODE COMING SOON
+          </div>
+          <PixelButton fullWidth disabled>
+            PRACTICE NOT SUPPORTED
+          </PixelButton>
+        </div>
+      )}
     </div>
   )
 }

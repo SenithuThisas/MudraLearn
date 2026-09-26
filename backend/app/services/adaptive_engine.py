@@ -77,7 +77,8 @@ _REFERENCE_DIR = (
 
 
 def _filter_to_clip_covered(signs: list[dict]) -> list[dict]:
-    """Return only signs that have a .mp4 reference clip in public/reference/.
+    """Return only signs that have a .mp4 reference clip in public/reference/
+    AND are supported by the live recognition model.
 
     The adaptive engine only serves signs the user can watch — without a
     reference clip the user has no way to learn the correct form.  If the
@@ -85,11 +86,15 @@ def _filter_to_clip_covered(signs: list[dict]) -> list[dict]:
     so tests are never broken by a missing asset directory.
     """
     if not _REFERENCE_DIR.is_dir():
-        return signs
+        return [s for s in signs if s.get("recognitionSupported", True)]
     available: set[str] = {
         f.stem for f in _REFERENCE_DIR.iterdir() if f.suffix == ".mp4"
     }
-    return [s for s in signs if _slugify(s["name"]) in available]
+    return [
+        s
+        for s in signs
+        if _slugify(s["name"]) in available and s.get("recognitionSupported", True)
+    ]
 
 
 ALL_SIGNS: list[dict] = _filter_to_clip_covered(_ALL_SIGNS_RAW)

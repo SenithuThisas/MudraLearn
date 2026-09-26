@@ -6,11 +6,19 @@ interface SignCardProps {
   category: string
   has_clip: boolean
   recognizable: boolean
+  recognitionSupported?: boolean
   onOpen: (e: MouseEvent<HTMLButtonElement>) => void
 }
 
-export default function SignCard({ name, category, has_clip, recognizable, onOpen }: SignCardProps) {
-  const tier = getSignTier({ has_clip, recognizable })
+export default function SignCard({
+  name,
+  category,
+  has_clip,
+  recognizable,
+  recognitionSupported,
+  onOpen,
+}: SignCardProps) {
+  const tier = getSignTier({ has_clip, recognizable, recognitionSupported })
   const { label, badgeClass } = TIER_META[tier]
 
   return (

@@ -35,6 +35,7 @@ import { useHandLandmarker, CAPTURE_DURATION_MS } from '../hooks/useHandLandmark
 import { getNextSign } from '../services/api'
 import type { NextSignResponse } from '../services/api'
 import { getBatchRecommendations, type RecommendationReason } from '../services/practiceApi'
+import { isRecognitionSupported } from '../utils/signTiers'
 
 // ── Mode badge (global mode) ────────────────────────────────────────────────
 
@@ -249,9 +250,17 @@ export default function AdaptiveReviewPage() {
         ? (nextSign as { sign: string; category: string; mode: 'cold_start' | 'review' | 'new'; mastery: number | null })
         : null)
 
-  const currentBadge: ReactNode = isBatchMode
-    ? (current ? <ReasonBadge reason={(current as { reason: RecommendationReason }).reason} /> : null)
-    : (current ? <ModeBadge mode={(current as { mode: NextSignResponse['mode'] }).mode} /> : null)
+  const isSupported = current ? isRecognitionSupported(current.sign) : true
+
+  const currentBadge: ReactNode = !isSupported
+    ? (
+      <span className="inline-block border-2 border-ink bg-sticker-yellow px-2 py-0.5 font-pixel text-[9px] tracking-wide text-ink shadow-hard-sm">
+        COMING SOON
+      </span>
+    )
+    : isBatchMode
+      ? (current ? <ReasonBadge reason={(current as { reason: RecommendationReason }).reason} /> : null)
+      : (current ? <ModeBadge mode={(current as { mode: NextSignResponse['mode'] }).mode} /> : null)
 
   const headerTitle = isBatchMode ? 'RECOMMENDED REVIEW' : 'PRACTICE SIGN'
   const headerSubtitle = isBatchMode
@@ -370,7 +379,23 @@ export default function AdaptiveReviewPage() {
           )}
 
           {/* Capture controls — only when a sign is active and not yet scored */}
-          {current && !prediction && (
+          {current && !prediction && !isSupported && (
+            <div className="space-y-3">
+              <StatusBanner tone="yellow">
+                PRACTICE MODE COMING SOON FOR THIS SIGN — LIVE AI RECOGNITION IS NOT YET AVAILABLE
+              </StatusBanner>
+              <div className="flex gap-3">
+                <PixelButton id="adaptive-skip-sign-btn" onClick={handleNext}>
+                  SKIP TO NEXT SIGN →
+                </PixelButton>
+                <Link to={backLink}>
+                  <PixelButton>← BACK</PixelButton>
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {current && !prediction && isSupported && (
             <div className="flex gap-3">
               <PixelButton
                 id="adaptive-capture-btn"

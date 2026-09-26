@@ -113,6 +113,7 @@ export default function DictionaryPage() {
                     category={s.category}
                     has_clip={s.has_clip}
                     recognizable={s.recognizable}
+                    recognitionSupported={s.recognitionSupported}
                     onOpen={(e) => openSign(s, e)}
                   />
                 ))}

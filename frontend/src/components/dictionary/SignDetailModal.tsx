@@ -120,11 +120,27 @@ export default function SignDetailModal({ sign, onClose, triggerRef }: SignDetai
               </span>
             )}
 
-            {tier === 'has_clip' && <ReferenceVideo signId={sign.name} label={sign.name} />}
+            {!tierMeta?.practiceSupported && (
+              <div className="mb-4 border-2 border-ink bg-sticker-yellow/20 p-3">
+                <p className="font-pixel text-[9px] text-ink">PRACTICE MODE COMING SOON</p>
+                <p className="mt-1 font-body text-xs text-muted">
+                  Live gesture recognition for this sign is not supported in the active AI model (171 verified classes).
+                  {sign.has_clip
+                    ? ' You can still browse and study the reference video below.'
+                    : ' Reference materials and model support are in development.'}
+                </p>
+              </div>
+            )}
+
+            {(tier === 'has_clip' || tier === 'clip_practice_soon') && (
+              <ReferenceVideo signId={sign.name} label={sign.name} />
+            )}
             {tier === 'practiceable_no_clip' && (
               <ReferencePlaceholder label="NO REFERENCE CLIP YET — RECOGNIZABLE IN PRACTICE" />
             )}
-            {/* catalogue_only: no video, no fallback — name/category/badge above is the full view */}
+            {tier === 'catalogue_only' && (
+              <ReferencePlaceholder label="REFERENCE CLIP IN PRODUCTION — PRACTICE COMING SOON" />
+            )}
           </motion.div>
         </motion.div>
       )}
