@@ -6,7 +6,7 @@ import { HardCard, StatusBanner } from '../components/practice/PracticeUi';
 
 export default function TranslatePage() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { isReady, isCapturing, prediction, error, frameCount, SEQUENCE_LEN, startCapture, stopCapture } = useHandLandmarker();
+  const { isReady, isCapturing, prediction, error, captureProgress, CAPTURE_DURATION_MS, startCapture, stopCapture } = useHandLandmarker();
   const [cameraActive, setCameraActive] = useState(false);
 
   useEffect(() => {
@@ -34,7 +34,9 @@ export default function TranslatePage() {
     };
   }, []);
 
-  const progressPct = Math.min((frameCount / SEQUENCE_LEN) * 100, 100);
+  const progressPct = Math.min(captureProgress * 100, 100);
+  const elapsedSec   = (captureProgress * CAPTURE_DURATION_MS / 1000).toFixed(1);
+  const totalSec     = (CAPTURE_DURATION_MS / 1000).toFixed(1);
 
   return (
     <DashboardShell>
@@ -79,7 +81,7 @@ export default function TranslatePage() {
                 disabled={!isReady || !cameraActive || isCapturing}
                 onClick={() => startCapture(videoRef.current!, { targetSign: 'unknown', category: 'free' })}
               >
-                {!isReady ? 'LOADING AI MODEL…' : isCapturing ? 'RECORDING…' : 'RECORD SIGN (2S)'}
+                {!isReady ? 'LOADING AI MODEL…' : isCapturing ? 'RECORDING…' : `RECORD SIGN (${totalSec}S)`}
               </PixelButton>
               {isCapturing && (
                 <PixelButton variant="secondary" onClick={stopCapture}>
@@ -97,7 +99,7 @@ export default function TranslatePage() {
                 />
               </div>
               <p className="mt-2 text-center font-body text-xs text-muted">
-                {frameCount} / {SEQUENCE_LEN} frames captured
+                {elapsedSec}s / {totalSec}s
               </p>
             </div>
           </HardCard>

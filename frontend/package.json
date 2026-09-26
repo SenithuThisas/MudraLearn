@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "setup:mediapipe": "node scripts/setup-mediapipe-assets.mjs",
     "setup:reference": "node scripts/setup-reference-clips.mjs",
-    "postinstall": "node scripts/setup-mediapipe-assets.mjs && node scripts/setup-reference-clips.mjs"
+    "postinstall": "node scripts/setup-mediapipe-assets.mjs && node scripts/setup-reference-clips.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@mediapipe/tasks-vision": "^0.10.35",
@@ -37,6 +39,7 @@
     "tailwindcss": "^3.4.19",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
-    "vite": "^8.0.12"
+    "vite": "^8.0.12",
+    "vitest": "^5.0.2"
   }
 }

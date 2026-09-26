@@ -221,7 +221,7 @@ export function PracticeSignPage() {
   const [, setHintHistory] = useState<HintClass[]>([])
   const [showHint, setShowHint] = useState(false)
   const {
-    isReady, isCapturing, isSubmitting, prediction, error, frameCount, startCapture, stopCapture, SEQUENCE_LEN,
+    isReady, isCapturing, isSubmitting, prediction, error, captureProgress, CAPTURE_DURATION_MS, startCapture, stopCapture,
   } = useHandLandmarker()
 
   useCamera(videoRef, setCamError)
@@ -285,8 +285,8 @@ export function PracticeSignPage() {
       <WebcamPanel
         videoRef={videoRef}
         isCapturing={isCapturing}
-        frameCount={frameCount}
-        sequenceLen={SEQUENCE_LEN}
+        captureProgress={captureProgress}
+        captureDurationMs={CAPTURE_DURATION_MS}
         isReady={isReady}
       />
       <div className="flex flex-wrap gap-3">
@@ -347,7 +347,7 @@ export function ChallengePage() {
   }, [batchId, navigate, queryClient])
 
   const {
-    isReady, isCapturing, isSubmitting, error, frameCount, startCapture, stopCapture, SEQUENCE_LEN,
+    isReady, isCapturing, isSubmitting, error, captureProgress, CAPTURE_DURATION_MS, startCapture, stopCapture,
   } = useHandLandmarker(submitSequence)
 
   useCamera(videoRef, setCamError)
@@ -416,8 +416,8 @@ export function ChallengePage() {
       <WebcamPanel
         videoRef={videoRef}
         isCapturing={isCapturing}
-        frameCount={frameCount}
-        sequenceLen={SEQUENCE_LEN}
+        captureProgress={captureProgress}
+        captureDurationMs={CAPTURE_DURATION_MS}
         isReady={isReady}
       />
       {!showResult && !state.hintPending && (

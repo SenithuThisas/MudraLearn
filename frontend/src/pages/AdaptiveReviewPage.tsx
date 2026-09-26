@@ -31,7 +31,7 @@ import {
   VerdictCard,
   WebcamPanel,
 } from '../components/practice/PracticeUi'
-import { useHandLandmarker, SEQUENCE_LEN } from '../hooks/useHandLandmarker'
+import { useHandLandmarker, CAPTURE_DURATION_MS } from '../hooks/useHandLandmarker'
 import { getNextSign } from '../services/api'
 import type { NextSignResponse } from '../services/api'
 import { getBatchRecommendations, type RecommendationReason } from '../services/practiceApi'
@@ -209,7 +209,7 @@ export default function AdaptiveReviewPage() {
     isSubmitting,
     prediction,
     error: captureError,
-    frameCount,
+    captureProgress,
     startCapture,
     clearPrediction,
   } = useHandLandmarker()
@@ -340,8 +340,8 @@ export default function AdaptiveReviewPage() {
             <WebcamPanel
               videoRef={videoRef}
               isCapturing={isCapturing}
-              frameCount={frameCount}
-              sequenceLen={SEQUENCE_LEN}
+              captureProgress={captureProgress}
+              captureDurationMs={CAPTURE_DURATION_MS}
               isReady={isReady}
             />
           )}
@@ -378,7 +378,7 @@ export default function AdaptiveReviewPage() {
                 disabled={busy || !isReady || !!cameraError}
               >
                 {isCapturing
-                  ? `CAPTURING… ${frameCount}/${SEQUENCE_LEN}`
+                  ? `CAPTURING… ${(captureProgress * CAPTURE_DURATION_MS / 1000).toFixed(1)}s`
                   : isSubmitting
                     ? 'SCORING…'
                     : 'SIGN NOW'}

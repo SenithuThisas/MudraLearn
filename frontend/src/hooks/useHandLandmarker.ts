@@ -4,13 +4,36 @@ import {
   FilesetResolver,
 } from '@mediapipe/tasks-vision';
 import { predictSign, type PredictResponse } from '../services/api';
+import { resampleSequence } from '../utils/resampleSequence';
 
 // ── Constants — must match training pipeline ─────────────────────────────────
 const NUM_LANDMARKS     = 21;
 const NUM_COORDS        = 3;
 const FEATURES_PER_HAND = NUM_LANDMARKS * NUM_COORDS; // 63
 
+/**
+ * Number of output frames sent to the model. Must match the training pipeline's
+ * SEQUENCE_LEN in ml/scripts/extract_hand_landmarks.py (currently 60).
+ */
 export const SEQUENCE_LEN = 60;
+
+/**
+ * Wall-clock recording duration in milliseconds.
+ *
+ * Training data source: SSL400 .mp4 videos average 3.17 seconds (range 2.90–3.20s)
+ * at 10 fps (~31.7 raw frames), resampled to SEQUENCE_LEN (60) frames via linear
+ * interpolation in extract_hand_landmarks.py.
+ *
+ * Live capture must span the same real-world duration so the model sees the same
+ * temporal structure (full gesture arc, not just the opening fraction). After the
+ * recording window closes, captured frames are resampled to exactly SEQUENCE_LEN
+ * using the same linear-interpolation logic (see utils/resampleSequence.ts).
+ *
+ * If the training pipeline's source fps or video duration changes, update this
+ * constant to match. The relationship is:
+ *   CAPTURE_DURATION_MS ≈ (source video duration in seconds) × 1000
+ */
+export const CAPTURE_DURATION_MS = 3000;
 
 // Served locally from public/mediapipe (see frontend/public/mediapipe) instead of
 // fetched from a CDN at runtime — the CDN fetch was stalling on slow/restricted
@@ -87,12 +110,12 @@ export function useHandLandmarker(submitSequence?: SequenceSubmitter) {
   const submitRef       = useRef<SequenceSubmitter | undefined>(submitSequence);
   submitRef.current     = submitSequence;
 
-  const [isReady,       setIsReady]       = useState(false);
-  const [isCapturing,   setIsCapturing]   = useState(false);
-  const [isSubmitting,  setIsSubmitting]  = useState(false);
-  const [prediction,    setPrediction]    = useState<PredictResponse | null>(null);
-  const [error,         setError]         = useState<string | null>(null);
-  const [frameCount,    setFrameCount]    = useState(0);
+  const [isReady,          setIsReady]          = useState(false);
+  const [isCapturing,      setIsCapturing]      = useState(false);
+  const [isSubmitting,     setIsSubmitting]     = useState(false);
+  const [prediction,       setPrediction]       = useState<PredictResponse | null>(null);
+  const [error,            setError]            = useState<string | null>(null);
+  const [captureProgress,  setCaptureProgress]  = useState(0);  // 0..1 fraction of time elapsed
 
   // Initialise HandLandmarker
   useEffect(() => {
@@ -123,7 +146,13 @@ export function useHandLandmarker(submitSequence?: SequenceSubmitter) {
   }, []);
 
   /**
-   * Start recording frames from a video element.
+   * Start recording frames from a video element for CAPTURE_DURATION_MS.
+   *
+   * Instead of stopping after a fixed frame count (which completes in ~1s at 60Hz),
+   * we record for the full wall-clock duration that matches training data (~3s), then
+   * resample whatever frames were captured to exactly SEQUENCE_LEN via linear
+   * interpolation — identical to the training pipeline's resample_sequence().
+   *
    * @param videoEl  — the <video> element to detect from
    * @param ctx      — adaptive learning context (targetSign, category)
    */
@@ -139,31 +168,40 @@ export function useHandLandmarker(submitSequence?: SequenceSubmitter) {
       setIsCapturing(true);
       setPrediction(null);
       setError(null);
-      setFrameCount(0);
+      setCaptureProgress(0);
 
       let lastTimestamp = -1;
 
       function processFrame() {
         if (!isRecording.current || !detectorRef.current) return;
 
-        const now = performance.now();
-        const ts  = now > lastTimestamp ? now : lastTimestamp + 1;
-        lastTimestamp = ts;
+        const now     = performance.now();
+        const elapsed = now - captureStartRef.current;
+        const ts      = now > lastTimestamp ? now : lastTimestamp + 1;
+        lastTimestamp  = ts;
+
+        // Update time-based progress (0..1)
+        setCaptureProgress(Math.min(elapsed / CAPTURE_DURATION_MS, 1));
 
         try {
           const result   = detectorRef.current.detectForVideo(videoEl, ts);
           const features = extractFrameFeatures(result);
           frameBuffer.current.push(features);
-          setFrameCount(frameBuffer.current.length);
-
-          if (frameBuffer.current.length >= SEQUENCE_LEN) {
-            isRecording.current = false;
-            setIsCapturing(false);
-            sendPrediction(frameBuffer.current.slice(0, SEQUENCE_LEN));
-            return;
-          }
         } catch (err) {
           console.warn('Frame detection error:', err);
+        }
+
+        // Check if the recording window has elapsed
+        if (elapsed >= CAPTURE_DURATION_MS) {
+          isRecording.current = false;
+          setIsCapturing(false);
+          setCaptureProgress(1);
+
+          // Resample captured frames to exactly SEQUENCE_LEN, matching the
+          // training pipeline's temporal structure regardless of browser fps.
+          const resampled = resampleSequence(frameBuffer.current, SEQUENCE_LEN);
+          sendPrediction(resampled);
+          return;
         }
 
         animFrameRef.current = requestAnimationFrame(processFrame);
@@ -178,6 +216,7 @@ export function useHandLandmarker(submitSequence?: SequenceSubmitter) {
   const stopCapture = useCallback(() => {
     isRecording.current = false;
     setIsCapturing(false);
+    setCaptureProgress(0);
     cancelAnimationFrame(animFrameRef.current);
   }, []);
 
@@ -231,10 +270,11 @@ export function useHandLandmarker(submitSequence?: SequenceSubmitter) {
     isSubmitting,
     prediction,   // full PredictResponse including correct, mastery, feedback
     error,
-    frameCount,
+    captureProgress,  // 0..1 fraction of capture window elapsed (time-based)
     startCapture,
     stopCapture,
     clearPrediction,
     SEQUENCE_LEN,
+    CAPTURE_DURATION_MS,
   };
 }

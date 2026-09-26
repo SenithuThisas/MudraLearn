@@ -147,16 +147,20 @@ export function ModelSaw({
 export function WebcamPanel({
   videoRef,
   isCapturing,
-  frameCount,
-  sequenceLen,
+  captureProgress,
+  captureDurationMs,
   isReady,
 }: {
   videoRef: RefObject<HTMLVideoElement | null>
   isCapturing: boolean
-  frameCount: number
-  sequenceLen: number
+  captureProgress: number
+  captureDurationMs: number
   isReady: boolean
 }) {
+  const pct = Math.min(100, captureProgress * 100)
+  const elapsedSec = (captureProgress * captureDurationMs / 1000).toFixed(1)
+  const totalSec = (captureDurationMs / 1000).toFixed(1)
+
   return (
     <div className="space-y-3">
       <video
@@ -169,13 +173,13 @@ export function WebcamPanel({
       {isCapturing && (
         <div>
           <div className="mb-1 flex justify-between font-body text-xs text-muted">
-            <span>Capturing frames…</span>
-            <span>{frameCount} / {sequenceLen}</span>
+            <span>Recording gesture…</span>
+            <span>{elapsedSec}s / {totalSec}s</span>
           </div>
           <div className="h-2 w-full border-2 border-ink bg-white">
             <div
-              className="h-full bg-primary"
-              style={{ width: `${Math.min(100, (frameCount / sequenceLen) * 100)}%` }}
+              className="h-full bg-primary transition-[width] duration-75 ease-linear"
+              style={{ width: `${pct}%` }}
             />
           </div>
         </div>
@@ -186,6 +190,7 @@ export function WebcamPanel({
     </div>
   )
 }
+
 
 export function StatusBanner({ children, tone }: { children: ReactNode; tone: 'yellow' | 'purple' | 'red' }) {
   const cls = {
