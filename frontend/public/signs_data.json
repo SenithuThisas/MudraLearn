@@ -5,2299 +5,2682 @@
       "name": "Bad",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Beautiful",
       "category": "Adjectives",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Careful",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Cold",
       "category": "Adjectives",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Deaf",
       "category": "Adjectives",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Deep",
       "category": "Adjectives",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Different",
       "category": "Adjectives",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Difficult",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Double",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Fast",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Fat",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Free",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Full",
       "category": "Adjectives",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Good",
       "category": "Adjectives",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Happy",
       "category": "Adjectives",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Hard",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Healthy",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "High",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Independent",
       "category": "Adjectives",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Less",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Loose",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Low",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Next",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Nice",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Not good",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Old",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Past",
       "category": "Adjectives",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Positive",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Present",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Quick",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Rich",
       "category": "Adjectives",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Same",
       "category": "Adjectives",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Senior",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Small",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Soft",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Strong",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Thirsty",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Tight",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Ugly",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Welcome",
       "category": "Adjectives",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Wrong",
       "category": "Adjectives",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Again",
       "category": "Adverb",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Also",
       "category": "Adverb",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Can",
       "category": "Adverb",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Cant",
       "category": "Adverb",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Clearly",
       "category": "Adverb",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Dont",
       "category": "Adverb",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Dont know",
       "category": "Adverb",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Here",
       "category": "Adverb",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Instead",
       "category": "Adverb",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Never",
       "category": "Adverb",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Not like (dislike)",
       "category": "Adverb",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "When",
       "category": "Adverb",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Where",
       "category": "Adverb",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Why",
       "category": "Adverb",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Black",
       "category": "Colors",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Blue",
       "category": "Colors",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Brown",
       "category": "Colors",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Color",
       "category": "Colors",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Gold",
       "category": "Colors",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Gray",
       "category": "Colors",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Green",
       "category": "Colors",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Grey",
       "category": "Colors",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Orange",
       "category": "Colors",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Pink",
       "category": "Colors",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Purple",
       "category": "Colors",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Red",
       "category": "Colors",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "White",
       "category": "Colors",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Yellow",
       "category": "Colors",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Or",
       "category": "Conjunctions",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Day",
       "category": "Days",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Day after tomorrow",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Evening",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Friday",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Good evening",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Good morning",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Good night",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Hour",
       "category": "Days",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Monday",
       "category": "Days",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Morning",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Night",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Saturday",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Seconds",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Sunday",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Thursday",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Time",
       "category": "Days",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Today",
       "category": "Days",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Tomorrow",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Tuesday",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Wednesday",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Week",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Yesterday",
       "category": "Days",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "No",
       "category": "Determiner",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Alright",
       "category": "Greetings",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Ayubowan",
       "category": "Greetings",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Hello",
       "category": "Greetings",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "How are you",
       "category": "Greetings",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Thank you",
       "category": "Greetings",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Yes",
       "category": "Interjection",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "April",
       "category": "Months",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "August",
       "category": "Months",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "December",
       "category": "Months",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "February",
       "category": "Months",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "January",
       "category": "Months",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "July",
       "category": "Months",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "June",
       "category": "Months",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "March",
       "category": "Months",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "May",
       "category": "Months",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Month",
       "category": "Months",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "November",
       "category": "Months",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "October",
       "category": "Months",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "September",
       "category": "Months",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Year",
       "category": "Months",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Article",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Bag",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Bed",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Book",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Camera",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Card",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Cat",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Ceiling fan",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Cell phone",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Chain",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Children",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Choice",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Clothing",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Computer",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Cow",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Crocodile",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Culture",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Door",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Elephant",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Eye",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Eyes",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Face",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Fever",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Flower",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Food",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Group",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Gun",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Hat",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "He",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Health",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Hill",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "How many",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "How much",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "I",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Impact",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Internet",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Key",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Laptop",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "List",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Lock",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Middle",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Milk",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Mind",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Money",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Moon",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Movie",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "My",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Network",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "None",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Ok",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Our",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Paint",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Part",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Path",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Peace",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Pencil",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Phone",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Pocket",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Point",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Problem",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Radio",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Ring",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Sand",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Saree",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Shirt",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Sign",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Sign language",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Skirt",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Society",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Song",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Squirrel",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Street",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Structure",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Suit",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Table",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Tea",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Team",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Technology",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Telephone",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "They",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Tree",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Weather",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Who",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Whom",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Whose",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Window",
       "category": "Nouns",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "You",
       "category": "Nouns",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "1. one",
       "category": "Numbers",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "10. ten",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "11. eleven",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "12. twelve",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "13. thirteen",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "14. fourteen",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "15. fifteen",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "16. sixteen",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "17. seventeen",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "18. eighteen",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "19. nineteen",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "2. two",
       "category": "Numbers",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "20. twenty",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "3. three",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "4. four",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "5. five",
       "category": "Numbers",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "6. six",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "7. seven",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "8. eight",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "9. nine",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Addition",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Count",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Divide",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Equal",
       "category": "Numbers",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Multiplication",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Subtraction",
       "category": "Numbers",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Aunt",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Baby",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Bro",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Brother in law",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Child",
       "category": "People",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Daughter",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Doctor",
       "category": "People",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Elder bro",
       "category": "People",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Elder sister",
       "category": "People",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Families",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Family",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Father",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Grand father",
       "category": "People",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Grand mother",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Grand son",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Husband",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Lady",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Man",
       "category": "People",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Mother",
       "category": "People",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Player",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Police",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Relations",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "She",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Sister",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Sister in law",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Son",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Thief",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Uncle",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Us",
       "category": "People",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Wife",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Younger bro",
       "category": "People",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Younger sister",
       "category": "People",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Airport",
       "category": "Places",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Bank",
       "category": "Places",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Bus station",
       "category": "Places",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Church",
       "category": "Places",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Hospital",
       "category": "Places",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "House",
       "category": "Places",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Location",
       "category": "Places",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Next door",
       "category": "Places",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Police station",
       "category": "Places",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Road",
       "category": "Places",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Shop",
       "category": "Places",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Temple",
       "category": "Places",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Train station",
       "category": "Places",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "After",
       "category": "Preposition",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Around",
       "category": "Preposition",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "In",
       "category": "Preposition",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Inside",
       "category": "Preposition",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Near",
       "category": "Preposition",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "On",
       "category": "Preposition",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Out",
       "category": "Preposition",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Over",
       "category": "Preposition",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Than",
       "category": "Preposition",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "To",
       "category": "Preposition",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Until",
       "category": "Preposition",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Up",
       "category": "Preposition",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Bicycle",
       "category": "Vehicles",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Boat",
       "category": "Vehicles",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Bus",
       "category": "Vehicles",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Car",
       "category": "Vehicles",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Motorcycle",
       "category": "Vehicles",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Plane",
       "category": "Vehicles",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Tire",
       "category": "Vehicles",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Train",
       "category": "Vehicles",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Van",
       "category": "Vehicles",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Vehicle",
       "category": "Vehicles",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Allow",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Bathe",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Boil",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Break",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Bring",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Buy",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Carry",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Change",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Choose",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Click",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Come",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Connect",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Cook",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Copy",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Cough",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Cover",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Cry",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Cut",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Dance",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Done",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Draw",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Drink",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Eat",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Enter",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Erase",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Exchange",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Feel",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Fight",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Follow",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Get up",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Give",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Go",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Guide",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Hang",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Hear",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Help",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Hit",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "How",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "I know",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Jump",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Knock",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Laugh",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Lead",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Let",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Like",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Listen",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Look",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Love",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Make",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Meet",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Now",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Open",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Order",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Peeing",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Play",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Pull",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Put",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Quickly",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Run",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Scratch",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Search",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "See",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Select",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Sell",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Show",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Sit",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Sleep",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Smile",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Stop",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Study",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Sweep",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Swim",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Take",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Talk",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Teach",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Tear",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Tell",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Text",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Think",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Throw",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Trust",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Understand",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Use",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Visit",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Walk",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Want",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Wash",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Watch",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     },
     {
       "name": "Work",
       "category": "Verbs",
       "has_clip": false,
-      "recognizable": false
+      "recognizable": false,
+      "recognitionSupported": false
     },
     {
       "name": "Write",
       "category": "Verbs",
       "has_clip": true,
-      "recognizable": true
+      "recognizable": true,
+      "recognitionSupported": true
     }
   ]
 }
