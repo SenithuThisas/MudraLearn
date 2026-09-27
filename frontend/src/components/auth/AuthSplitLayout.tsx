@@ -14,7 +14,7 @@ function LogoTile() {
         justifyContent: 'center',
         width: 32,
         height: 32,
-        background: '#6D28D9',
+        background: '#6025B8',
         border: '2px solid #14213D',
         boxShadow: '2px 2px 0px #14213D',
       }}
