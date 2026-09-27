@@ -69,20 +69,38 @@ export default function SignInPasswordPage() {
           }}
           className="signin-left-inner"
         >
-          {/* Logo wordmark */}
+          {/* Logo — icon tile + wordmark, matching AuthHeader */}
           <Link
             to="/"
             style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: 11,
-              color: '#000000',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 12,
               textDecoration: 'none',
-              marginBottom: 64,
-              display: 'inline-block',
-              letterSpacing: 1,
+              marginBottom: 48,
             }}
           >
-            MudraLearn
+            <span
+              aria-hidden="true"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 32,
+                height: 32,
+                background: '#6025B8',
+                border: '2px solid #14213D',
+                boxShadow: '2px 2px 0px #14213D',
+                flexShrink: 0,
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 11V8a2 2 0 0 0-4 0v5M14 11V6a2 2 0 0 0-4 0v5M10 11V8a2 2 0 0 0-4 0v3a8 8 0 0 0 16 0v-3" />
+              </svg>
+            </span>
+            <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 13, color: '#14213D', letterSpacing: 1, lineHeight: 1 }}>
+              MudraLearn
+            </span>
           </Link>
 
           {/* Heading */}
@@ -91,7 +109,7 @@ export default function SignInPasswordPage() {
               fontFamily: "'Press Start 2P', monospace",
               fontSize: 'clamp(20px, 2.5vw, 26px)',
               color: '#14213D',
-              lineHeight: 1.6,
+              lineHeight: 1.15,
               margin: '0 0 16px 0',
             }}
           >
@@ -166,9 +184,11 @@ export default function SignInPasswordPage() {
                 fontFamily: "'Inter', sans-serif",
                 fontSize: 14,
                 fontWeight: 700,
-                color: '#6D28D9',
+                color: '#6025B8',
                 textDecoration: 'underline',
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#4C1D95' }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = '#6025B8' }}
             >
               Use a different email
             </Link>
