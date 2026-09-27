@@ -7,12 +7,14 @@
 :root {
   --primary: #1a2744;
   --accent: #6025B8;
-  --bg: #ffffff;
+  --bg: #f0ecfb;
+  --bg-alt: #eae4f7;
   --pastel-yellow: #FFF3B0;
   --pastel-pink: #FFD6E0;
   --pastel-blue: #C8E6FF;
   --pastel-mint: #C3F5E8;
-  --shadow: 5px 5px 0px #1a2744;
+  /* P2: Upgraded to 6px hard offset */
+  --shadow: 6px 6px 0px #1a2744;
   --shadow-sm: 3px 3px 0px #1a2744;
   --shadow-white: 5px 5px 0px #ffffff;
   --border: 2px solid #1a2744;
@@ -23,6 +25,152 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===================================================
+   GLOBAL PAGE BACKGROUND — Priority 1
+   A fixed warm-lavender base + visible dot-grid +
+   two large colour blobs (purple right, green lower-left)
+   rendered BEHIND all sections via ::before/::after on body.
+   =================================================== */
+
+html, body {
+  /* Warm lavender-white base tone */
+  background-color: #f0ecfb;
+}
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Layer 1 — Blob duo: purple (upper-right) + green (lower-left) */
+body::before {
+  background:
+    radial-gradient(ellipse 500px 450px at 85% 30%, rgba(96, 37, 184, 0.30) 0%, transparent 70%),
+    radial-gradient(ellipse 440px 420px at 12% 75%, rgba(163, 230, 53, 0.22) 0%, rgba(195, 245, 232, 0.18) 50%, transparent 70%);
+  filter: blur(1px);
+}
+
+/* Layer 2 — Dot grid ON TOP of blobs (z-order: after > before) */
+body::after {
+  background-image: radial-gradient(rgba(26, 26, 46, 0.08) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+/* ===================================================
+   PER-SECTION BACKGROUND TINT SHIFTS
+   Very subtle tint alternation so scrolling reads as
+   one cohesive page, not identical flat panels.
+   All section backgrounds are semi-transparent so
+   the global blobs/grid bleed through.
+   =================================================== */
+.section-tint-base {
+  background-color: rgba(240, 236, 251, 0.60) !important;
+}
+
+.section-tint-alt {
+  background-color: rgba(234, 228, 247, 0.65) !important;
+}
+
+.section-tint-light {
+  background-color: rgba(248, 245, 255, 0.55) !important;
+}
+
+/* ===================================================
+   TEXTURE OVERLAYS — still used inside specific panels
+   =================================================== */
+.bg-dot-grid {
+  /* Section-level dot boost for hero canvas area */
+  background-image: none; /* global body::after handles it */
+}
+
+.bg-dot-grid-subtle {
+  background-image: radial-gradient(rgba(26, 39, 68, 0.06) 1.25px, transparent 1.25px);
+  background-size: 22px 22px;
+}
+
+.bg-dot-grid-accent {
+  background-image: radial-gradient(rgba(96, 37, 184, 0.07) 1.25px, transparent 1.25px);
+  background-size: 26px 26px;
+}
+
+.bg-dot-grid-dark {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1.25px, transparent 1.25px);
+  background-size: 24px 24px;
+}
+
+.bg-graph-paper {
+  background-image:
+    linear-gradient(to right, rgba(26, 39, 68, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(26, 39, 68, 0.045) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.bg-canvas-grid {
+  background-image:
+    linear-gradient(to right, rgba(26, 39, 68, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(26, 39, 68, 0.07) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* ===================================================
+   P3 ANIMATIONS — Float, Glow Pulse, Scan-Line Sweep
+   All respect prefers-reduced-motion (blanket rule below)
+   =================================================== */
+@keyframes ml-float-a {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(4deg); }
+}
+@keyframes ml-float-b {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(-6deg); }
+}
+@keyframes ml-float-c {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(8deg); }
+}
+@keyframes ml-float-d {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(-4deg); }
+}
+@keyframes ml-float-e {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-7px) rotate(5deg); }
+}
+@keyframes ml-float-f {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-9px) rotate(-7deg); }
+}
+
+@keyframes ml-glow-pulse {
+  0%, 100% { opacity: 0.40; transform: scale(1); }
+  50% { opacity: 0.70; transform: scale(1.08); }
+}
+
+@keyframes ml-scanline {
+  0%   { transform: translateX(-110%); }
+  100% { transform: translateX(110%); }
+}
+
+.ml-float-a { animation: ml-float-a 4.2s ease-in-out infinite; }
+.ml-float-b { animation: ml-float-b 5.1s ease-in-out infinite; animation-delay: 0.7s; }
+.ml-float-c { animation: ml-float-c 3.8s ease-in-out infinite; animation-delay: 1.2s; }
+.ml-float-d { animation: ml-float-d 6.0s ease-in-out infinite; animation-delay: 0.3s; }
+.ml-float-e { animation: ml-float-e 4.7s ease-in-out infinite; animation-delay: 1.8s; }
+.ml-float-f { animation: ml-float-f 5.5s ease-in-out infinite; animation-delay: 0.9s; }
+
+.ml-glow-pulse {
+  animation: ml-glow-pulse 3.2s ease-in-out infinite;
+}
+
+.ml-scanline {
+  animation: ml-scanline 4s linear infinite;
+  animation-delay: 1.5s;
 }
 
 html {
@@ -46,4 +194,14 @@ html {
 
 body {
   margin: 0;
+}
+
+/* Accessibility: respect user prefers-reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

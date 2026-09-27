@@ -12,9 +12,22 @@ export default function CTA() {
         padding: '80px 40px',
         textAlign: 'center',
         fontFamily: 'var(--font-body)',
+        position: 'relative',
+        overflow: 'hidden',
       }}
+      className="bg-dot-grid-dark"
     >
-      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+      {/* Soft dark-mode ambient violet glow */}
+      <div
+        className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[350px] rounded-full"
+        style={{
+          background: 'radial-gradient(circle, rgba(96, 37, 184, 0.32) 0%, transparent 70%)',
+          filter: 'blur(50px)',
+        }}
+        aria-hidden="true"
+      />
+
+      <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         {/* Heading */}
         <motion.div
           variants={slideLeft}

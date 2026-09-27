@@ -7,13 +7,15 @@ export default function WhatIsMudraLearn() {
     <section
       id="about"
       style={{
-        background: '#ffffff',
+        background: 'rgba(234, 228, 247, 0.65)',
         padding: '80px 80px',
         fontFamily: 'var(--font-body)',
+        borderBottom: '2px solid var(--primary)',
+        position: 'relative',
       }}
-      className="what-section"
+      className="what-section bg-graph-paper"
     >
-      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         {/* Section heading row */}
         <motion.div
           variants={slideLeft}
