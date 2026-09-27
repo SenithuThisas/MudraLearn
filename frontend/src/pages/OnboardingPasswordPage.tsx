@@ -51,8 +51,10 @@ function CheckItem({ met, label }: { met: boolean; label: string }) {
           width: 20,
           height: 20,
           border: '2px solid #14213D',
-          background: met ? '#6D28D9' : '#ffffff',
+          boxShadow: met ? '2px 2px 0px #14213D' : 'none',
+          background: met ? '#6025B8' : '#ffffff',
           flexShrink: 0,
+          transition: 'background 150ms ease, box-shadow 150ms ease',
         }}
       >
         {met && (
@@ -119,7 +121,7 @@ export default function OnboardingPasswordPage() {
       >
         <StepProgress current={1} total={4} />
 
-        <h1 style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 26, color: '#14213D', lineHeight: 1.5, margin: '0 0 16px 0' }}>
+        <h1 style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 26, color: '#14213D', lineHeight: 1.15, margin: '0 0 16px 0' }}>
           SECURE YOUR
           <br />
           ACCOUNT.
