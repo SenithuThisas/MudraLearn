@@ -35,11 +35,11 @@ export const Button = ({ variant, children, onClick, className, type = 'button',
       ...customStyle,
     }}
     whileHover={{
-      x: 3,
-      y: 3,
-      boxShadow: variant === 'white' ? '2px 2px 0px #ffffff' : '2px 2px 0px #1a2744',
+      x: -2,
+      y: -2,
+      boxShadow: variant === 'white' ? '8px 8px 0px #ffffff' : '8px 8px 0px #1a2744',
     }}
-    whileTap={{ x: 5, y: 5, boxShadow: '0px 0px 0px #1a2744' }}
+    whileTap={{ x: 4, y: 4, boxShadow: '0px 0px 0px #1a2744' }}
     transition={{ type: 'spring', stiffness: 400, damping: 20 }}
     onFocus={(e) => {
       e.currentTarget.style.outline = '2px solid var(--accent)';

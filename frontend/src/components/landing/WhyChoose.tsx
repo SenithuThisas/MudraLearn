@@ -5,13 +5,26 @@ export default function WhyChoose() {
   return (
     <section
       style={{
-        background: '#ffffff',
+        background: 'rgba(240, 236, 251, 0.60)',
         padding: '80px 80px',
         fontFamily: 'var(--font-body)',
+        borderBottom: '2px solid var(--primary)',
+        position: 'relative',
+        overflow: 'hidden',
       }}
-      className="why-section"
+      className="why-section bg-dot-grid-accent"
     >
-      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+      {/* Soft ambient depth blob behind bento grid */}
+      <div
+        className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] rounded-full"
+        style={{
+          background: 'radial-gradient(circle, rgba(96, 37, 184, 0.06) 0%, rgba(251, 226, 74, 0.05) 45%, transparent 70%)',
+          filter: 'blur(70px)',
+        }}
+        aria-hidden="true"
+      />
+
+      <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         {/* Section heading */}
         <motion.div
           variants={fadeUp}

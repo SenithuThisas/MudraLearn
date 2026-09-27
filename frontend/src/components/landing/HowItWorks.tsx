@@ -46,13 +46,15 @@ export default function HowItWorks() {
     <section
       id="how-it-works"
       style={{
-        background: '#ffffff',
+        background: 'rgba(248, 245, 255, 0.55)',
         padding: '80px 80px',
         fontFamily: 'var(--font-body)',
+        borderBottom: '2px solid var(--primary)',
+        position: 'relative',
       }}
-      className="hiw-section"
+      className="hiw-section bg-dot-grid-subtle"
     >
-      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         {/* Section heading */}
         <motion.div
           variants={fadeUp}

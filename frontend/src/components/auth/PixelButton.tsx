@@ -1,32 +1,29 @@
 import { motion } from 'framer-motion'
+import type { HTMLMotionProps } from 'framer-motion'
 import type { ReactNode } from 'react'
 
-interface PixelButtonProps {
+interface PixelButtonProps extends HTMLMotionProps<"button"> {
   children: ReactNode
-  onClick?: () => void
   variant?: 'primary' | 'secondary'
-  type?: 'button' | 'submit'
-  disabled?: boolean
-  style?: React.CSSProperties
   fullWidth?: boolean
 }
 
 export default function PixelButton({
   children,
-  onClick,
   variant = 'primary',
   type = 'button',
   disabled = false,
   style,
   fullWidth = false,
+  ...rest
 }: PixelButtonProps) {
   const isPrimary = variant === 'primary'
 
   return (
     <motion.button
       type={type}
-      onClick={onClick}
       disabled={disabled}
+      {...rest}
       style={{
         width: fullWidth ? '100%' : 'auto',
         padding: '14px 28px',
