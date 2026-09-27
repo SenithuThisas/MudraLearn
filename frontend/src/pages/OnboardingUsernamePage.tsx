@@ -109,7 +109,7 @@ export default function OnboardingUsernamePage() {
       >
         <StepProgress current={4} total={4} />
 
-        <h1 style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 26, color: '#14213D', lineHeight: 1.5, margin: '0 0 16px 0' }}>
+        <h1 style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 26, color: '#14213D', lineHeight: 1.15, margin: '0 0 16px 0' }}>
           PICK YOUR
           <br />
           USERNAME.
@@ -160,9 +160,11 @@ export default function OnboardingUsernamePage() {
           <Link
             to="/onboarding/last"
             state={{ signupToken, email, password, firstName, lastName }}
-            style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 9, color: '#6B7280', textDecoration: 'none', letterSpacing: 0.5 }}
+            style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 700, color: '#6025B8', textDecoration: 'underline' }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = '#4C1D95' }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = '#6025B8' }}
           >
-            BACK TO STEP 3
+            ← Back to Step 3
           </Link>
         </div>
       </div>
