@@ -17,9 +17,10 @@ export default function Footer() {
     <footer
       style={{
         background: 'var(--primary)',
-        borderTop: '2px solid var(--accent)',
         padding: '48px 80px',
         fontFamily: 'var(--font-body)',
+        position: 'relative',
+        zIndex: 1,
       }}
       className="footer-section"
     >

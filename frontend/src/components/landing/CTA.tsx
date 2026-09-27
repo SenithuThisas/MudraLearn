@@ -13,6 +13,7 @@ export default function CTA() {
         textAlign: 'center',
         fontFamily: 'var(--font-body)',
         position: 'relative',
+        zIndex: 1,
         overflow: 'hidden',
       }}
       className="bg-dot-grid-dark"
