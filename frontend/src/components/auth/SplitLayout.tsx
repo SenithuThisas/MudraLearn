@@ -30,6 +30,8 @@ export default function SplitLayout({ left, right, header }: SplitLayoutProps) {
             flex: '0 0 50%',
             display: 'flex',
             flexDirection: 'column',
+            /* Center content vertically so it never floats near the top */
+            justifyContent: 'center',
             background: '#ffffff',
           }}
           className="split-left"
