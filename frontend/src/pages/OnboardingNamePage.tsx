@@ -46,7 +46,7 @@ export default function OnboardingNamePage() {
       >
         <StepProgress current={2} total={4} />
 
-        <h1 style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 26, color: '#14213D', lineHeight: 1.5, margin: '0 0 16px 0' }}>
+        <h1 style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 26, color: '#14213D', lineHeight: 1.15, margin: '0 0 16px 0' }}>
           WHAT'S YOUR
           <br />
           FIRST NAME?
