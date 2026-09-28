@@ -55,55 +55,12 @@ export default function RightPanel({ variant = 'signin' }: { variant?: 'signin' 
             position: 'relative',
           }}
         >
-          {/* Hand illustration — cartoon style with black outlines, blue + yellow */}
-          <svg
-            width="260"
-            height="220"
-            viewBox="0 0 260 220"
-            fill="none"
-            aria-label="Two hands making an OK/connect sign language gesture"
-          >
-            {/* ── Blue hand (left) ── */}
-            {/* Wrist */}
-            <rect x="18" y="150" width="52" height="36" rx="4" fill="#7CB9E8" stroke="#1a1a1a" strokeWidth="3" />
-            {/* Palm */}
-            <rect x="14" y="90" width="60" height="68" rx="6" fill="#7CB9E8" stroke="#1a1a1a" strokeWidth="3" />
-            {/* Thumb */}
-            <rect x="-2" y="100" width="20" height="38" rx="8" fill="#7CB9E8" stroke="#1a1a1a" strokeWidth="3" />
-            {/* Index finger — curved into circle */}
-            <ellipse cx="46" cy="62" rx="12" ry="30" fill="#7CB9E8" stroke="#1a1a1a" strokeWidth="3" />
-            {/* Middle finger */}
-            <ellipse cx="64" cy="54" rx="11" ry="34" fill="#7CB9E8" stroke="#1a1a1a" strokeWidth="3" />
-            {/* Ring finger */}
-            <ellipse cx="80" cy="64" rx="10" ry="28" fill="#7CB9E8" stroke="#1a1a1a" strokeWidth="3" />
-            {/* Pinky */}
-            <ellipse cx="93" cy="78" rx="8" ry="20" fill="#7CB9E8" stroke="#1a1a1a" strokeWidth="3" />
-            {/* OK circle — index meets thumb */}
-            <circle cx="22" cy="88" r="14" fill="#7CB9E8" stroke="#1a1a1a" strokeWidth="3" />
-            <circle cx="22" cy="88" r="7" fill="#ffffff" />
-
-            {/* ── Yellow hand (right) ── */}
-            {/* Wrist */}
-            <rect x="188" y="150" width="52" height="36" rx="4" fill="#F5D06B" stroke="#1a1a1a" strokeWidth="3" />
-            {/* Palm */}
-            <rect x="184" y="90" width="60" height="68" rx="6" fill="#F5D06B" stroke="#1a1a1a" strokeWidth="3" />
-            {/* Thumb */}
-            <rect x="240" y="100" width="20" height="38" rx="8" fill="#F5D06B" stroke="#1a1a1a" strokeWidth="3" />
-            {/* Index */}
-            <ellipse cx="214" cy="62" rx="12" ry="30" fill="#F5D06B" stroke="#1a1a1a" strokeWidth="3" />
-            {/* Middle */}
-            <ellipse cx="196" cy="54" rx="11" ry="34" fill="#F5D06B" stroke="#1a1a1a" strokeWidth="3" />
-            {/* Ring */}
-            <ellipse cx="180" cy="64" rx="10" ry="28" fill="#F5D06B" stroke="#1a1a1a" strokeWidth="3" />
-            {/* Pinky */}
-            <ellipse cx="167" cy="78" rx="8" ry="20" fill="#F5D06B" stroke="#1a1a1a" strokeWidth="3" />
-            {/* OK circle */}
-            <circle cx="238" cy="88" r="14" fill="#F5D06B" stroke="#1a1a1a" strokeWidth="3" />
-            <circle cx="238" cy="88" r="7" fill="#ffffff" />
-
-            {/* Connection point — fingertips touching */}
-            <circle cx="130" cy="105" r="8" fill="#1a1a1a" opacity="0.12" />
-          </svg>
+          {/* Heart Hands Illustration */}
+          <img
+            src="/media/auth-illustration.jpg"
+            alt="Two hands forming a heart shape"
+            style={{ width: '260px', height: '220px', objectFit: 'contain' }}
+          />
         </div>
 
         {/* ── Badge: top-left (384 Signs) ── */}

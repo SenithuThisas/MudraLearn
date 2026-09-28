@@ -4,6 +4,7 @@ import SplitLayout from '../components/auth/SplitLayout'
 import RightPanel from '../components/auth/RightPanel'
 import PixelInput from '../components/auth/PixelInput'
 import PixelButton from '../components/auth/PixelButton'
+import { Logo } from '../components/ui/Logo'
 import { authErrorMessage } from '../services/auth'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -80,24 +81,7 @@ export default function SignInPasswordPage() {
               marginBottom: 48,
             }}
           >
-            <span
-              aria-hidden="true"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 32,
-                height: 32,
-                background: '#6025B8',
-                border: '2px solid #14213D',
-                boxShadow: '2px 2px 0px #14213D',
-                flexShrink: 0,
-              }}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 11V8a2 2 0 0 0-4 0v5M14 11V6a2 2 0 0 0-4 0v5M10 11V8a2 2 0 0 0-4 0v3a8 8 0 0 0 16 0v-3" />
-              </svg>
-            </span>
+            <Logo size={32} />
             <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 13, color: '#14213D', letterSpacing: 1, lineHeight: 1 }}>
               MudraLearn
             </span>

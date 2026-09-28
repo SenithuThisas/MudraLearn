@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Button } from '../ui/Button';
+import { Logo } from '../ui/Logo';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -62,44 +63,7 @@ export default function Navbar() {
           style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 12 }}
           aria-label="MudraLearn home"
         >
-          {/* Pixel hand icon box — hard border + offset shadow */}
-          <div
-            style={{
-              width: 36,
-              height: 36,
-              border: '2.5px solid var(--primary)',
-              boxShadow: '3px 3px 0px 0px var(--primary)',
-              background: 'var(--accent)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-              position: 'relative',
-              overflow: 'hidden',
-            }}
-          >
-            {!shouldReduceMotion && (
-              <div
-                className="ml-scanline"
-                aria-hidden="true"
-                style={{
-                  position: 'absolute',
-                  top: 0, bottom: 0, left: 0,
-                  width: '60%',
-                  background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.28) 50%, transparent 100%)',
-                  pointerEvents: 'none',
-                }}
-              />
-            )}
-            <svg width="18" height="20" viewBox="0 0 18 20" fill="none" aria-hidden="true">
-              <rect x="3" y="9" width="12" height="9" fill="#f3eeff" stroke="#ffffff" strokeWidth="1.5" />
-              <rect x="0" y="10" width="4" height="6" fill="#f3eeff" stroke="#ffffff" strokeWidth="1.5" />
-              <rect x="3" y="2" width="3" height="8" fill="#f3eeff" stroke="#ffffff" strokeWidth="1.5" />
-              <rect x="7" y="0" width="3" height="10" fill="#f3eeff" stroke="#ffffff" strokeWidth="1.5" />
-              <rect x="11" y="3" width="3" height="7" fill="#f3eeff" stroke="#ffffff" strokeWidth="1.5" />
-              <rect x="14" y="6" width="2" height="5" fill="#f3eeff" stroke="#ffffff" strokeWidth="1.5" />
-            </svg>
-          </div>
+          <Logo size={36} />
 
           {/* Wordmark — single-line, bold, same pixel font as hero headline */}
           <span

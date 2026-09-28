@@ -301,137 +301,22 @@ export default function Hero() {
                 overflow: 'hidden',
               }}
             >
-              {/* Pulsing glow behind the hand illustration */}
-              <div
-                className="ml-glow-pulse pointer-events-none"
-                aria-hidden="true"
+              <video
+                src="/media/hero-demo.mp4"
+                autoPlay={!shouldReduceMotion}
+                loop
+                muted
+                playsInline
+                preload="metadata"
+                poster="/media/hero-poster.jpg"
+                aria-label="Demonstration of MudraLearn recognising a Sinhala Sign Language gesture"
                 style={{
-                  position: 'absolute',
-                  width: 200,
-                  height: 200,
-                  borderRadius: '50%',
-                  background: 'radial-gradient(circle, rgba(96,37,184,0.22) 0%, transparent 70%)',
-                  filter: 'blur(20px)',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block',
                 }}
               />
-              {/* Slow scan-line sweep */}
-              <div
-                className="ml-scanline pointer-events-none"
-                aria-hidden="true"
-                style={{
-                  position: 'absolute',
-                  top: 0, bottom: 0,
-                  left: 0,
-                  width: '35%',
-                  background: 'linear-gradient(90deg, transparent 0%, rgba(96,37,184,0.07) 40%, rgba(255,255,255,0.18) 50%, rgba(96,37,184,0.07) 60%, transparent 100%)',
-                }}
-              />
-              {/* Hand illustration SVG with subtle gesture tracking & gentle wave motion */}
-              <svg width="220" height="240" viewBox="0 0 220 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Left hand (stationary / anchor posture) */}
-                <g transform="translate(10, 20)">
-                  <motion.g
-                    animate={shouldReduceMotion ? undefined : { y: [0, -2, 0] }}
-                    transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-                  >
-                    {/* Palm */}
-                    <rect x="20" y="80" width="60" height="80" fill="var(--accent)" stroke="var(--primary)" strokeWidth="3" />
-                    {/* Thumb */}
-                    <rect x="0" y="90" width="24" height="40" fill="var(--accent)" stroke="var(--primary)" strokeWidth="3" />
-                    {/* Index finger */}
-                    <rect x="22" y="20" width="16" height="64" fill="var(--accent)" stroke="var(--primary)" strokeWidth="3" />
-                    {/* Middle finger */}
-                    <rect x="42" y="10" width="16" height="74" fill="var(--accent)" stroke="var(--primary)" strokeWidth="3" />
-                    {/* Ring finger */}
-                    <rect x="62" y="25" width="16" height="60" fill="var(--accent)" stroke="var(--primary)" strokeWidth="3" />
-                    {/* Pinky */}
-                    <rect x="78" y="50" width="14" height="40" fill="var(--accent)" stroke="var(--primary)" strokeWidth="3" />
-                    {/* Wrist */}
-                    <rect x="30" y="158" width="40" height="30" fill="var(--accent)" stroke="var(--primary)" strokeWidth="3" />
-
-                    {/* AI Landmark Tracking Node on Left Hand Fingertip */}
-                    <motion.rect
-                      x="47" y="5" width="6" height="6"
-                      fill="#B9FBC0" stroke="var(--primary)" strokeWidth="1.5"
-                      animate={shouldReduceMotion ? undefined : { opacity: [0.4, 1, 0.4], scale: [0.9, 1.25, 0.9] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                      style={{ transformOrigin: '50px 8px' }}
-                    />
-                  </motion.g>
-                </g>
-
-                {/* Right hand (waving / signing posture with gentle, tasteful pivot loop) */}
-                <g transform="translate(120, 30)">
-                  <motion.g
-                    animate={shouldReduceMotion ? undefined : {
-                      rotate: [-2.5, 2.5, -2.5],
-                      y: [0, -3, 0],
-                    }}
-                    transition={{
-                      duration: 2.8,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                    style={{
-                      transformOrigin: '40px 150px',
-                    }}
-                  >
-                    {/* Palm */}
-                    <rect x="10" y="70" width="60" height="80" fill="#f3eeff" stroke="var(--primary)" strokeWidth="3" />
-                    {/* Thumb */}
-                    <rect x="66" y="80" width="24" height="40" fill="#f3eeff" stroke="var(--primary)" strokeWidth="3" />
-                    {/* Index finger */}
-                    <rect x="52" y="12" width="16" height="62" fill="#f3eeff" stroke="var(--primary)" strokeWidth="3" />
-                    {/* Middle finger */}
-                    <rect x="32" y="2" width="16" height="72" fill="#f3eeff" stroke="var(--primary)" strokeWidth="3" />
-                    {/* Ring finger */}
-                    <rect x="12" y="16" width="16" height="58" fill="#f3eeff" stroke="var(--primary)" strokeWidth="3" />
-                    {/* Pinky */}
-                    <rect x="0" y="42" width="14" height="38" fill="#f3eeff" stroke="var(--primary)" strokeWidth="3" />
-                    {/* Wrist */}
-                    <rect x="22" y="148" width="40" height="30" fill="#f3eeff" stroke="var(--primary)" strokeWidth="3" />
-
-                    {/* AI Landmark Tracking Nodes on Right Hand Fingertips */}
-                    <motion.rect
-                      x="37" y="-3" width="6" height="6"
-                      fill="#B9FBC0" stroke="var(--primary)" strokeWidth="1.5"
-                      animate={shouldReduceMotion ? undefined : { opacity: [0.4, 1, 0.4], scale: [0.9, 1.25, 0.9] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
-                      style={{ transformOrigin: '40px 0px' }}
-                    />
-                    <motion.rect
-                      x="57" y="7" width="6" height="6"
-                      fill="#FFF3B0" stroke="var(--primary)" strokeWidth="1.5"
-                      animate={shouldReduceMotion ? undefined : { opacity: [0.3, 1, 0.3], scale: [0.9, 1.25, 0.9] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 0.6 }}
-                      style={{ transformOrigin: '60px 10px' }}
-                    />
-                  </motion.g>
-                </g>
-
-                {/* Gesture motion lines with pulsing signal effect */}
-                <motion.line
-                  x1="100" y1="60" x2="115" y2="50"
-                  stroke="var(--accent)"
-                  strokeWidth="3"
-                  animate={shouldReduceMotion ? undefined : { opacity: [0.35, 1, 0.35], x: [0, 2, 0] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                />
-                <motion.line
-                  x1="108" y1="70" x2="120" y2="60"
-                  stroke="var(--accent)"
-                  strokeWidth="2"
-                  animate={shouldReduceMotion ? undefined : { opacity: [0.5, 1, 0.5], x: [0, 2.5, 0] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut', delay: 0.2 }}
-                />
-                <motion.line
-                  x1="95" y1="55" x2="110" y2="40"
-                  stroke="var(--primary)"
-                  strokeWidth="2"
-                  animate={shouldReduceMotion ? undefined : { opacity: [0.25, 0.9, 0.25], x: [0, 1.5, 0] }}
-                  transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
-                />
-              </svg>
             </div>
           </div>
 

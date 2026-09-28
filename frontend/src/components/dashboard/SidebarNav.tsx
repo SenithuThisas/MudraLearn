@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import NavItem from './NavItem'
 import SidebarUserSection from './SidebarUserSection'
+import { Logo } from '../ui/Logo'
 
 const COLLAPSE_STORAGE_KEY = 'mudralearn-sidebar-collapsed'
 
@@ -92,16 +93,7 @@ export default function SidebarNav() {
       <div className="dashboard-sidebar-top">
         <div className="dashboard-sidebar-brand-row">
           <Link to="/dashboard" className="dashboard-sidebar-logo-link">
-            <span
-              style={{
-                width: 28, height: 28, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: '#6D28D9', border: '2px solid #ffffff',
-              }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 11V8a2 2 0 0 0-4 0v5M14 11V6a2 2 0 0 0-4 0v5M10 11V8a2 2 0 0 0-4 0v3a8 8 0 0 0 16 0v-3" />
-              </svg>
-            </span>
+            <Logo size={28} />
             <span className="dashboard-sidebar-logo-text">MUDRALEARN</span>
           </Link>
           <button
