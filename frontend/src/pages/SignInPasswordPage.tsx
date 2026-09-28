@@ -4,6 +4,7 @@ import SplitLayout from '../components/auth/SplitLayout'
 import RightPanel from '../components/auth/RightPanel'
 import PixelInput from '../components/auth/PixelInput'
 import PixelButton from '../components/auth/PixelButton'
+import { Logo } from '../components/ui/Logo'
 import { authErrorMessage } from '../services/auth'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -69,20 +70,21 @@ export default function SignInPasswordPage() {
           }}
           className="signin-left-inner"
         >
-          {/* Logo wordmark */}
+          {/* Logo — icon tile + wordmark, matching AuthHeader */}
           <Link
             to="/"
             style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: 11,
-              color: '#000000',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 12,
               textDecoration: 'none',
-              marginBottom: 64,
-              display: 'inline-block',
-              letterSpacing: 1,
+              marginBottom: 48,
             }}
           >
-            MudraLearn
+            <Logo size={32} />
+            <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 13, color: '#14213D', letterSpacing: 1, lineHeight: 1 }}>
+              MudraLearn
+            </span>
           </Link>
 
           {/* Heading */}
@@ -91,7 +93,7 @@ export default function SignInPasswordPage() {
               fontFamily: "'Press Start 2P', monospace",
               fontSize: 'clamp(20px, 2.5vw, 26px)',
               color: '#14213D',
-              lineHeight: 1.6,
+              lineHeight: 1.15,
               margin: '0 0 16px 0',
             }}
           >
@@ -166,9 +168,11 @@ export default function SignInPasswordPage() {
                 fontFamily: "'Inter', sans-serif",
                 fontSize: 14,
                 fontWeight: 700,
-                color: '#6D28D9',
+                color: '#6025B8',
                 textDecoration: 'underline',
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#4C1D95' }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = '#6025B8' }}
             >
               Use a different email
             </Link>

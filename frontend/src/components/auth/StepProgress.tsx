@@ -21,9 +21,11 @@ export default function StepProgress({ current, total }: { current: number; tota
             style={{
               flex: 1,
               height: 10,
-              background: i < current ? '#6D28D9' : '#E5E7EB',
+              background: i < current ? '#6025B8' : '#E5E7EB',
               border: '2px solid #14213D',
               borderRadius: 0,
+              boxShadow: i < current ? '2px 2px 0px #14213D' : 'none',
+              display: 'block',
             }}
           />
         ))}

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import type { HTMLMotionProps } from 'framer-motion'
 import type { ReactNode } from 'react'
 
@@ -18,6 +18,7 @@ export default function PixelButton({
   ...rest
 }: PixelButtonProps) {
   const isPrimary = variant === 'primary'
+  const shouldReduceMotion = useReducedMotion()
 
   return (
     <motion.button
@@ -27,10 +28,12 @@ export default function PixelButton({
       style={{
         width: fullWidth ? '100%' : 'auto',
         padding: '14px 28px',
-        background: isPrimary ? '#6D28D9' : '#ffffff',
+        /* Primary uses the bold saturated accent purple — same as landing "Get Started" */
+        background: isPrimary ? '#6025B8' : '#ffffff',
         color: isPrimary ? '#ffffff' : '#14213D',
         border: '2px solid #000000',
-        boxShadow: disabled ? '0px 0px 0px #000000' : '5px 5px 0px #000000',
+        /* 6px hard ink offset shadow matching the landing page spec */
+        boxShadow: disabled ? '0px 0px 0px #000000' : '6px 6px 0px 0px #000000',
         borderRadius: 0,
         fontFamily: "'Press Start 2P', monospace",
         fontSize: 11,
@@ -41,13 +44,14 @@ export default function PixelButton({
         alignItems: 'center',
         justifyContent: 'center',
         gap: 8,
-        transition: 'transform 150ms ease, box-shadow 150ms ease',
+        transition: shouldReduceMotion ? 'none' : 'transform 150ms ease, box-shadow 150ms ease',
         ...style,
       }}
-      whileHover={disabled ? {} : { x: 3, y: 3, boxShadow: '2px 2px 0px #000000' }}
-      whileTap={disabled ? {} : { x: 5, y: 5, boxShadow: '0px 0px 0px #000000' }}
+      /* Hover-lift: -2px/-2px translate, shadow grows to 8px */
+      whileHover={disabled || shouldReduceMotion ? {} : { x: -2, y: -2, boxShadow: '8px 8px 0px 0px #000000' }}
+      whileTap={disabled || shouldReduceMotion ? {} : { x: 2, y: 2, boxShadow: '4px 4px 0px 0px #000000' }}
       onFocus={(e) => {
-        e.currentTarget.style.outline = '2px solid #6D28D9';
+        e.currentTarget.style.outline = '2px solid #6025B8';
         e.currentTarget.style.outlineOffset = '2px';
       }}
       onBlur={(e) => {

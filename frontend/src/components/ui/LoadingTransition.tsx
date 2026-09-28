@@ -15,37 +15,7 @@ export interface LoadingTransitionProps {
   onComplete?: () => void;
 }
 
-// ─── Logo Mark ────────────────────────────────────────────────────────────────
-
-function LogoMark() {
-  return (
-    <div
-      style={{
-        width: 88,
-        height: 88,
-        background: '#ffffff',
-        border: '5px solid #6D28D9',
-        boxShadow: '6px 6px 0px #6D28D9',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        imageRendering: 'pixelated',
-        flexShrink: 0,
-      }}
-      aria-hidden="true"
-    >
-      {/* Inner square — pixel-art nested square motif matching reference image */}
-      <div
-        style={{
-          width: 44,
-          height: 44,
-          background: '#ffffff',
-          border: '4px solid #6D28D9',
-        }}
-      />
-    </div>
-  );
-}
+import { Logo } from './Logo';
 
 // ─── Pixel Progress Bar ───────────────────────────────────────────────────────
 
@@ -213,7 +183,7 @@ export default function LoadingTransition({
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             >
-              <LogoMark />
+              <Logo size={88} />
             </motion.div>
 
             {/* Wordmark */}

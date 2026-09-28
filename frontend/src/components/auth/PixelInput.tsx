@@ -58,13 +58,17 @@ export default function PixelInput({
         }}
         onFocusCapture={(e) => {
           if (props.disabled) return
-          e.currentTarget.style.boxShadow = `2px 2px 0px ${error ? '#DC2626' : '#14213D'}`
-          e.currentTarget.style.transform = 'translate(2px, 2px)'
+          const wrapper = e.currentTarget
+          wrapper.style.boxShadow = `2px 2px 0px ${error ? '#DC2626' : '#6025B8'}`
+          wrapper.style.transform = 'translate(2px, 2px)'
+          wrapper.style.borderColor = error ? '#DC2626' : '#6025B8'
         }}
         onBlurCapture={(e) => {
           if (props.disabled) return
-          e.currentTarget.style.boxShadow = `4px 4px 0px ${error ? '#DC2626' : '#14213D'}`
-          e.currentTarget.style.transform = 'translate(0, 0)'
+          const wrapper = e.currentTarget
+          wrapper.style.boxShadow = `4px 4px 0px ${error ? '#DC2626' : '#14213D'}`
+          wrapper.style.transform = 'translate(0, 0)'
+          wrapper.style.borderColor = error ? '#DC2626' : '#14213D'
         }}
       >
         {leading != null && (

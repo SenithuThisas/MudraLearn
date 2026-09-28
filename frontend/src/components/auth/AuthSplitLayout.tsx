@@ -3,28 +3,7 @@ import { Link } from 'react-router-dom'
 import SplitLayout from './SplitLayout'
 import RightPanel from './RightPanel'
 
-/** Purple pixel logo tile — a small OK-hand glyph on the primary square. */
-function LogoTile() {
-  return (
-    <span
-      aria-hidden="true"
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 32,
-        height: 32,
-        background: '#6D28D9',
-        border: '2px solid #14213D',
-        boxShadow: '2px 2px 0px #14213D',
-      }}
-    >
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M18 11V8a2 2 0 0 0-4 0v5M14 11V6a2 2 0 0 0-4 0v5M10 11V8a2 2 0 0 0-4 0v3a8 8 0 0 0 16 0v-3" />
-      </svg>
-    </span>
-  )
-}
+import { Logo } from '../ui/Logo'
 
 /**
  * Standard header shared by every split auth screen: logo tile + MUDRALEARN
@@ -46,7 +25,7 @@ function AuthHeader() {
         to="/"
         style={{ display: 'inline-flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}
       >
-        <LogoTile />
+        <Logo size={32} />
         <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 14, color: '#14213D', letterSpacing: 1 }}>
           MUDRALEARN
         </span>

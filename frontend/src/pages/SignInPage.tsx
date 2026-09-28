@@ -4,6 +4,7 @@ import SplitLayout from '../components/auth/SplitLayout'
 import RightPanel from '../components/auth/RightPanel'
 import PixelInput from '../components/auth/PixelInput'
 import PixelButton from '../components/auth/PixelButton'
+import { Logo } from '../components/ui/Logo'
 import { checkEmail, requestOTP, authErrorMessage } from '../services/auth'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -136,29 +137,30 @@ export default function SignInPage() {
           }}
           className="signin-left-inner"
         >
-          {/* Logo wordmark — black, pixel font, top-left */}
+          {/* Logo — icon tile + wordmark, matching AuthHeader exactly */}
           <Link
             to="/"
             style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: 11,
-              color: '#000000',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 12,
               textDecoration: 'none',
-              marginBottom: 64,
-              display: 'inline-block',
-              letterSpacing: 1,
+              marginBottom: 48,
             }}
           >
-            MudraLearn
+            <Logo size={32} />
+            <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 13, color: '#14213D', letterSpacing: 1, lineHeight: 1 }}>
+              MudraLearn
+            </span>
           </Link>
 
-          {/* Heading — both lines dark navy, tight line-height */}
+          {/* Heading — tight line-height for confident block reading */}
           <h1
             style={{
               fontFamily: "'Press Start 2P', monospace",
               fontSize: 'clamp(20px, 2.5vw, 26px)',
               color: '#14213D',
-              lineHeight: 1.6,
+              lineHeight: 1.15,
               margin: '0 0 16px 0',
             }}
           >
@@ -215,26 +217,28 @@ export default function SignInPage() {
             />
           </div>
 
-          {/* OR divider — pixel font */}
+          {/* OR divider — brutalist styled: thick ink border lines + pixel bracket accents */}
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 12,
+              gap: 10,
               marginBottom: 24,
             }}
           >
-            <div style={{ flex: 1, borderTop: '2px solid #e5e7eb' }} />
+            <div style={{ flex: 1, borderTop: '2px solid #14213D' }} />
             <span
               style={{
                 fontFamily: "'Press Start 2P', monospace",
                 fontSize: 9,
-                color: '#6B7280',
+                color: '#14213D',
+                padding: '0 4px',
+                letterSpacing: 1,
               }}
             >
-              OR
+              [&nbsp;OR&nbsp;]
             </span>
-            <div style={{ flex: 1, borderTop: '2px solid #e5e7eb' }} />
+            <div style={{ flex: 1, borderTop: '2px solid #14213D' }} />
           </div>
 
           {/* Email form */}

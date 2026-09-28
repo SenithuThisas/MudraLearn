@@ -3,6 +3,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom'
 import SplitLayout from '../components/auth/SplitLayout'
 import RightPanel from '../components/auth/RightPanel'
 import PixelButton from '../components/auth/PixelButton'
+import { Logo } from '../components/ui/Logo'
 import { verifyOTP, requestOTP, authErrorMessage } from '../services/auth'
 
 const DIGITS = 6
@@ -121,20 +122,21 @@ export default function VerifyEmailPage() {
             width: '100%',
           }}
         >
-          {/* Logo */}
+          {/* Logo — icon tile + wordmark, matching AuthHeader */}
           <Link
             to="/"
             style={{
-              fontFamily: "'Press Start 2P', monospace",
-              fontSize: 11,
-              color: '#000000',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 12,
               textDecoration: 'none',
-              marginBottom: 80,
-              display: 'inline-block',
-              letterSpacing: 1,
+              marginBottom: 40,
             }}
           >
-            MudraLearn
+            <Logo size={32} />
+            <span style={{ fontFamily: "'Press Start 2P', monospace", fontSize: 13, color: '#14213D', letterSpacing: 1, lineHeight: 1 }}>
+              MudraLearn
+            </span>
           </Link>
 
           {/* Badge */}
@@ -166,7 +168,7 @@ export default function VerifyEmailPage() {
               fontFamily: "'Press Start 2P', monospace",
               fontSize: 'clamp(24px, 3vw, 32px)',
               color: '#152238',
-              lineHeight: 1.4,
+              lineHeight: 1.15,
               margin: '0 0 20px 0',
             }}
           >
@@ -226,12 +228,14 @@ export default function VerifyEmailPage() {
                     transition: 'box-shadow 150ms ease, transform 150ms ease, border-color 150ms ease',
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.boxShadow = '2px 2px 0px #000000';
+                    e.currentTarget.style.boxShadow = '2px 2px 0px #6025B8';
                     e.currentTarget.style.transform = 'translate(2px, 2px)';
+                    e.currentTarget.style.borderColor = error ? '#ef4444' : '#6025B8';
                   }}
                   onBlur={(e) => {
                     e.currentTarget.style.boxShadow = '4px 4px 0px #000000';
                     e.currentTarget.style.transform = 'translate(0, 0)';
+                    e.currentTarget.style.borderColor = error ? '#ef4444' : '#000000';
                   }}
                 />
               ))}
@@ -270,7 +274,7 @@ export default function VerifyEmailPage() {
             </PixelButton>
           </form>
 
-          {/* Links */}
+          {/* Links — both secondary text-links share one consistent style: purple, underline */}
           <div
             style={{
               display: 'flex',
@@ -282,19 +286,23 @@ export default function VerifyEmailPage() {
             <button
               onClick={handleResend}
               type="button"
+              disabled={!canResend}
               style={{
                 fontFamily: "'Inter', sans-serif",
                 fontSize: 14,
                 fontWeight: 700,
-                color: canResend ? '#6D28D9' : '#9CA3AF',
+                color: canResend ? '#6025B8' : '#9CA3AF',
                 background: 'none',
                 border: 'none',
                 cursor: canResend ? 'pointer' : 'default',
                 textDecoration: canResend ? 'underline' : 'none',
                 padding: 0,
+                transition: 'color 150ms ease',
               }}
+              onMouseEnter={(e) => { if (canResend) e.currentTarget.style.color = '#4C1D95' }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = canResend ? '#6025B8' : '#9CA3AF' }}
             >
-              Resend Code
+              {canResend ? 'Resend Code' : `Resend Code (${countdown}s)`}
             </button>
             <Link
               to="/signin"
@@ -302,9 +310,11 @@ export default function VerifyEmailPage() {
                 fontFamily: "'Inter', sans-serif",
                 fontSize: 14,
                 fontWeight: 700,
-                color: '#6D28D9',
+                color: '#6025B8',
                 textDecoration: 'underline',
               }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#4C1D95' }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = '#6025B8' }}
             >
               Change Email
             </Link>
