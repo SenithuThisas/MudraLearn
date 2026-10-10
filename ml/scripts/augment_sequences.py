@@ -23,7 +23,7 @@ from scipy.interpolate import interp1d
 # ──────────────────────────────────────────────────────────────────────────────
 # Constants
 # ──────────────────────────────────────────────────────────────────────────────
-DATA_DIR   = pathlib.Path("data/hand_v2")
+DATA_DIR   = pathlib.Path("data/hand_v5")
 AUG_FACTOR = 5       # 5 synthetic copies per real sample → 6× total
 SEED       = 42
 SEQUENCE_LEN = 60
