@@ -16,7 +16,7 @@ from app.services.curriculum_config import (
 )
 
 _PROJECT_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_CSV = _PROJECT_ROOT / "ml" / "saved_models" / "experiment_170" / "per_class_report_170.csv"
+DEFAULT_CSV = _PROJECT_ROOT / "ml" / "saved_models" / "per_class_report.csv"
 DEFAULT_LABEL_MAP = _PROJECT_ROOT / "ml" / "saved_models" / "label_map.json"
 DEFAULT_SIGNS = _PROJECT_ROOT / "frontend" / "public" / "signs_data.json"
 DEFAULT_SEED_JSON = Path(__file__).resolve().parents[1] / "data" / "curriculum_seed.json"
