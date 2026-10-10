@@ -229,12 +229,12 @@ def main():
     download_model_if_needed()
 
     # Collect all video files
-    video_files = sorted(SRC_ROOT.rglob("*.mp4"))
+    video_files = sorted([f for f in SRC_ROOT.rglob("*") if f.suffix.lower() in {'.mp4', '.mov'}])
     total_videos = len(video_files)
-    log.info(f"Found {total_videos} .mp4 files")
+    log.info(f"Found {total_videos} video files (.mp4, .mov)")
 
     if total_videos == 0:
-        log.error("No .mp4 files found. Check SRC_ROOT path.")
+        log.error("No video files found. Check SRC_ROOT path.")
         sys.exit(1)
 
     # Create HandLandmarker detector
