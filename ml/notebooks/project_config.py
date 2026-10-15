@@ -1,6 +1,6 @@
 import pathlib
 
-VERSION = "v5"
+VERSION = "v6"
 
 # Directory paths
 DATA_DIR = pathlib.Path(f"../data/hand_{VERSION}")
